@@ -8,6 +8,7 @@ body {
   font-size: 15px;
   line-height: 1.8;
   color: #868e96;
+  overflow-x: auto;
 }
 a {
   -webkit-transition: 0.3s all ease;
