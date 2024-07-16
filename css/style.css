@@ -532,10 +532,10 @@ header .navbar .dropdown-menu a {
 }
 .owl-carousel.home-slider-loop-false .slider-item .slider-text h1,
 .owl-carousel.home-slider .slider-item .slider-text h1 {
-  font-size: 5rem;
+  font-size: 3rem;
   color: #fff;
   line-height: 1.2;
-  font-weight: 800 !important;
+  font-weight: 200 !important;
 }
 @media (max-width: 991px) {
   .owl-carousel.home-slider-loop-false .slider-item .slider-text h1,
