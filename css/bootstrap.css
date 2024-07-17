@@ -424,6 +424,8 @@ a > code {
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+  justify-content: center;
+  position: relative;
 }
 .no-gutters {
   margin-right: 0;
