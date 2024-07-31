@@ -1086,4 +1086,28 @@ header .navbar .dropdown-menu a {
   color: #000;
   font-style: italic;
 }
+
+/* VIEW CART BUTTON */
+.view-cart-btn {
+  margin-left: auto;
+  background: #ff7404;
+  color: white !important;
+  border: 1px red;
+  display: none;
+
+  padding: 1em 1.5em;
+}
+
+@media (max-width: 480px) {
+  .view-cart-btn {
+    display: inline-block;
+  }
+}
+
+/* Additional CSS for button styling */
+.view-cart-btn:hover {
+  background: #ff9037;
+  border: 1px solid #ff9037;
+}
+
 /*# sourceMappingURL=style.css.map */

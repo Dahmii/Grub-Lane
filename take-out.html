@@ -25,6 +25,88 @@
     <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .side-cart {
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 300px;
+        height: 100%;
+        background: white;
+        border-left: 1px solid #ccc;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+      }
+
+      .side-cart.active {
+        transform: translateX(0);
+      }
+
+      .side-cart-header {
+        background: #ff7404;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-size: 18px;
+        position: relative;
+      }
+
+      .side-cart-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+      }
+
+      .side-cart-items {
+        padding: 10px;
+      }
+
+      .side-cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .side-cart-item h4 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .side-cart-item p {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .side-cart-item .remove-btn {
+        cursor: pointer;
+        color: red;
+      }
+
+      .side-cart-footer {
+        padding: 10px;
+        text-align: center;
+      }
+
+      .side-cart-footer h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+
+      .side-cart-footer button {
+        background: #ff7404;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
   </head>
   <body>
     <!-- HEADER -->
@@ -55,13 +137,13 @@
                 <a class="nav-link" href="take-out.html">Take-Out Menu</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Table Reservations </a>
+                <a class="nav-link" href="#">Table Reservations</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="contact.html">Contact Us</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="cart.html">Cart</a>
+                <a class="nav-link" href="#" id="cart-button">Cart</a>
               </li>
             </ul>
           </div>
@@ -364,17 +446,26 @@
     </section>
     <!-- MENU END -->
 
+    <!-- SIDE CART -->
+    <div id="side-cart" class="side-cart">
+      <div class="side-cart-header">
+        Your Cart
+        <span id="side-cart-close" class="side-cart-close">&times;</span>
+      </div>
+      <div id="side-cart-items" class="side-cart-items">
+        <!-- Cart items will be inserted here by JavaScript -->
+      </div>
+      <div class="side-cart-footer">
+        <h3 id="total-price">Total: N0</h3>
+        <button id="checkout-button">Checkout with Paystack</button>
+      </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="site-footer" role="contentinfo">
       <div class="container">
         <div class="row mb-5">
           <div class="col-md-4 mb-5">
-            <!-- <h3>About Us</h3>
-            <p class="mb-5">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatibus et dolor blanditiis consequuntur ex voluptates
-              perspiciatis omnis unde minima expedita.
-            </p> -->
             <ul class="list-unstyled footer-link d-flex footer-social">
               <li>
                 <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
@@ -406,8 +497,8 @@
               <h3>Contact Info</h3>
               <ul class="list-unstyled footer-link">
                 <li class="d-block">
-                  <span class="d-block text-black">Address:</span>
-                  <span
+                  <span class="d-block text-black">Address:</span
+                  ><span
                     >19A Sinari Daranijo Street, Victoria Island, Lagos</span
                   >
                 </li>
@@ -438,7 +529,6 @@
               <li><a href="#">Contact</a></li>
             </ul>
           </div>
-          <div class="col-md-3"></div>
         </div>
         <div class="row">
           <div class="col-12 text-md-center text-left">
@@ -488,6 +578,44 @@
       // Initialize cart
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+      // Function to render cart items in the side cart
+      function renderCart() {
+        const cartItemsContainer = document.getElementById("side-cart-items");
+        cartItemsContainer.innerHTML = "";
+
+        let totalPrice = 0;
+
+        cart.forEach((item, index) => {
+          const cartItemDiv = document.createElement("div");
+          cartItemDiv.classList.add("side-cart-item");
+          cartItemDiv.innerHTML = `
+          <h4>${item.name}</h4>
+          <p>N${item.price}</p>
+          <span class="remove-btn" data-index="${index}">&times;</span>
+        `;
+          cartItemsContainer.appendChild(cartItemDiv);
+
+          totalPrice += parseInt(item.price);
+        });
+
+        document.getElementById(
+          "total-price"
+        ).textContent = `Total: N${totalPrice}`;
+
+        // Add event listeners for remove buttons
+        document.querySelectorAll(".remove-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            const itemIndex = this.getAttribute("data-index");
+            cart.splice(itemIndex, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+          });
+        });
+      }
+
+      // Initial render
+      renderCart();
+
       // Handle click event for Add to Cart button
       document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
         button.addEventListener("click", function () {
@@ -507,10 +635,35 @@
           // Save cart to localStorage
           localStorage.setItem("cart", JSON.stringify(cart));
 
-          // Display confirmation
-          alert("Added to cart: " + itemName);
+          // Render cart again to update the side cart
+          renderCart();
+
+          // Show the side cart
+          document.getElementById("side-cart").classList.add("active");
         });
       });
+
+      // Toggle side cart visibility
+      document
+        .getElementById("cart-button")
+        .addEventListener("click", function () {
+          document.getElementById("side-cart").classList.toggle("active");
+        });
+
+      // Close side cart
+      document
+        .getElementById("side-cart-close")
+        .addEventListener("click", function () {
+          document.getElementById("side-cart").classList.remove("active");
+        });
+
+      // Checkout with Paystack (sample implementation)
+      document
+        .getElementById("checkout-button")
+        .addEventListener("click", function () {
+          // Replace with your actual Paystack integration code
+          alert("Checkout with Paystack");
+        });
     </script>
 
     <script
