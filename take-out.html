@@ -106,6 +106,62 @@
         cursor: pointer;
         border-radius: 5px;
       }
+
+      .add-to-cart-btn {
+        background: #ff7404;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .overlay.active {
+        display: block;
+      }
+
+      /* Custom styles for cart icon and navbar */
+      .navbar-nav {
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-item-cart {
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-item-cart a {
+        padding: 0.5rem;
+        color: white;
+      }
+
+      .nav-item-cart a:hover {
+        color: #ff7404;
+      }
+
+      @media (max-width: 768px) {
+        .navbar-toggler {
+          margin-right: 0.5rem;
+        }
+
+        .nav-item-cart {
+          order: 1;
+          margin-left: auto;
+        }
+      }
     </style>
   </head>
   <body>
@@ -114,17 +170,22 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container">
           <a class="navbar-brand" href="index.html">Grub Lane</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExample05"
-            aria-controls="navbarsExample05"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <div class="d-flex">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarsExample05"
+              aria-controls="navbarsExample05"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="nav-link" href="#" id="cart-button"
+              ><i class="fa fa-shopping-cart"></i
+            ></a>
+          </div>
           <div class="collapse navbar-collapse" id="navbarsExample05">
             <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
               <li class="nav-item">
@@ -141,9 +202,6 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="contact.html">Contact Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#" id="cart-button">Cart</a>
               </li>
             </ul>
           </div>
@@ -461,6 +519,9 @@
       </div>
     </div>
 
+    <!-- OVERLAY -->
+    <div id="overlay" class="overlay"></div>
+
     <!-- FOOTER -->
     <footer class="site-footer" role="contentinfo">
       <div class="container">
@@ -590,12 +651,12 @@
           cartItemDiv.classList.add("side-cart-item");
           cartItemDiv.innerHTML = `
           <h4>${item.name}</h4>
-          <p>N${item.price}</p>
+          <p>N${item.price} x ${item.quantity}</p>
           <span class="remove-btn" data-index="${index}">&times;</span>
         `;
           cartItemsContainer.appendChild(cartItemDiv);
 
-          totalPrice += parseInt(item.price);
+          totalPrice += item.price * item.quantity;
         });
 
         document.getElementById(
@@ -621,16 +682,20 @@
         button.addEventListener("click", function () {
           // Get item name and price from data attributes
           const itemName = this.getAttribute("data-item");
-          const itemPrice = this.getAttribute("data-price");
+          const itemPrice = parseInt(this.getAttribute("data-price"));
 
-          // Create cart item object
-          const cartItem = {
-            name: itemName,
-            price: itemPrice,
-          };
+          // Check if item is already in cart
+          const existingItemIndex = cart.findIndex(
+            (item) => item.name === itemName
+          );
 
-          // Add item to cart
-          cart.push(cartItem);
+          if (existingItemIndex > -1) {
+            // Increment quantity if item already exists
+            cart[existingItemIndex].quantity += 1;
+          } else {
+            // Add new item to cart
+            cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+          }
 
           // Save cart to localStorage
           localStorage.setItem("cart", JSON.stringify(cart));
@@ -640,6 +705,7 @@
 
           // Show the side cart
           document.getElementById("side-cart").classList.add("active");
+          document.getElementById("overlay").classList.add("active");
         });
       });
 
@@ -648,6 +714,7 @@
         .getElementById("cart-button")
         .addEventListener("click", function () {
           document.getElementById("side-cart").classList.toggle("active");
+          document.getElementById("overlay").classList.toggle("active");
         });
 
       // Close side cart
@@ -655,7 +722,14 @@
         .getElementById("side-cart-close")
         .addEventListener("click", function () {
           document.getElementById("side-cart").classList.remove("active");
+          document.getElementById("overlay").classList.remove("active");
         });
+
+      // Close side cart when clicking outside
+      document.getElementById("overlay").addEventListener("click", function () {
+        document.getElementById("side-cart").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      });
 
       // Checkout with Paystack (sample implementation)
       document

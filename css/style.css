@@ -1110,4 +1110,141 @@ header .navbar .dropdown-menu a {
   border: 1px solid #ff9037;
 }
 
+/* Styling for cart icon navbar */
+.side-cart {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: white;
+  border-left: 1px solid #ccc;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.side-cart.active {
+  transform: translateX(0);
+}
+
+.side-cart-header {
+  background: #ff7404;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  position: relative;
+}
+
+.side-cart-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.side-cart-items {
+  padding: 10px;
+}
+
+.side-cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.side-cart-item h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.side-cart-item p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.side-cart-item .remove-btn {
+  cursor: pointer;
+  color: red;
+}
+
+.side-cart-footer {
+  padding: 10px;
+  text-align: center;
+}
+
+.side-cart-footer h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.side-cart-footer button {
+  background: #ff7404;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add-to-cart-btn {
+  background: #ff7404;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* Custom styles for cart icon and navbar */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-cart {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-cart a {
+  padding: 0.5rem;
+  color: white;
+}
+
+.nav-item-cart a:hover {
+  color: #ff7404;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler {
+    margin-right: 0.5rem;
+  }
+
+  .nav-item-cart {
+    order: 1;
+    margin-left: auto;
+  }
+}
 /*# sourceMappingURL=style.css.map */
