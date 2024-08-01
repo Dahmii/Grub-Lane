@@ -24,7 +24,7 @@ body {
   grid-template-columns: 420px 420px;
 }
 .card-img {
-  background: url("../img/food-2.jpg") center/cover no-repeat;
+  background: url("../img/") center/cover no-repeat;
 }
 .banner h2 {
   padding-bottom: 40px;
