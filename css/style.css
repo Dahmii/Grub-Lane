@@ -1218,6 +1218,7 @@ header .navbar .dropdown-menu a {
 }
 
 /* Custom styles for cart icon and navbar */
+
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -1237,6 +1238,11 @@ header .navbar .dropdown-menu a {
   color: #ff7404;
 }
 
+@media (min-width: 768px) {
+  #cart-button {
+    display: none;
+  }
+}
 @media (max-width: 768px) {
   .navbar-toggler {
     margin-right: 0.5rem;
