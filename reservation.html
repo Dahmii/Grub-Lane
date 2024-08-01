@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Grub Lane - Table Reservations</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" href="ftco-32x32.html" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="css/aos.css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" />
+    <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css" />
+    <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+    <link rel="stylesheet" href="css/reservation.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <!-- <header role="banner">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Grub Lane</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarsExample05"
+            aria-controls="navbarsExample05"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+              <li class="nav-item">
+                <a class="nav-link" href="about.html">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Dine-In Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="take-out.html">Take-Out Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="table-reservations.html"
+                  >Table Reservations</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contact.html">Contact Us</a>
+              </li>
+              <li class="nav-item nav-item-cart">
+                <a class="nav-link" href="#" id="cart-button"
+                  ><i class="fa fa-shopping-cart"></i
+                ></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header> -->
+
+    <!-- RESERVATION SECTION -->
+    <section class="banner">
+      <h2>BOOK A TABLE NOW!</h2>
+      <div class="card-container">
+        <div class="card-img">
+          <!-- img here -->
+        </div>
+
+        <div class="card-content">
+          <h3>Reservation</h3>
+          <form action="">
+            <div class="form-row">
+              <select name="days">
+                <option value="day-select">Select Day</option>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="friday">Friday</option>
+                <option value="saturday">Saturday</option>
+              </select>
+
+              <select name="hours" id="">
+                <option value="hour-select">Select Hour</option>
+                <option value="10">10:00</option>
+                <option value="10">11:00</option>
+                <option value="10">12:00</option>
+                <option value="10">13:00</option>
+                <option value="10">14:00</option>
+                <option value="10">15:00</option>
+                <option value="10">16:00</option>
+                <option value="10">17:00</option>
+                <option value="10">18:00</option>
+                <option value="10">19:00</option>
+                <option value="10">20:00</option>
+                <option value="10">21:00</option>
+                <option value="10">22:00</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <input type="text" placeholder="Full Name" />
+              <input type="text" placeholder="Phone Number" />
+            </div>
+
+            <div class="form-row">
+              <input type="number" placeholder="How many persons?" min="1" />
+              <input type="submit" value="BOOK TABLE" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <!-- <section class="section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center heading-section">
+            <h2 class="mb-4">Table Reservations</h2>
+            <p>
+              Reserve your table at Grub Lane and enjoy an exquisite dining
+              experience.
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <form class="reservation-form" id="reservation-form">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    placeholder="Your Name"
+                    required
+                  />
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="Your Email"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="phone">Phone</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    placeholder="Your Phone Number"
+                    required
+                  />
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="date">Date</label>
+                  <input type="date" class="form-control" id="date" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="time">Time</label>
+                  <input type="time" class="form-control" id="time" required />
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="guests">Number of Guests</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="guests"
+                    placeholder="Number of Guests"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="requests">Special Requests</label>
+                <textarea
+                  class="form-control"
+                  id="requests"
+                  rows="3"
+                  placeholder="Any special requests?"
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Reserve Table
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- FOOTER -->
+    <!-- <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-4 mb-5">
+            <ul class="list-unstyled footer-link d-flex footer-social">
+              <li>
+                <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+              </li>
+              <li>
+                <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+              </li>
+              <li>
+                <a href="#" class="p-2"><span class="fa fa-linkedin"></span></a>
+              </li>
+              <li>
+                <a href="#" class="p-2"
+                  ><span class="fa fa-instagram"></span
+                ></a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-5 mb-5">
+            <div class="mb-5">
+              <h3>Opening Hours</h3>
+              <p>
+                <strong class="d-block font-weight-normal text-black"
+                  >Monday-Friday</strong
+                >
+                9AM - 4PM
+              </p>
+            </div>
+            <div>
+              <h3>Contact Info</h3>
+              <ul class="list-unstyled footer-link">
+                <li class="d-block">
+                  <span class="d-block text-black">Address:</span
+                  ><span
+                    >19A Sinari Daranijo Street, Victoria Island, Lagos</span
+                  >
+                </li>
+                <li class="d-block">
+                  <span class="d-block text-black">Phone:</span
+                  ><span> +234 808 912 8657</span>
+                </li>
+                <li class="d-block">
+                  <span class="d-block text-black">Email:</span
+                  ><span
+                    ><a
+                      href="#"
+                      class="__cf_email__"
+                      data-cfemail="7910171f163900160c0b1d1614181017571a1614"
+                      >grublane@yahoo.com</a
+                    ></span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-3 mb-5">
+            <h3>Quick Links</h3>
+            <ul class="list-unstyled footer-link">
+              <li><a href="#">About</a></li>
+              <li><a href="#">Terms of Use</a></li>
+              <li><a href="#">Disclaimers</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-md-center text-left">
+            <p>
+              Copyright &copy;
+              <script
+                data-cfasync="false"
+                src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+              ></script>
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              All rights reserved
+              <i class="fa fa-heart-o" aria-hidden="true"></i>
+              <a href="#" target="_blank">Grublane</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer> -->
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/magnific-popup-options.js"></script>
+    <script src="js/main.js"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-23581568-13");
+    </script>
+  </body>
+</html>
