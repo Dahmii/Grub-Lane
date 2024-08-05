@@ -15,6 +15,8 @@ const initializeDatabase = require("./initializeDatabase");
 const userRoutes = require("./routes/users");
 const orderRoutes = require("./routes/orders");
 const reservationRoutes = require("./routes/reservations");
+const menuRoutes = require('./routes/menu');
+const dishRoutes = require('./routes/dish');
 
 initializeDatabase();
 
@@ -40,6 +42,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/users", userRoutes);
 app.use("/orders", orderRoutes);
 app.use("/reservations", reservationRoutes);
+app.use('/menu', menuRoutes);
+app.use('/dish', dishRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://0.0.0.0:${port}`);
