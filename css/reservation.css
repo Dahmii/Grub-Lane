@@ -8,9 +8,112 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+
+/* HEADER STYLES */
+
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  padding: 0px 0;
+}
+@media (min-width: 768px) {
+  header {
+    padding: 30px 0;
+  }
+}
+header .navbar-brand {
+  font-family: "DM Serif Display", serif;
+  font-size: 2rem;
+}
+header .navbar-brand.absolute {
+  position: absolute;
+}
+@media (max-width: 991px) {
+  header .navbar-brand.absolute {
+    position: relative;
+  }
+}
+header .navbar-brand span {
+  color: #ff7404;
+}
+@media (min-width: 768px) {
+  header .navbar-brand span {
+    color: #ced4da;
+  }
+}
+header .navbar {
+  background: black !important;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+@media (min-width: 768px) {
+  header .navbar {
+    padding-top: 0;
+    padding-bottom: 0;
+    background: none !important;
+    position: relative;
+  }
+}
+header .navbar .nav-link {
+  padding: 1.7rem 1rem;
+  outline: none !important;
+  font-size: 1rem;
+  color: white !important;
+}
+@media (max-width: 1199px) {
+  header .navbar .nav-link {
+    padding: 0.5rem 0rem;
+  }
+}
+header .navbar .nav-link.active {
+  color: #ff7404 !important;
+}
+header .navbar .dropdown-menu {
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  -webkit-box-shadow: 0 2px 30px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 30px 0px rgba(0, 0, 0, 0.2);
+  min-width: 13em;
+  margin-top: -10px;
+}
+header .navbar .dropdown-menu:before {
+  bottom: 100%;
+  left: 10%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-bottom-color: #fff;
+  border-width: 7px;
+}
+@media (max-width: 991px) {
+  header .navbar .dropdown-menu:before {
+    display: none;
+  }
+}
+header .navbar .dropdown-menu .dropdown-item:hover {
+  background: #ff7404;
+  color: #fff;
+}
+header .navbar .dropdown-menu .dropdown-item.active {
+  background: #ff7404;
+  color: #fff;
+}
+header .navbar .dropdown-menu a {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+/* RESERVATION STYLES */
 .banner {
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
     url("../img/banner-1.jpg") center/cover no-repeat;
   display: flex;
   flex-direction: column;
@@ -24,10 +127,10 @@ body {
   grid-template-columns: 420px 420px;
 }
 .card-img {
-  background: url("../img/") center/cover no-repeat;
+  background: url("../img/grublane-11.jpg") center/cover no-repeat;
 }
 .banner h2 {
-  padding-bottom: 40px;
+  padding-top: 160px;
   margin-bottom: 20px;
 }
 .card-content {
