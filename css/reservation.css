@@ -110,6 +110,43 @@ header .navbar .dropdown-menu a {
   padding-bottom: 7px;
 }
 
+/* Custom styles for cart icon and navbar */
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-cart {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-cart a {
+  padding: 0.5rem;
+  color: white;
+}
+
+.nav-item-cart a:hover {
+  color: #ff7404;
+}
+
+@media (min-width: 768px) {
+  #cart-button {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .navbar-toggler {
+    margin-right: 0.5rem;
+  }
+
+  .nav-item-cart {
+    order: 1;
+    margin-left: auto;
+  }
+}
+
 /* RESERVATION STYLES */
 .banner {
   min-height: 100vh;
