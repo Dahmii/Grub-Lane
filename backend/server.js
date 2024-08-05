@@ -20,7 +20,6 @@ const dishRoutes = require('./routes/dish');
 
 initializeDatabase();
 
-// Swagger setup
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
