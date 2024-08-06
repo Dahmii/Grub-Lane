@@ -19,13 +19,35 @@ const db = new sqlite3.Database(databasePath);
  *             properties:
  *               name:
  *                 type: string
+ *                 description: The name of the menu
+ *                 example: "Lunch Specials"
  *               take_out:
  *                 type: boolean
+ *                 description: Whether the menu is for take-out
+ *                 example: true
  *     responses:
  *       201:
  *         description: Menu created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The ID of the created menu
+ *                   example: 1
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *                   example: "Could not create menu"
  */
 router.post('/create', (req, res) => {
     const { name, take_out } = req.body;
