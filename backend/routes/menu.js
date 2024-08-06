@@ -3,11 +3,14 @@ const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
 
+const db = new sqlite3.Database(databasePath);
+
 /**
  * @swagger
  * /menu/create:
  *   post:
- *     description: Create a new menu
+ *     summary: Create a new menu
+ *     description: Create a new menu with a name and take_out flag
  *     requestBody:
  *       required: true
  *       content:
@@ -26,10 +29,37 @@ const databasePath = process.env.DATABASE_PATH;
  *     responses:
  *       201:
  *         description: Menu created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The ID of the created menu
+ *                   example: 1
  *       400:
  *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *                   example: "Name and take_out flag are required."
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
+ *                   example: "Could not create menu"
  */
 router.post('/create', (req, res) => {
     const { name, take_out } = req.body;
