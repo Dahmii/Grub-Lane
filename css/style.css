@@ -1255,6 +1255,14 @@ header .navbar .dropdown-menu a {
   color: #ff7404;
 }
 
+/* Hide cart button on larger screens */
+@media (min-width: 768px) {
+  #cart-button {
+    display: none;
+  }
+}
+
+/* Style adjustments for mobile view */
 @media (max-width: 768px) {
   .navbar {
     justify-content: space-between;
