@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap");
+
 body {
   background: #fff;
   font-family: "Open Sans", Arial, sans-serif;
@@ -5,6 +7,7 @@ body {
   font-size: 15px;
   line-height: 1.8;
   color: #868e96;
+  font-family: "Poppins", sans-serif;
 }
 a {
   -webkit-transition: 0.3s all ease;
@@ -20,7 +23,8 @@ h2,
 h3,
 h4 {
   color: #000;
-  font-family: "DM Serif Display", serif;
+  /* font-family: "DM Serif Display", serif; */
+  font-family: "Poppins", sans-serif;
 }
 .btn,
 .form-control {
