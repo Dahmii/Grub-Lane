@@ -101,7 +101,6 @@ header {
 header .navbar-brand {
   font-family: "DM Serif Display", serif;
   font-size: 2rem;
-  padding-right: 200px;
 }
 
 header .navbar-brand.absolute {
