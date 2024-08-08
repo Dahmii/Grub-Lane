@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap");
+
 body {
   background: #fff;
   font-family: "Open Sans", Arial, sans-serif;
@@ -5,6 +7,7 @@ body {
   font-size: 15px;
   line-height: 1.8;
   color: #868e96;
+  font-family: "Poppins", sans-serif;
 }
 a {
   -webkit-transition: 0.3s all ease;
@@ -20,7 +23,8 @@ h2,
 h3,
 h4 {
   color: #000;
-  font-family: "DM Serif Display", serif;
+  /* font-family: "DM Serif Display", serif; */
+  font-family: "Poppins", sans-serif;
 }
 .btn,
 .form-control {
@@ -93,31 +97,38 @@ header {
     padding: 30px 0;
   }
 }
+
 header .navbar-brand {
   font-family: "DM Serif Display", serif;
   font-size: 2rem;
 }
+
 header .navbar-brand.absolute {
   position: absolute;
 }
+
 @media (max-width: 991px) {
   header .navbar-brand.absolute {
     position: relative;
   }
 }
+
 header .navbar-brand span {
   color: #ff7404;
 }
+
 @media (min-width: 768px) {
   header .navbar-brand span {
     color: #ced4da;
   }
 }
+
 header .navbar {
   background: black !important;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+
 @media (min-width: 768px) {
   header .navbar {
     padding-top: 0;
@@ -126,20 +137,24 @@ header .navbar {
     position: relative;
   }
 }
+
 header .navbar .nav-link {
   padding: 1.7rem 1rem;
   outline: none !important;
   font-size: 1rem;
   color: white !important;
 }
+
 @media (max-width: 1199px) {
   header .navbar .nav-link {
     padding: 0.5rem 0rem;
   }
 }
+
 header .navbar .nav-link.active {
   color: #ff7404 !important;
 }
+
 header .navbar .dropdown-menu {
   font-size: 14px;
   border-radius: 4px;
@@ -149,6 +164,7 @@ header .navbar .dropdown-menu {
   min-width: 13em;
   margin-top: -10px;
 }
+
 header .navbar .dropdown-menu:before {
   bottom: 100%;
   left: 10%;
@@ -161,23 +177,28 @@ header .navbar .dropdown-menu:before {
   border-bottom-color: #fff;
   border-width: 7px;
 }
+
 @media (max-width: 991px) {
   header .navbar .dropdown-menu:before {
     display: none;
   }
 }
+
 header .navbar .dropdown-menu .dropdown-item:hover {
   background: #ff7404;
   color: #fff;
 }
+
 header .navbar .dropdown-menu .dropdown-item.active {
   background: #ff7404;
   color: #fff;
 }
+
 header .navbar .dropdown-menu a {
   padding-top: 7px;
   padding-bottom: 7px;
 }
+
 .blog .media h3 {
   font-size: 20px;
   margin-bottom: 10px;
@@ -1218,7 +1239,6 @@ header .navbar .dropdown-menu a {
 }
 
 /* Custom styles for cart icon and navbar */
-
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -1238,19 +1258,37 @@ header .navbar .dropdown-menu a {
   color: #ff7404;
 }
 
+/* Hide cart button on larger screens */
 @media (min-width: 768px) {
   #cart-button {
     display: none;
   }
 }
+
+/* Style adjustments for mobile view */
 @media (max-width: 768px) {
-  .navbar-toggler {
-    margin-right: 0.5rem;
+  .navbar {
+    justify-content: space-between;
   }
 
-  .nav-item-cart {
-    order: 1;
+  .navbar-brand {
+    margin-right: auto;
+  }
+
+  .d-flex {
+    display: flex;
+    align-items: center;
     margin-left: auto;
+  }
+
+  .navbar-toggler {
+    order: 1; /* Ensure hamburger menu comes first */
+  }
+
+  #cart-button {
+    order: 2; /* Ensure cart button comes next to the hamburger menu */
+    padding: 0.5rem;
+    color: white;
   }
 }
 /*# sourceMappingURL=style.css.map */

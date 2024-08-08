@@ -7,7 +7,7 @@ const db = new sqlite3.Database(databasePath);
 
 /**
  * @swagger
- * /dish/by-takeout:
+ * /dish/getDishes:
  *   get:
  *     summary: Get dishes based on the take_out flag of the menu
  *     parameters:
@@ -23,7 +23,7 @@ const db = new sqlite3.Database(databasePath);
  *       500:
  *         description: Server error
  */
-router.get('/by-takeout', (req, res) => {
+router.get('/getDishes', (req, res) => {
     const take_out = req.query.take_out === 'true'; // Convert query string to boolean
     const query = `
         SELECT Dish.id, Dish.name, Dish.price, Dish.menu_id 
