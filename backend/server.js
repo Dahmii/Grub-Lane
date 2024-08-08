@@ -11,6 +11,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const httpsPort = process.env.HTTPS_PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -33,7 +34,7 @@ const swaggerOptions = {
       contact: {
         name: 'API Support',
       },
-      servers: ['http://localhost:3000'],
+      servers: ['http://localhost:3000', 'https://localhost:3001'],
     },
   },
   apis: ['./routes/users.js', './routes/orders.js', './routes/reservations.js', './routes/dish.js', './routes/menu.js'],
@@ -53,6 +54,14 @@ const options = {
   cert: fs.readFileSync('ssl/server.cert')
 };
 
-https.createServer(options, app).listen(port, () => {
-  console.log(`Server is running on https://0.0.0.0:${port}`);
+https.createServer(options, app).listen(httpsPort, () => {
+  console.log(`HTTPS Server is running on https://0.0.0.0:${httpsPort}`);
+});
+
+const http = require('http');
+http.createServer((req, res) => {
+  res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
+  res.end();
+}).listen(port, () => {
+  console.log(`HTTP Server is running on http://0.0.0.0:${port} and redirecting to https`);
 });
