@@ -50,8 +50,8 @@ app.use('/menu', menuRoutes);
 app.use('/dish', dishRoutes);
 
 const options = {
-  key: fs.readFileSync('ssl/server.key'),
-  cert: fs.readFileSync('ssl/server.cert')
+  key: fs.readFileSync('/var/log/ssl/server.key'),
+  cert: fs.readFileSync('/var/log/ssl/server.cert')
 };
 
 https.createServer(options, app).listen(httpsPort, () => {
