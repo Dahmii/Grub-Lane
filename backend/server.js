@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const cors = require("cors"); // Import the cors package
+const cors = require("cors"); 
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(cors()); // Use the cors middleware
+app.use(cors()); 
 
 const initializeDatabase = require("./initializeDatabase");
 const userRoutes = require("./routes/users");
@@ -31,7 +31,7 @@ const swaggerOptions = {
       contact: {
         name: "API Support",
       },
-      servers: ["http://localhost:3000"],
+      servers: ["http://0.0.0.0:3000"],
     },
   },
   apis: ["./routes/users.js", "./routes/orders.js", "./routes/reservations.js", "./routes/dish.js", "./routes/menu.js"],
