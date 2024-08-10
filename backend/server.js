@@ -14,10 +14,8 @@ const port = process.env.PORT || 3000;
 
 // Load SSL certificate and key
 const sslOptions = {
-  key: fs.readFileSync("/var/log/private.key"), // Ensure the path and filename are correct
-  cert: fs.readFileSync("/var/log/certificate.crt"), // Ensure the path and filename are correct
-  // If you have an intermediate certificate bundle, include it like this:
-  // ca: fs.readFileSync("/var/log/ca_bundle.crt"),
+  key: fs.readFileSync("/etc/ssl/private/private.key"),
+  cert: fs.readFileSync("/etc/ssl/certs/certificate.crt"),
 };
 
 app.use(bodyParser.json());
