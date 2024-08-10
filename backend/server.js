@@ -4,14 +4,24 @@ const dotenv = require("dotenv");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const cors = require("cors"); 
+const https = require("https");
+const fs = require("fs");
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Load SSL certificate and key
+const sslOptions = {
+  key: fs.readFileSync("/var/log/private.key"), // Ensure the path and filename are correct
+  cert: fs.readFileSync("/var/log/certificate.crt"), // Ensure the path and filename are correct
+  // If you have an intermediate certificate bundle, include it like this:
+  // ca: fs.readFileSync("/var/log/ca_bundle.crt"),
+};
+
 app.use(bodyParser.json());
-app.use(cors()); 
+app.use(cors());
 
 const initializeDatabase = require("./initializeDatabase");
 const userRoutes = require("./routes/users");
@@ -31,7 +41,7 @@ const swaggerOptions = {
       contact: {
         name: "API Support",
       },
-      servers: ["http://0.0.0.0:3000"],
+      servers: ["https://0.0.0.0:3000"], // Change to https
     },
   },
   apis: ["./routes/users.js", "./routes/orders.js", "./routes/reservations.js", "./routes/dish.js", "./routes/menu.js"],
@@ -46,6 +56,7 @@ app.use("/reservations", reservationRoutes);
 app.use('/menu', menuRoutes);
 app.use('/dish', dishRoutes);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+// Use https.createServer to start the server with SSL options
+https.createServer(sslOptions, app).listen(port, () => {
+  console.log(`HTTPS Server is running on https://0.0.0.0:${port}`);
 });
