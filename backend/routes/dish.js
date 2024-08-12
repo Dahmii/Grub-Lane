@@ -187,7 +187,7 @@ router.post("/createDish", upload.single("image"), (req, res) => {
 
   const image_filename = req.file.filename;
   const image_link = `/app/database/images/${image_filename}`;
-  const host = 'grublanerestaurant.com.ng';
+  const host = 'grublanerestaurant.com';
   const protocol = req.protocol;
   const image_url = `${protocol}://${host}/images/${image_filename}`;
 
