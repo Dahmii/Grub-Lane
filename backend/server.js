@@ -39,7 +39,7 @@ const swaggerOptions = {
       contact: {
         name: "API Support",
       },
-      servers: ["https://0.0.0.0:3000"], // Change to https
+      servers: ["https://0.0.0.0:3000"], 
     },
   },
   apis: ["./routes/users.js", "./routes/orders.js", "./routes/reservations.js", "./routes/dish.js", "./routes/menu.js"],

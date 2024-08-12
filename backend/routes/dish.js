@@ -69,6 +69,65 @@ const upload = multer({
   },
 });
 
+
+
+/**
+ * @swagger
+ * /dish/createDish:
+ *   post:
+ *     summary: Create a new dish
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: name
+ *         type: string
+ *         required: true
+ *         description: Name of the dish
+ *       - in: formData
+ *         name: price
+ *         type: number
+ *         required: true
+ *         description: Price of the dish
+ *       - in: formData
+ *         name: menu_id
+ *         type: integer
+ *         required: true
+ *         description: ID of the menu to which the dish belongs
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         required: true
+ *         description: Image of the dish
+ *     responses:
+ *       201:
+ *         description: Dish created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The dish ID
+ *                 name:
+ *                   type: string
+ *                   description: The name of the dish
+ *                 price:
+ *                   type: number
+ *                   description: The price of the dish
+ *                 menu_id:
+ *                   type: integer
+ *                   description: The ID of the menu to which the dish belongs
+ *                 image_link:
+ *                   type: string
+ *                   description: The link to the dish's image
+ *       400:
+ *         description: Invalid input, object invalid
+ *       500:
+ *         description: Server error
+ */
+
 router.post("/createDish", upload.single("image"), (req, res) => {
   const { name, price, menu_id } = req.body;
 
