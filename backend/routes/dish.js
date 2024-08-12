@@ -26,7 +26,7 @@ const db = new sqlite3.Database(databasePath);
  *         description: Server error
  */
 router.get("/getDishes", (req, res) => {
-  const take_out = req.query.take_out === "true"; // Convert query string to boolean
+  const take_out = req.query.take_out === "true"; 
   const query = `
         SELECT Dish.id, Dish.name, Dish.price, Dish.menu_id, Dish.image_link 
         FROM Dish
@@ -142,7 +142,7 @@ router.post("/createDish", upload.single("image"), (req, res) => {
       .json({ error: "Price and menu_id must be valid numbers." });
   }
 
-  const image_link = `/app/grublane_project/database/${req.file.filename}`;
+  const image_link = `/app/database/${req.file.filename}`;
 
   const query = `
         INSERT INTO Dish (name, price, menu_id, image_link)
