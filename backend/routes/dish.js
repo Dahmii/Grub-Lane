@@ -44,7 +44,7 @@ router.get("/getDishes", (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/app/grublane_project/database");
+    cb(null, "/app/database");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
