@@ -44,7 +44,7 @@ router.get("/getDishes", (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/app/database");
+    cb(null, "/app/database/images");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -142,7 +142,7 @@ router.post("/createDish", upload.single("image"), (req, res) => {
       .json({ error: "Price and menu_id must be valid numbers." });
   }
 
-  const image_link = `/app/database/${req.file.filename}`;
+  const image_link = `/app/database/images/${req.file.filename}`;
 
   const query = `
         INSERT INTO Dish (name, price, menu_id, image_link)
