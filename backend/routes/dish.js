@@ -22,11 +22,40 @@ const db = new sqlite3.Database(databasePath);
  *     responses:
  *       200:
  *         description: List of dishes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dishes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       price:
+ *                         type: number
+ *                       menu_id:
+ *                         type: integer
+ *                       image_link:
+ *                         type: string
+ *                         description: The relative path to the dish's image
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
  */
 router.get("/getDishes", (req, res) => {
-  const take_out = req.query.take_out === "true"; // Convert query string to boolean
+  const take_out = req.query.take_out === "true"; 
   const query = `
         SELECT Dish.id, Dish.name, Dish.price, Dish.menu_id, Dish.image_link 
         FROM Dish
@@ -44,7 +73,7 @@ router.get("/getDishes", (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "/app/grublane_project/database");
+    cb(null, "/app/database/images");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -68,8 +97,6 @@ const upload = multer({
     }
   },
 });
-
-
 
 /**
  * @swagger
@@ -119,13 +146,29 @@ const upload = multer({
  *                 menu_id:
  *                   type: integer
  *                   description: The ID of the menu to which the dish belongs
- *                 image_link:
+ *                 image_url:
  *                   type: string
- *                   description: The link to the dish's image
+ *                   description: The full URL to access the dish's image
  *       400:
  *         description: Invalid input, object invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: Error message
  */
 
 router.post("/createDish", upload.single("image"), (req, res) => {
@@ -142,7 +185,11 @@ router.post("/createDish", upload.single("image"), (req, res) => {
       .json({ error: "Price and menu_id must be valid numbers." });
   }
 
-  const image_link = `/app/grublane_project/database/${req.file.filename}`;
+  const image_filename = req.file.filename;
+  const image_link = `/app/database/images/${image_filename}`;
+  const host = 'grublanerestaurant.com';
+  const protocol = req.protocol;
+  const image_url = `${protocol}://${host}/images/${image_filename}`;
 
   const query = `
         INSERT INTO Dish (name, price, menu_id, image_link)
@@ -158,7 +205,14 @@ router.post("/createDish", upload.single("image"), (req, res) => {
       }
       return res.status(500).json({ error: err.message });
     }
-    res.status(201).json({ id: this.lastID, name, price, menu_id, image_link });
+    res.status(201).json({
+      id: this.lastID,
+      name,
+      price,
+      menu_id,
+      image_url,
+    });
   });
 });
+
 module.exports = router;
