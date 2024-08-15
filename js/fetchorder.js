@@ -6,7 +6,7 @@ function createOrder(
   paystackReference = "",
   orderDetails = ""
 ) {
-  const endpointUrl = `https://grublanerestaurant.com:3000/orders`;
+  const endpointUrl = `https://grublanerestaurant.com/api/orders`;
   const orderData = {
     user_id: userId,
     amount_paid: amountPaid,
@@ -41,7 +41,7 @@ function createOrder(
 }
 
 function fetchAllOrders() {
-  const endpointUrl = `https://grublanerestaurant.com:3000/orders`;
+  const endpointUrl = `https://grublanerestaurant.com/api/orders`;
 
   fetch(endpointUrl)
     .then((response) => {
