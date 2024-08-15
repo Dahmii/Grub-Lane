@@ -3,7 +3,12 @@ function fetchMenuData(menuType) {
   const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
 
   fetch(endpointUrl)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then((data) => {
       const menuContainer = document.getElementById("menu-container");
       let menuHtml = "";
@@ -16,16 +21,14 @@ function fetchMenuData(menuType) {
             </div>
           `;
       } else {
-        Object.keys(data).forEach((category) => {
+        for (const category in data) {
           menuHtml += `<h2 class="text-center">${category}</h2><div class="row">`;
 
           data[category].forEach((item) => {
             menuHtml += `
                 <div class="col-md-4 mb-4">
                   <div class="menu-item">
-                    <img src="${item.image}" alt="${
-              item.name
-            }" class="img-fluid" />
+                    <img src="${item.image_url}" alt="${item.name}" class="img-fluid" />
                     <h4>${item.name}</h4>
                     <p>N${item.price}</p>
                     ${
@@ -43,32 +46,13 @@ function fetchMenuData(menuType) {
           });
 
           menuHtml += "</div>";
-        });
+        }
       }
 
       menuContainer.innerHTML = menuHtml;
 
       if (menuType === "take_out") {
-        document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
-          button.addEventListener("click", function () {
-            const itemName = this.getAttribute("data-item");
-            const itemPrice = parseInt(this.getAttribute("data-price"));
-            const existingItemIndex = cart.findIndex(
-              (item) => item.name === itemName
-            );
-
-            if (existingItemIndex > -1) {
-              cart[existingItemIndex].quantity += 1;
-            } else {
-              cart.push({ name: itemName, price: itemPrice, quantity: 1 });
-            }
-
-            localStorage.setItem("cart", JSON.stringify(cart));
-            renderCart();
-            document.getElementById("side-cart").classList.add("active");
-            document.getElementById("overlay").classList.add("active");
-          });
-        });
+        addCartFunctionality();
       }
     })
     .catch((error) => {
@@ -81,6 +65,27 @@ function fetchMenuData(menuType) {
         `;
       console.error("Error fetching menu data:", error);
     });
+}
+
+function addCartFunctionality() {
+  document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemName = this.getAttribute("data-item");
+      const itemPrice = parseInt(this.getAttribute("data-price"));
+      const existingItemIndex = cart.findIndex((item) => item.name === itemName);
+
+      if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+      } else {
+        cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+      document.getElementById("side-cart").classList.add("active");
+      document.getElementById("overlay").classList.add("active");
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

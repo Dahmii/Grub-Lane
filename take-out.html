@@ -400,7 +400,6 @@
           "total-price"
         ).textContent = `Total: N${totalPrice}`;
 
-        // Add event listeners for remove buttons
         document.querySelectorAll(".remove-btn").forEach((button) => {
           button.addEventListener("click", function () {
             const itemIndex = this.getAttribute("data-index");
