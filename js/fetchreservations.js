@@ -1,5 +1,5 @@
 function createReservation(userId, tableNumber, numberOfGuests, dateTime) {
-  const endpointUrl = `https://grublanerestaurant.com:3000/reservations`;
+  const endpointUrl = `https://grublanerestaurant.com/api/reservations`;
   const reservationData = {
     user_id: userId,
     table_number: tableNumber,
@@ -45,7 +45,6 @@ function fetchAllReservations() {
     .then((data) => {
       const reservations = data.reservations;
       console.log("Fetched reservations:", reservations);
-      // Optionally, render reservations to the DOM
     })
     .catch((error) => {
       console.error("Error fetching reservations:", error.message);

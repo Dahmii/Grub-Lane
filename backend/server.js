@@ -54,7 +54,6 @@ app.use("/reservations", reservationRoutes);
 app.use('/menu', menuRoutes);
 app.use('/dish', dishRoutes);
 
-// Use https.createServer to start the server with SSL options
 https.createServer(sslOptions, app).listen(port, () => {
   console.log(`HTTPS Server is running on https://0.0.0.0:${port}`);
 });

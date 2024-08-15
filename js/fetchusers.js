@@ -1,5 +1,5 @@
 function createUser(email, name, address = "", phoneNumber = "") {
-  const endpointUrl = `https://grublanerestaurant.com:3000/users`;
+  const endpointUrl = `https://grublanerestaurant.com/api/users`;
   const userData = {
     email: email,
     name: name,
@@ -31,7 +31,7 @@ function createUser(email, name, address = "", phoneNumber = "") {
     });
 }
 function fetchAllUsers() {
-  const endpointUrl = `https://grublanerestaurant.com:3000/users`;
+  const endpointUrl = `https://grublanerestaurant.com/api/users`;
 
   fetch(endpointUrl)
     .then((response) => {
