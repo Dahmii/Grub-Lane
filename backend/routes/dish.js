@@ -7,6 +7,16 @@ const databasePath = process.env.DATABASE_PATH;
 
 const db = new sqlite3.Database(databasePath);
 
+// Define storage for multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "/app/database/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
 /**
  * @swagger
  * /dish/getDishes:
