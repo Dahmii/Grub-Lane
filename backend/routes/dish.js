@@ -7,6 +7,16 @@ const databasePath = process.env.DATABASE_PATH;
 
 const db = new sqlite3.Database(databasePath);
 
+// Define storage for multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "/app/database/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
 /**
  * @swagger
  * /dish/getDishes:
@@ -67,18 +77,22 @@ router.get("/getDishes", (req, res) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json({ dishes: rows });
+
+    const protocol = req.protocol;
+    const host = 'grublanerestaurant.com';
+
+    const dishes = rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      price: row.price,
+      menu_id: row.menu_id,
+      image_url: `${protocol}://${host}/images/${path.basename(row.image_link)}`
+    }));
+
+    res.json({ dishes });
   });
 });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "/app/database/images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
 
 const upload = multer({
   storage: storage,
