@@ -9,26 +9,39 @@ const databasePath = process.env.DATABASE_PATH;
  *   post:
  *     description: Create a new reservation
  *     parameters:
- *       - name: user_id
+ *       - name: name
  *         in: body
  *         required: true
  *         schema:
  *           type: string
- *       - name: table_number
+ *       - name: date
  *         in: body
  *         required: true
  *         schema:
- *           type: number
+ *           type: string
+ *           format: date
+ *       - name: time
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: time
+ *       - name: phone_number
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: email
+ *         in: body
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: email
  *       - name: number_of_guests
  *         in: body
  *         required: true
  *         schema:
- *           type: number
- *       - name: date_time
- *         in: body
- *         required: true
- *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       201:
  *         description: Reservation created successfully
@@ -38,35 +51,36 @@ const databasePath = process.env.DATABASE_PATH;
  *         description: Reservation already exists
  */
 router.post("/", (req, res) => {
-  const { user_id, table_number, number_of_guests, date_time } = req.body;
-  if (!user_id || !table_number || !number_of_guests || !date_time) {
-    return res
-      .status(400)
-      .json({
-        error:
-          "User ID, table number, number of guests, and date-time are required.",
-      });
+  const { name, date, time, phone_number, email, number_of_guests } = req.body;
+  if (!name || !date || !time || !phone_number || !email || !number_of_guests) {
+    return res.status(400).json({
+      error:
+        "Name, date, time, phone number, email, and number of guests are required.",
+    });
   }
 
   let db = new sqlite3.Database(databasePath);
-  let checkSql = `SELECT id FROM Reservations WHERE user_id = ? AND date_time = ?`;
-  db.get(checkSql, [user_id, date_time], (err, row) => {
+  let dateTime = `${date} ${time}`; // Combine date and time
+
+  let checkSql = `SELECT id FROM Reservations WHERE email = ? AND date_time = ?`;
+  db.get(checkSql, [email, dateTime], (err, row) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
     if (row) {
-      return res
-        .status(409)
-        .json({
-          error:
-            "Reservation for this user at this date and time already exists.",
-        });
+      return res.status(409).json({
+        error:
+          "Reservation for this email at this date and time already exists.",
+      });
     }
 
-    let insertSql = `INSERT INTO Reservations (user_id, table_number, number_of_guests, date_time) VALUES (?, ?, ?, ?)`;
+    let insertSql = `
+      INSERT INTO Reservations (name, date_time, phone_number, email, number_of_guests)
+      VALUES (?, ?, ?, ?, ?)`;
+
     db.run(
       insertSql,
-      [user_id, table_number, number_of_guests, date_time],
+      [name, dateTime, phone_number, email, number_of_guests],
       function (err) {
         if (err) {
           return res.status(400).json({ error: err.message });
@@ -74,6 +88,7 @@ router.post("/", (req, res) => {
         res.status(201).json({ id: this.lastID });
       }
     );
+
     db.close((err) => {
       if (err) {
         console.error("Error closing database connection:", err.message);

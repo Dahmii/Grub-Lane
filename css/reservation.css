@@ -351,7 +351,7 @@ form input[type="submit"]:hover {
 /* Reservation form date styling */
 .placeholder-label {
   position: absolute;
-  top: 50%;
+  top: -10%;
   left: 10px;
   transform: translateY(-50%);
   pointer-events: none;
@@ -372,11 +372,4 @@ input[type="date"]:not(:placeholder-shown) + .placeholder-label {
 .form-row {
   position: relative;
   margin-bottom: 15px;
-}
-
-/* Hide placeholder label for mobile to avoid overlap with native date picker */
-@media (max-width: 768px) {
-  .placeholder-label {
-    display: none;
-  }
 }

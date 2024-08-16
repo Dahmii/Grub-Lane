@@ -97,18 +97,18 @@
 
         <div class="card-content">
           <h3>Reservation</h3>
-          <form action="">
+          <form id="createReservationForm" action="">
             <div class="form-row">
               <!-- Date picker with restriction -->
               <input
                 type="date"
                 placeholder="Select Date"
                 name="reservation-date"
-                id="reservation-date"
+                id="date"
                 required
               />
 
-              <select name="hours" id="reservation-hour" required>
+              <select name="hours" id="time" required>
                 <option value="" disabled selected>Select Time</option>
                 <option value="10">10:00</option>
                 <option value="11">11:00</option>
@@ -127,13 +127,19 @@
             </div>
 
             <div class="form-row">
-              <input type="text" placeholder="Full Name" required />
-              <input type="text" placeholder="Phone Number" required />
+              <input type="text" id="name" placeholder="Full Name" required />
+              <input
+                type="text"
+                id="phone_number"
+                placeholder="Phone Number"
+                required
+              />
             </div>
 
             <div class="form-row">
               <input
                 type="email"
+                id="email"
                 placeholder="Email Address"
                 name="email"
                 required
@@ -143,7 +149,8 @@
             <div class="form-row">
               <input
                 type="number"
-                placeholder="How many persons?"
+                id="number_of_guest"
+                placeholder="Number of Guest"
                 min="1"
                 required
               />
@@ -186,7 +193,7 @@
     <!-- SCRIPT FOR RESERVATION DATE -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const dateInput = document.getElementById("reservation-date");
+        const dateInput = document.getElementById("date");
         const today = new Date();
         const sevenDaysLater = new Date();
         sevenDaysLater.setDate(today.getDate() + 7);
