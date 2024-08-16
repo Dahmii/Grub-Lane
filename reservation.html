@@ -99,42 +99,54 @@
           <h3>Reservation</h3>
           <form action="">
             <div class="form-row">
-              <select name="days">
-                <option value="day-select">Select Day</option>
-                <option value="sunday">Sunday</option>
-                <option value="monday">Monday</option>
-                <option value="tuesday">Tuesday</option>
-                <option value="wednesday">Wednesday</option>
-                <option value="thursday">Thursday</option>
-                <option value="friday">Friday</option>
-                <option value="saturday">Saturday</option>
-              </select>
+              <!-- Date picker with restriction -->
+              <input
+                type="date"
+                placeholder="Select Date"
+                name="reservation-date"
+                id="reservation-date"
+                required
+              />
 
-              <select name="hours" id="">
-                <option value="hour-select">Select Hour</option>
+              <select name="hours" id="reservation-hour" required>
+                <option value="" disabled selected>Select Time</option>
                 <option value="10">10:00</option>
-                <option value="10">11:00</option>
-                <option value="10">12:00</option>
-                <option value="10">13:00</option>
-                <option value="10">14:00</option>
-                <option value="10">15:00</option>
-                <option value="10">16:00</option>
-                <option value="10">17:00</option>
-                <option value="10">18:00</option>
-                <option value="10">19:00</option>
-                <option value="10">20:00</option>
-                <option value="10">21:00</option>
-                <option value="10">22:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+                <option value="22">22:00</option>
               </select>
             </div>
 
             <div class="form-row">
-              <input type="text" placeholder="Full Name" />
-              <input type="text" placeholder="Phone Number" />
+              <input type="text" placeholder="Full Name" required />
+              <input type="text" placeholder="Phone Number" required />
             </div>
 
             <div class="form-row">
-              <input type="number" placeholder="How many persons?" min="1" />
+              <input
+                type="email"
+                placeholder="Email Address"
+                name="email"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <input
+                type="number"
+                placeholder="How many persons?"
+                min="1"
+                required
+              />
               <input type="submit" value="BOOK TABLE" />
             </div>
           </form>
@@ -160,92 +172,6 @@
     <!-- OVERLAY -->
     <div id="overlay" class="overlay"></div>
 
-    <!-- <section class="section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5">
-          <div class="col-md-7 text-center heading-section">
-            <h2 class="mb-4">Table Reservations</h2>
-            <p>
-              Reserve your table at Grub Lane and enjoy an exquisite dining
-              experience.
-            </p>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-10">
-            <form class="reservation-form" id="reservation-form">
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="name"
-                    placeholder="Your Name"
-                    required
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="email">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    placeholder="Your Email"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="phone">Phone</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="phone"
-                    placeholder="Your Phone Number"
-                    required
-                  />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="date">Date</label>
-                  <input type="date" class="form-control" id="date" required />
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="time">Time</label>
-                  <input type="time" class="form-control" id="time" required />
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="guests">Number of Guests</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="guests"
-                    placeholder="Number of Guests"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="requests">Special Requests</label>
-                <textarea
-                  class="form-control"
-                  id="requests"
-                  rows="3"
-                  placeholder="Any special requests?"
-                ></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Reserve Table
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section> -->
-
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -257,6 +183,47 @@
     <script src="js/main.js"></script>
     <script src="js/cart.js"></script>
 
+    <!-- SCRIPT FOR RESERVATION DATE -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.getElementById("reservation-date");
+        const today = new Date();
+        const sevenDaysLater = new Date();
+        sevenDaysLater.setDate(today.getDate() + 7);
+
+        const formatDate = (date) => {
+          let day = ("0" + date.getDate()).slice(-2);
+          let month = ("0" + (date.getMonth() + 1)).slice(-2);
+          return `${date.getFullYear()}-${month}-${day}`;
+        };
+
+        dateInput.min = formatDate(today);
+        dateInput.max = formatDate(sevenDaysLater);
+
+        // Placeholder-like effect
+        const placeholderText = "Select Date";
+        const placeholderLabel = document.createElement("label");
+        placeholderLabel.textContent = placeholderText;
+        placeholderLabel.classList.add("placeholder-label");
+
+        // Append the label right before the input
+        dateInput.parentNode.insertBefore(placeholderLabel, dateInput);
+
+        const togglePlaceholder = () => {
+          if (dateInput.value) {
+            placeholderLabel.style.display = "none";
+          } else {
+            placeholderLabel.style.display = "inline";
+          }
+        };
+
+        dateInput.addEventListener("input", togglePlaceholder);
+
+        // Initial check to hide placeholder if date is already selected
+        togglePlaceholder();
+      });
+    </script>
+    <!-- END OF RESERVATION DATE SCRIPT -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"

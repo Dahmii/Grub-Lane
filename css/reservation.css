@@ -313,7 +313,7 @@ form select,
 form input {
   display: block;
   width: 100%;
-  margin: 15px 12px;
+  margin: 5px 12px;
   padding: 5px;
   font-size: 15px;
   font-family: "Poppins", sans-serif;
@@ -345,5 +345,38 @@ form input[type="submit"]:hover {
   }
   .card-img {
     height: 330px;
+  }
+}
+
+/* Reservation form date styling */
+.placeholder-label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #aaa;
+  transition: all 0.2s;
+  font-size: 15px; /* Adjusted for better appearance */
+}
+
+input[type="date"]:focus + .placeholder-label,
+input[type="date"]:not(:placeholder-shown) + .placeholder-label {
+  top: 0;
+  left: 10px;
+  transform: translateY(-150%); /* Move the placeholder label above the input */
+  font-size: 12px; /* Reduce the font size for a better fit */
+  color: #555;
+}
+
+.form-row {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* Hide placeholder label for mobile to avoid overlap with native date picker */
+@media (max-width: 768px) {
+  .placeholder-label {
+    display: none;
   }
 }
