@@ -33,7 +33,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -101,9 +101,8 @@
 
         <div class="card-content">
           <h3>Reservation</h3>
-          <form id="createReservationForm" action="">
+          <form id="createReservationForm">
             <div class="form-row">
-              <!-- Date picker with restriction -->
               <input
                 type="date"
                 placeholder="Select Date"
@@ -153,8 +152,8 @@
             <div class="form-row">
               <input
                 type="number"
-                id="number_of_guest"
-                placeholder="Number of Guest"
+                id="number_of_guests"
+                placeholder="Number of Guests"
                 min="1"
                 required
               />
@@ -199,8 +198,6 @@
       document.addEventListener("DOMContentLoaded", function () {
         const dateInput = document.getElementById("date");
         const today = new Date();
-        const sevenDaysLater = new Date();
-        sevenDaysLater.setDate(today.getDate() + 7);
 
         const formatDate = (date) => {
           let day = ("0" + date.getDate()).slice(-2);
@@ -209,7 +206,6 @@
         };
 
         dateInput.min = formatDate(today);
-        dateInput.max = formatDate(sevenDaysLater);
 
         // Placeholder-like effect
         const placeholderText = "Select Date";
@@ -230,11 +226,75 @@
 
         dateInput.addEventListener("input", togglePlaceholder);
 
-        // Initial check to hide placeholder if date is already selected
+        // Initialize placeholder visibility
         togglePlaceholder();
       });
     </script>
     <!-- END OF RESERVATION DATE SCRIPT -->
+
+    <!-- FORM SUBMISSION POST REQUEST -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize form submission handler
+        document
+          .getElementById("createReservationForm")
+          .addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Collect form data
+            const name = document.getElementById("name").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+            const phoneNumber = document.getElementById("phone_number").value;
+            const email = document.getElementById("email").value;
+            const numberOfGuests =
+              document.getElementById("number_of_guests").value;
+
+            // Create the data object
+            const reservationData = {
+              name: name,
+              date: date,
+              time: time,
+              phone_number: phoneNumber,
+              email: email,
+              number_of_guests: numberOfGuests,
+            };
+
+            // Define the API endpoint
+            const endpointUrl =
+              "https://grublanerestaurant.com/api/reservations";
+
+            // Make the POST request using fetch
+            fetch(endpointUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(reservationData), // Send the collected data as JSON
+            })
+              .then((response) => {
+                if (response.status === 201) {
+                  return response.json();
+                } else if (response.status === 409) {
+                  throw new Error("Reservation already exists.");
+                } else {
+                  throw new Error("Failed to create reservation.");
+                }
+              })
+              .then((data) => {
+                console.log(
+                  "Reservation created successfully with ID:",
+                  data.id
+                );
+                alert("Reservation created successfully!");
+              })
+              .catch((error) => {
+                console.error("Error creating reservation:", error.message);
+                alert("Error: " + error.message);
+              });
+          });
+      });
+    </script>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"

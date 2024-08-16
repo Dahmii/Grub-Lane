@@ -141,7 +141,7 @@ header .navbar {
 header .navbar .nav-link {
   padding: 1.7rem 1rem;
   outline: none !important;
-  font-size: 1rem;
+  font-size: 14px;
   color: white !important;
 }
 
