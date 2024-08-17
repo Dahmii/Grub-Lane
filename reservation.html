@@ -92,6 +92,7 @@
         </div>
       </nav>
     </header>
+
     <!-- RESERVATION SECTION -->
     <section class="banner">
       <div class="card-container">
@@ -157,6 +158,16 @@
                 min="1"
                 required
               />
+
+              <!-- <select id="table_number" required>
+                <option value="" disabled selected>Select Table</option>
+              </select> -->
+              <input
+                type="number"
+                id="table_number"
+                placeholder="Table Number"
+                required
+              />
               <input type="submit" value="BOOK TABLE" />
             </div>
           </form>
@@ -182,6 +193,7 @@
     <!-- OVERLAY -->
     <div id="overlay" class="overlay"></div>
 
+    <!-- JavaScript Dependencies -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -235,66 +247,141 @@
     <!-- FORM SUBMISSION POST REQUEST -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Initialize form submission handler
         document
           .getElementById("createReservationForm")
           .addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault(); // Prevent default form submission
 
-            // Collect form data
+            // Collect user data
             const name = document.getElementById("name").value;
-            const date = document.getElementById("date").value;
-            const time = document.getElementById("time").value;
             const phoneNumber = document.getElementById("phone_number").value;
             const email = document.getElementById("email").value;
+
+            // Collect reservation data
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
             const numberOfGuests =
               document.getElementById("number_of_guests").value;
 
-            // Create the data object
-            const reservationData = {
-              name: name,
-              date: date,
-              time: time,
-              phone_number: phoneNumber,
-              email: email,
-              number_of_guests: numberOfGuests,
-            };
+            // Define the API endpoint for creating a user
+            const userEndpointUrl = "https://grublanerestaurant.com/api/users";
 
-            // Define the API endpoint
-            const endpointUrl =
-              "https://grublanerestaurant.com/api/reservations";
-
-            // Make the POST request using fetch
-            fetch(endpointUrl, {
+            // Create the user first
+            fetch(userEndpointUrl, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(reservationData), // Send the collected data as JSON
+              body: JSON.stringify({
+                name: name,
+                phone_number: phoneNumber,
+                email: email,
+              }),
             })
               .then((response) => {
-                if (response.status === 201) {
-                  return response.json();
-                } else if (response.status === 409) {
-                  throw new Error("Reservation already exists.");
-                } else {
-                  throw new Error("Failed to create reservation.");
+                if (response.status === 409) {
+                  throw new Error("User already exists with this email.");
                 }
+                if (!response.ok) {
+                  throw new Error("Failed to create user.");
+                }
+                return response.json();
               })
-              .then((data) => {
+              .then((userData) => {
+                // Now that the user is created, use the user_id to create the reservation
+                const userId = userData.id;
+                const reservationEndpointUrl =
+                  "https://grublanerestaurant.com/api/reservations";
+
+                return fetch(reservationEndpointUrl, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    user_id: userId,
+                    date_time: `${date} ${time}`, // Combine date and time
+                    number_of_guests: numberOfGuests,
+                  }),
+                });
+              })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((errorData) => {
+                    console.error("Error response:", errorData);
+                    throw new Error(
+                      `Failed to create reservation. Status: ${response.status}`
+                    );
+                  });
+                }
+                return response.json();
+              })
+              .then((reservationData) => {
                 console.log(
                   "Reservation created successfully with ID:",
-                  data.id
+                  reservationData.id
                 );
                 alert("Reservation created successfully!");
               })
               .catch((error) => {
-                console.error("Error creating reservation:", error.message);
+                console.error("Error:", error.message);
                 alert("Error: " + error.message);
               });
           });
       });
     </script>
+
+    <!-- SCRIPT FOR FETCHING TABLES -->
+    <!-- <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.getElementById("date");
+        const timeInput = document.getElementById("time");
+        const tableSelect = document.getElementById("table_number");
+
+        function fetchAvailableTables(date, time) {
+          const dateTime = `${date} ${time}`;
+          const availableTablesEndpointUrl = `https://grublanerestaurant.com/api/reservations/available-tables?date_time=${encodeURIComponent(
+            dateTime
+          )}`;
+
+          fetch(availableTablesEndpointUrl)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to fetch available tables.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const availableTables = data.available_tables;
+              tableSelect.innerHTML = ""; // Clear the previous options
+              availableTables.forEach((table) => {
+                const option = document.createElement("option");
+                option.value = table.table_number;
+                option.textContent = `Table ${table.table_number}`;
+                tableSelect.appendChild(option);
+              });
+            })
+            .catch((error) => {
+              console.error("Error:", error.message);
+              alert("Error: " + error.message);
+            });
+        }
+
+        // Trigger fetchAvailableTables when date or time changes
+        dateInput.addEventListener("change", () => {
+          if (dateInput.value && timeInput.value) {
+            fetchAvailableTables(dateInput.value, timeInput.value);
+          }
+        });
+
+        timeInput.addEventListener("change", () => {
+          if (dateInput.value && timeInput.value) {
+            fetchAvailableTables(dateInput.value, timeInput.value);
+          }
+        });
+      });
+    </script> -->
+
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"

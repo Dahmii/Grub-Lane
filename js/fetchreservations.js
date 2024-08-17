@@ -1,20 +1,11 @@
 // Function to create a reservation
-function createReservation(
-  name,
-  date,
-  time,
-  phoneNumber,
-  email,
-  numberOfGuests
-) {
+function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
   const endpointUrl = `https://grublanerestaurant.com/api/reservations`;
   const reservationData = {
-    name: name,
-    date: date,
-    time: time,
-    phone_number: phoneNumber,
-    email: email,
+    user_id: userId,
     number_of_guests: numberOfGuests,
+    date_time: dateTime,
+    table_number: tableNumber, // Include table_number in the request
   };
 
   fetch(endpointUrl, {
@@ -35,17 +26,29 @@ function createReservation(
     })
     .then((data) => {
       console.log("Reservation created successfully with ID:", data.id);
-      alert("Reservation created successfully!");
     })
     .catch((error) => {
       console.error("Error creating reservation:", error.message);
-      alert("Error: " + error.message);
     });
 }
 
-// Function to fetch all reservations
+// Form submission handler
+document
+  .getElementById("createReservationForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const userId = document.getElementById("user_id").value;
+    const numberOfGuests = document.getElementById("number_of_guests").value;
+    const dateTime = document.getElementById("date_time").value;
+    const tableNumber = document.getElementById("table_number").value; // Capture the table number
+
+    createReservation(userId, numberOfGuests, dateTime, tableNumber);
+  });
+
+// Function to fetch all reservations (if needed)
 function fetchAllReservations() {
-  const endpointUrl = `https://grublanerestaurant.com:3000/reservations`;
+  const endpointUrl = `https://grublanerestaurant.com/api/reservations`;
 
   fetch(endpointUrl)
     .then((response) => {
@@ -64,23 +67,6 @@ function fetchAllReservations() {
     });
 }
 
-// Event listener for form submission
-document
-  .getElementById("createReservationForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const name = document.getElementById("name").value;
-    const date = document.getElementById("date").value;
-    const time = document.getElementById("time").value;
-    const phoneNumber = document.getElementById("phone_number").value;
-    const email = document.getElementById("email").value;
-    const numberOfGuests = document.getElementById("number_of_guests").value;
-
-    createReservation(name, date, time, phoneNumber, email, numberOfGuests);
-  });
-
-// Fetch all reservations on page load
 document.addEventListener("DOMContentLoaded", function () {
   fetchAllReservations();
 });
