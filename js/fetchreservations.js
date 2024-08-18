@@ -1,15 +1,13 @@
-// Function to create a reservation
 function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
   const endpointUrl = `https://grublanerestaurant.com/api/reservations`;
   const reservationData = {
     user_id: userId,
     number_of_guests: numberOfGuests,
     date_time: dateTime,
-    table_number: tableNumber, // Include table_number in the request
+    table_number: tableNumber,
   };
-  console.log(reservationData);
 
-  fetch(endpointUrl, {
+  return fetch(endpointUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,11 +23,9 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
         throw new Error("Failed to create reservation.");
       }
     })
-    .then((data) => {
-      console.log("Reservation created successfully with ID:", data.id);
-    })
     .catch((error) => {
       console.error("Error creating reservation:", error.message);
+      return null; 
     });
 }
 

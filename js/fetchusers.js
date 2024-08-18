@@ -7,7 +7,7 @@ function createUser(email, name, address = "", phoneNumber = "") {
     phone_number: phoneNumber,
   };
 
-  fetch(endpointUrl, {
+  return fetch(endpointUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,13 +23,13 @@ function createUser(email, name, address = "", phoneNumber = "") {
         throw new Error("Failed to create user.");
       }
     })
-    .then((data) => {
-      console.log("User created successfully with ID:", data.id);
-    })
     .catch((error) => {
       console.error("Error creating user:", error.message);
+      throw error;
     });
 }
+
+
 function fetchAllUsers() {
   const endpointUrl = `https://grublanerestaurant.com/api/users`;
 

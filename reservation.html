@@ -102,6 +102,7 @@
             <input type="number" id="number_of_guests" placeholder="Number of Guests" min="1" required />
             <input type="hidden" id="user_id" />
             <input type="hidden" id="date_time" />
+            <input type="hidden" id="table_number" value="1" />
             <input type="submit" value="BOOK TABLE" />
           </div>
         </form>
@@ -153,17 +154,23 @@
         const name = document.getElementById("name").value;
         const phoneNumber = document.getElementById("phone_number").value;
         const email = document.getElementById("email").value;
+        const tableNumber =1;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+        const numberOfGuests = document.getElementById("number_of_guests").value;
+        const dateTime = `${date} ${time}:00`;
 
         createUser(email, name, "", phoneNumber)
           .then((data) => {
             const userId = data.id;
-            const tableNumber = 1;
-            const date = document.getElementById("date").value;
-            const time = document.getElementById("time").value;
-            const numberOfGuests = document.getElementById("number_of_guests").value;
-            const dateTime = `${date} ${time}:00`;
             document.getElementById("date_time").value = dateTime;
-            createReservation(userId, numberOfGuests, dateTime, tableNumber);
+            document.getElementById("user_id").value = userId;
+
+            return createReservation(userId, numberOfGuests, dateTime, tableNumber);
+          })
+          .then((data) => {
+            console.log("Reservation created successfully with ID:", data.id);
+            alert("Reservation created successfully!");
           })
           .catch((error) => {
             console.error("Error:", error.message);
