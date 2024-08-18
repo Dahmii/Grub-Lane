@@ -5,9 +5,7 @@ const databasePath = process.env.DATABASE_PATH;
 
 router.post("/", (req, res) => {
   const { user_id, number_of_guests, date_time } = req.body;
-
-  // Adding a placeholder for table_number
-  const table_number = 0; // Use a placeholder value
+  const table_number = 0;
 
   if (!user_id || !number_of_guests || !date_time) {
     return res.status(400).json({
@@ -30,7 +28,6 @@ router.post("/", (req, res) => {
       });
     }
 
-    // Insert the new reservation with placeholder table_number
     let insertSql = `INSERT INTO Reservations (user_id, table_number, number_of_guests, date_time) VALUES (?, ?, ?, ?)`;
     db.run(
       insertSql,
@@ -51,6 +48,43 @@ router.post("/", (req, res) => {
         console.error("Error closing database connection:", err.message);
       }
     });
+  });
+});
+
+router.get("/", (req, res) => {
+  const { user_id, date_time, table_number } = req.query;
+  
+  let db = new sqlite3.Database(databasePath);
+  let querySql = "SELECT * FROM Reservations WHERE 1=1";
+  let params = [];
+
+  if (user_id) {
+    querySql += " AND user_id = ?";
+    params.push(user_id);
+  }
+
+  if (date_time) {
+    querySql += " AND date_time = ?";
+    params.push(date_time);
+  }
+
+  if (table_number) {
+    querySql += " AND table_number = ?";
+    params.push(table_number);
+  }
+
+  db.all(querySql, params, (err, rows) => {
+    if (err) {
+      console.error("Error fetching reservations:", err.message);
+      return res.status(500).json({ error: "Internal server error." });
+    }
+    res.status(200).json(rows);
+  });
+
+  db.close((err) => {
+    if (err) {
+      console.error("Error closing database connection:", err.message);
+    }
   });
 });
 
