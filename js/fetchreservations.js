@@ -7,6 +7,7 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
     date_time: dateTime,
     table_number: tableNumber, // Include table_number in the request
   };
+  console.log(reservationData);
 
   fetch(endpointUrl, {
     method: "POST",

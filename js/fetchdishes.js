@@ -1,6 +1,6 @@
 function fetchMenuData(menuType) {
   const takeOut = menuType === "dine_in" ? "false" : "true";
-  const endpointUrl = `https  ://grublanerestaurant.com:3000/dish/getDishes?take_out=${takeOut}`;
+  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
 
   fetch(endpointUrl)
     .then((response) => {
