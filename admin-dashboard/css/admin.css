@@ -1,0 +1,363 @@
+/* GENERAL BODY STYLES */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* LOGIN PAGE STYLES */
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.login-container .form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.login-container .form-control {
+  height: 45px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.login-container .btn {
+  height: 45px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.login-container .btn-block {
+  width: 100%;
+}
+
+.error-message {
+  margin-top: 15px;
+  color: #ff4d4d;
+  font-size: 14px;
+}
+
+/* ADMIN OVERVIEW */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.card-text {
+  font-size: 16px;
+  color: #555;
+}
+
+/* ADMIN DASHBOARD */
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+#sidebar {
+  width: 250px;
+  background: #343a40;
+  color: #fff;
+  transition: all 0.3s;
+  position: fixed;
+  height: 100%;
+  padding-top: 60px;
+  z-index: 1000;
+}
+
+#sidebar.active {
+  width: 80px; /* Shrink the sidebar to show just the icons */
+}
+
+#sidebar .sidebar-header {
+  padding: 20px;
+  background: #343a40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #47748b;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#sidebar.active .sidebar-header h3 {
+  display: none; /* Hide the full title when collapsed */
+}
+
+#sidebar.active .hamburger-menu {
+  justify-content: center; /* Center the hamburger icon in collapsed state */
+}
+
+.hamburger-menu {
+  display: block;
+  cursor: pointer;
+}
+
+#sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul li {
+  padding: 10px;
+  font-size: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+}
+
+#sidebar ul li a i {
+  margin-right: 10px;
+  min-width: 30px;
+  text-align: center;
+}
+
+#sidebar.active ul li a span {
+  display: none; /* Hide the text in collapsed state */
+}
+
+#sidebar ul li a:hover {
+  color: #7386d5;
+  background: #fff;
+}
+
+#content {
+  width: calc(100% - 250px);
+  padding: 20px;
+  min-height: 100vh;
+  transition: all 0.3s;
+  margin-left: 250px;
+}
+
+#content.active {
+  width: calc(
+    100% - 80px
+  ); /* Adjust the content width when sidebar is collapsed */
+  margin-left: 80px;
+}
+
+#content .navbar {
+  padding: 10px 15px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+#content .dashboard-title {
+  margin-left: 20px;
+  font-weight: 600;
+}
+
+.content-area {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-controls .form-control {
+  width: auto;
+}
+
+.table-responsive {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+}
+
+.table td {
+  background-color: #fff;
+  color: #555;
+}
+
+.table .text-center {
+  text-align: center;
+}
+
+/* Navbar Icons Styles */
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Align icons to the right */
+}
+
+.navbar-icons .nav-link {
+  margin-left: 20px;
+  color: #343a40;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-icons .nav-link i {
+  margin-right: 8px;
+}
+
+.navbar-icons .dropdown .nav-link {
+  display: flex;
+  align-items: center;
+  color: #343a40;
+}
+
+.navbar-icons .dropdown-menu {
+  min-width: 180px;
+  right: 0;
+  left: auto;
+}
+
+.navbar-icons .dropdown-menu a {
+  color: #343a40;
+}
+
+.navbar-icons .dropdown-menu a:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+.navbar-icons .nav-link:hover {
+  color: #007bff;
+}
+
+.container-fluid.d-flex {
+  display: flex;
+  justify-content: space-between; /* Ensure space between title and icons */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: 0;
+    width: 80px; /* Collapse sidebar to show just icons */
+  }
+
+  #sidebar .sidebar-header h3 {
+    display: none; /* Hide the Admin text */
+  }
+
+  .components span {
+    display: none;
+  }
+
+  #sidebar .sidebar-header .hamburger-menu:before {
+    font-family: "FontAwesome";
+    font-size: 24px;
+    color: #fff;
+  }
+
+  #sidebar ul li a span {
+    display: none; /* Hide text in sidebar list items */
+  }
+
+  #content {
+    width: calc(100% - 80px);
+    margin-left: 80px;
+  }
+
+  .content-area {
+    padding: 10px;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-controls .form-control,
+  .dashboard-controls .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .table-responsive {
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 10px;
+    text-align: center; /* Center-align text */
+  }
+}
