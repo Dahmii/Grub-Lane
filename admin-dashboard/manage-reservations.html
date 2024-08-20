@@ -86,25 +86,22 @@
                                 <th class="text-center">Name</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Time</th>
-                                <th class="text-center">Number of Guest</th>
+                                <th class="text-center">Number of Guests</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Example rows (will be populated dynamically) -->
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td class="text-center">John Doe</td>
-                                <td class="text-center">2024-08-18</td>
-                                <td class="text-center">19:00</td>
-                                <td class="text-center">2</td>
-                                <td class="text-center">Confirmed</td>
-                                <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
-                            </tr>
-                            <!-- More rows here -->
+                        <tbody id="reservation-table-body">
+                            <!-- Rows will be populated dynamically -->
                         </tbody>
                     </table>
+
+                    <!-- Pagination controls -->
+                    <div class="pagination-controls">
+                        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-btn" class="btn btn-secondary">Next</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,6 +111,7 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/admin.js"></script>
+    <script src="../js/fetchreservations.js"></script>
 </body>
 
 </html>
