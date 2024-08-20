@@ -40,8 +40,11 @@ function createOrder(
     });
 }
 
-function fetchAllOrders() {
-  const endpointUrl = `https://grublanerestaurant.com/api/orders`;
+let currentPage = 1;
+const rowsPerPage = 10;
+
+function fetchAllOrders(page = 1) {
+  const endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
 
   fetch(endpointUrl)
     .then((response) => {
@@ -52,38 +55,66 @@ function fetchAllOrders() {
       }
     })
     .then((data) => {
-      const orders = data.orders;
-      console.log("Fetched orders:", orders);
-      // Optionally, render orders to the DOM
+      console.log("API Response:", data);
+
+      // Assuming the response is an array of orders
+      const orders = data.orders || data;
+      const totalPages = Math.ceil(data.totalCount / rowsPerPage);
+
+      populateTable(orders);
+      updatePaginationControls(page, totalPages);
     })
     .catch((error) => {
       console.error("Error fetching orders:", error.message);
     });
 }
 
-document
-  .getElementById("createOrderForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
+function populateTable(orders) {
+  const tableBody = document.getElementById("order-table-body");
+  tableBody.innerHTML = ""; // Clear existing rows
 
-    const userId = document.getElementById("user_id").value;
-    const amountPaid = document.getElementById("amount_paid").value;
-    const orderNumber = document.getElementById("order_number").value;
-    const date = document.getElementById("date").value;
-    const paystackReference =
-      document.getElementById("paystack_reference").value;
-    const orderDetails = document.getElementById("order_details").value;
+  if (orders.length === 0) {
+    tableBody.innerHTML =
+      "<tr><td colspan='6' class='text-center'>No orders found.</td></tr>";
+  } else {
+    orders.forEach((order) => {
+      const row = `
+                <tr>
+                    <td class="text-center">${order.id}</td>
+                    <td class="text-center">${order.user_id}</td>
+                    <td class="text-center">${new Date(
+                      order.date
+                    ).toLocaleDateString()}</td>
+                    <td class="text-center">${order.order_details}</td>
+                    <td class="text-center">${
+                      order.status || "In Progress"
+                    }</td>
+                    <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
+                </tr>
+            `;
+      tableBody.insertAdjacentHTML("beforeend", row);
+    });
+  }
+}
 
-    createOrder(
-      userId,
-      amountPaid,
-      orderNumber,
-      date,
-      paystackReference,
-      orderDetails
-    );
-  });
+function updatePaginationControls(currentPage, totalPages) {
+  document.getElementById("page-info").textContent = `Page ${currentPage}`;
+  document.getElementById("prev-btn").disabled = currentPage === 1;
+  document.getElementById("next-btn").disabled = currentPage === totalPages;
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   fetchAllOrders();
+
+  document.getElementById("prev-btn").addEventListener("click", function () {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchAllOrders(currentPage);
+    }
+  });
+
+  document.getElementById("next-btn").addEventListener("click", function () {
+    currentPage++;
+    fetchAllOrders(currentPage);
+  });
 });

@@ -17,13 +17,13 @@
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>Admin Dashboard</h3>
+                <h3>Welcome</h3>
                 <div class="hamburger-menu">
                     <i class="fas fa-bars" id="sidebarCollapse"></i>
                 </div>
             </div>
             <ul class="list-unstyled components">
-                <li class="active">
+                <li>
                     <a href="index.html"><i class="fas fa-tachometer-alt"></i> <span>Home</span></a>
                 </li>
                 <li>
@@ -91,28 +91,26 @@
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Example rows (will be populated dynamically) -->
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td class="text-center">Jane Doe</td>
-                                <td class="text-center">2024-08-18</td>
-                                <td class="text-center">Pizza, Salad</td>
-                                <td class="text-center">In Progress</td>
-                                <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
-                            </tr>
-                            <!-- More rows here -->
+                        <tbody id="order-table-body">
+                            <!-- Rows will be populated dynamically -->
                         </tbody>
                     </table>
+
+                    <!-- Pagination controls -->
+                    <div class="pagination-controls">
+                        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-btn" class="btn btn-secondary">Next</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>t
+    <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/admin.js"></script>
+    <script src="../js/fetchorder.js"></script>
 </body>
 
 </html>
