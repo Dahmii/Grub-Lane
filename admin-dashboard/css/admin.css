@@ -1,66 +1,12 @@
 /* GENERAL BODY STYLES */
 body {
+  box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
   height: 100vh;
   overflow-x: hidden;
-}
-
-/* LOGIN PAGE STYLES */
-.container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f4f4f4;
-}
-
-.login-container {
-  width: 100%;
-  max-width: 400px;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.login-container h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: 600;
-  color: #343a40;
-}
-
-.login-container .form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.login-container .form-control {
-  height: 45px;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.login-container .btn {
-  height: 45px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 4px;
-}
-
-.login-container .btn-block {
-  width: 100%;
-}
-
-.error-message {
-  margin-top: 15px;
-  color: #ff4d4d;
   font-size: 14px;
 }
 
@@ -93,21 +39,53 @@ body {
   align-items: stretch;
 }
 
+/* Hamburger Menu */
+.hamburger-menu {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  cursor: pointer;
+}
+
+.hamburger-active {
+  color: white;
+}
+
+@media (min-width: 769px) {
+  .hamburger-menu {
+    display: none;
+  }
+}
+
+/* Sidebar */
 #sidebar {
+  position: fixed;
+  z-index: 1001;
+  margin-left: 0;
   width: 250px;
   background: #343a40;
   color: #fff;
-  transition: all 0.3s;
-  position: fixed;
+  transition: margin-left 0.3s ease, width 0.3s ease;
   height: 100%;
   padding-top: 60px;
-  z-index: 1000;
 }
 
 #sidebar.active {
-  width: 80px; /* Shrink the sidebar to show just the icons */
+  margin-left: 0;
 }
 
+#content {
+  width: calc(100% - 250px);
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+#content.active {
+  margin-left: 250px;
+}
+
+/* Sidebar Header */
 #sidebar .sidebar-header {
   padding: 20px;
   background: #343a40;
@@ -120,18 +98,10 @@ body {
 }
 
 #sidebar.active .sidebar-header h3 {
-  display: none; /* Hide the full title when collapsed */
+  display: none;
 }
 
-#sidebar.active .hamburger-menu {
-  justify-content: center; /* Center the hamburger icon in collapsed state */
-}
-
-.hamburger-menu {
-  display: block;
-  cursor: pointer;
-}
-
+/* Sidebar Links */
 #sidebar ul.components {
   padding: 20px 0;
   border-bottom: 1px solid #47748b;
@@ -159,7 +129,7 @@ body {
 }
 
 #sidebar.active ul li a span {
-  display: none; /* Hide the text in collapsed state */
+  display: none;
 }
 
 #sidebar ul li a:hover {
@@ -167,21 +137,7 @@ body {
   background: #fff;
 }
 
-#content {
-  width: calc(100% - 250px);
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3s;
-  margin-left: 250px;
-}
-
-#content.active {
-  width: calc(
-    100% - 80px
-  ); /* Adjust the content width when sidebar is collapsed */
-  margin-left: 80px;
-}
-
+/* Content Area */
 #content .navbar {
   padding: 10px 15px;
   background: #fff;
@@ -256,15 +212,16 @@ body {
 .navbar-icons {
   display: flex;
   align-items: center;
-  margin-left: auto; /* Align icons to the right */
+  margin-left: auto;
 }
 
 .navbar-icons .nav-link {
-  margin-left: 20px;
+  margin-left: 15px;
   color: #343a40;
   font-size: 16px;
   display: flex;
   align-items: center;
+  padding: 5px 10px;
 }
 
 .navbar-icons .nav-link i {
@@ -298,7 +255,7 @@ body {
 
 .container-fluid.d-flex {
   display: flex;
-  justify-content: space-between; /* Ensure space between title and icons */
+  justify-content: space-between;
   padding-left: 0;
   padding-right: 0;
 }
@@ -306,42 +263,41 @@ body {
 /* Media Queries */
 @media (max-width: 768px) {
   #sidebar {
+    margin-left: -60px;
+    width: 60px;
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  }
+
+  #sidebar.active {
     margin-left: 0;
-    width: 80px; /* Collapse sidebar to show just icons */
   }
 
   #sidebar .sidebar-header h3 {
-    display: none; /* Hide the Admin text */
+    display: none;
   }
 
   .components span {
     display: none;
   }
 
-  #sidebar .sidebar-header .hamburger-menu:before {
-    font-family: "FontAwesome";
-    font-size: 24px;
-    color: #fff;
-  }
-
-  #sidebar ul li a span {
-    display: none; /* Hide text in sidebar list items */
-  }
-
   #content {
-    width: calc(100% - 80px);
-    margin-left: 80px;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  #content.active {
+    margin-left: 60px;
   }
 
   .content-area {
-    padding: 10px;
-    margin: 0;
+    padding: 15px;
     box-shadow: none;
   }
 
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
   }
 
   .dashboard-controls .form-control,
@@ -351,13 +307,14 @@ body {
   }
 
   .table-responsive {
-    margin-top: 20px;
+    margin-top: 10px;
     overflow-x: auto;
   }
 
   .table th,
   .table td {
     padding: 8px 10px;
-    text-align: center; /* Center-align text */
+    font-size: 14px;
+    text-align: center;
   }
 }

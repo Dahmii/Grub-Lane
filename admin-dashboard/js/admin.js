@@ -1,14 +1,14 @@
-
 $(document).ready(function () {
-  // Sidebar toggle functionality
-  $("#sidebarCollapse").on("click", function () {
-    $("#sidebar").toggleClass("active");
-    $("#content").toggleClass("active");
-  });
+  // Remove all previous click handlers
+  $("#sidebarCollapse").off("click");
 
-  // Ensure the sidebar can be toggled on mobile devices
-  $(".hamburger-menu").on("click", function () {
+  // Attach the click handler to toggle the sidebar and change the icon color
+  $("#sidebarCollapse").on("click", function () {
+    console.log("Sidebar toggle clicked");
     $("#sidebar").toggleClass("active");
     $("#content").toggleClass("active");
+
+    // Toggle the color of the hamburger menu icon
+    $(this).toggleClass("hamburger-active");
   });
 });
