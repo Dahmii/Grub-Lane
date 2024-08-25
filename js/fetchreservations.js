@@ -29,48 +29,13 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
     });
 }
 
-// Form submission handler
-document.addEventListener("DOMContentLoaded", function () {
-  const createReservationForm = document.getElementById(
-    "createReservationForm"
-  );
-  if (createReservationForm) {
-    createReservationForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const userId = document.getElementById("user_id").value;
-      const numberOfGuests = document.getElementById("number_of_guests").value;
-      const dateTime = document.getElementById("date_time").value;
-      const tableNumber = document.getElementById("table_number").value; // Capture the table number
-
-      createReservation(userId, numberOfGuests, dateTime, tableNumber);
-    });
-  }
-
-  // Initialize reservation table on page load
-  fetchAllReservations();
-
-  // Pagination controls
-  document.getElementById("prev-btn").addEventListener("click", function () {
-    if (currentPage > 1) {
-      currentPage--;
-      fetchAllReservations(currentPage);
-    }
-  });
-
-  document.getElementById("next-btn").addEventListener("click", function () {
-    currentPage++;
-    fetchAllReservations(currentPage);
-  });
-});
-
 let currentPage = 1;
 const rowsPerPage = 10;
 
 function fetchAllReservations(page = 1) {
   const endpointUrl = `https://grublanerestaurant.com/api/reservations?page=${page}&limit=${rowsPerPage}`;
 
-  fetch(endpointUrl)
+  return fetch(endpointUrl)
     .then((response) => {
       if (response.status === 200) {
         return response.json();
@@ -81,17 +46,12 @@ function fetchAllReservations(page = 1) {
     .then((data) => {
       console.log("API Response:", data);
 
-      // Since the response is an array, assign it directly to reservations
-      const reservations = data;
-
-      // If your API does not provide a total count for pagination, we'll assume only one page
-      const totalPages = Math.ceil(reservations.length / rowsPerPage);
-
-      populateTable(reservations);
-      updatePaginationControls(page, totalPages);
+      // Assuming data is an array of reservations
+      return data;
     })
     .catch((error) => {
       console.error("Error fetching reservations:", error.message);
+      return []; // Return an empty array in case of error
     });
 }
 
@@ -134,17 +94,30 @@ function updatePaginationControls(currentPage, totalPages) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetchAllReservations();
+  // Fetch and display the first page of reservations when the page loads
+  fetchAllReservations(currentPage).then((reservations) => {
+    populateTable(reservations);
+    const totalPages = Math.ceil(reservations.length / rowsPerPage);
+    updatePaginationControls(currentPage, totalPages);
+  });
 
   document.getElementById("prev-btn").addEventListener("click", function () {
     if (currentPage > 1) {
       currentPage--;
-      fetchAllReservations(currentPage);
+      fetchAllReservations(currentPage).then((reservations) => {
+        populateTable(reservations);
+        const totalPages = Math.ceil(reservations.length / rowsPerPage);
+        updatePaginationControls(currentPage, totalPages);
+      });
     }
   });
 
   document.getElementById("next-btn").addEventListener("click", function () {
     currentPage++;
-    fetchAllReservations(currentPage);
+    fetchAllReservations(currentPage).then((reservations) => {
+      populateTable(reservations);
+      const totalPages = Math.ceil(reservations.length / rowsPerPage);
+      updatePaginationControls(currentPage, totalPages);
+    });
   });
 });

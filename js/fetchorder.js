@@ -16,7 +16,7 @@ function createOrder(
     order_details: orderDetails,
   };
 
-  fetch(endpointUrl, {
+  return fetch(endpointUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -46,7 +46,7 @@ const rowsPerPage = 10;
 function fetchAllOrders(page = 1) {
   const endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
 
-  fetch(endpointUrl)
+  return fetch(endpointUrl)
     .then((response) => {
       if (response.status === 200) {
         return response.json();
@@ -59,13 +59,11 @@ function fetchAllOrders(page = 1) {
 
       // Assuming the response is an array of orders
       const orders = data.orders || data;
-      const totalPages = Math.ceil(data.totalCount / rowsPerPage);
-
-      populateTable(orders);
-      updatePaginationControls(page, totalPages);
+      return orders;
     })
     .catch((error) => {
       console.error("Error fetching orders:", error.message);
+      return []; // Return an empty array in case of error
     });
 }
 
@@ -104,17 +102,30 @@ function updatePaginationControls(currentPage, totalPages) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetchAllOrders();
+  // Fetch and display the first page of orders when the page loads
+  fetchAllOrders(currentPage).then((orders) => {
+    populateTable(orders);
+    const totalPages = Math.ceil(orders.length / rowsPerPage);
+    updatePaginationControls(currentPage, totalPages);
+  });
 
   document.getElementById("prev-btn").addEventListener("click", function () {
     if (currentPage > 1) {
       currentPage--;
-      fetchAllOrders(currentPage);
+      fetchAllOrders(currentPage).then((orders) => {
+        populateTable(orders);
+        const totalPages = Math.ceil(orders.length / rowsPerPage);
+        updatePaginationControls(currentPage, totalPages);
+      });
     }
   });
 
   document.getElementById("next-btn").addEventListener("click", function () {
     currentPage++;
-    fetchAllOrders(currentPage);
+    fetchAllOrders(currentPage).then((orders) => {
+      populateTable(orders);
+      const totalPages = Math.ceil(orders.length / rowsPerPage);
+      updatePaginationControls(currentPage, totalPages);
+    });
   });
 });

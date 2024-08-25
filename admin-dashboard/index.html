@@ -98,36 +98,71 @@
             <div class="row">
               <!-- Reservations Overview -->
               <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Reservations</h5>
-                    <p class="card-text" id="reservations-overview">
-                      <!-- Data will be populated dynamically -->
-                    </p>
+                <a href="manage-reservations.html">
+                  <div id="reservations-card" class="card">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                        <div class="ml-3">
+                          <h5 class="card-title">Reservations</h5>
+                          <p class="card-text" id="reservations-overview">0</p>
+                          <span
+                            id="reservations-new"
+                            class="badge badge-danger"
+                            style="display: none"
+                            >New</span
+                          >
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
               <!-- Orders Overview -->
               <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Orders Processed</h5>
-                    <p class="card-text" id="orders-overview">
-                      <!-- Data will be populated dynamically -->
-                    </p>
+                <a href="manage-takeout.html">
+                  <div id="orders-card" class="card">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-box fa-3x text-success"></i>
+                        <div class="ml-3">
+                          <h5 class="card-title">Orders Processed</h5>
+                          <p class="card-text" id="orders-overview">0</p>
+                          <span
+                            id="orders-new"
+                            class="badge badge-danger"
+                            style="display: none"
+                            >New</span
+                          >
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
               <!-- Payments Overview -->
               <div class="col-md-4">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Payments/Revenue</h5>
-                    <p class="card-text" id="payments-overview">
-                      <!-- Data will be populated dynamically -->
-                    </p>
+                <a href="manage-payments.html">
+                  <div id="payments-card" class="card">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center">
+                        <i
+                          class="fas fa-money-check-alt fa-3x text-warning"
+                        ></i>
+                        <div class="ml-3">
+                          <h5 class="card-title">Payments/Revenue</h5>
+                          <p class="card-text" id="payments-overview">0</p>
+                          <span
+                            id="payments-new"
+                            class="badge badge-danger"
+                            style="display: none"
+                            >New</span
+                          >
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
             <!-- Additional rows and cards can be added here -->
@@ -140,5 +175,147 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/admin.js"></script>
+    <script src="../js/fetchreservations.js"></script>
+    <script src="../js/fetchorder.js"></script>
+    <script>
+      let lastReservationCount = 0;
+      let lastOrderCount = 0;
+      let lastPaymentCount = 0;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        updateDashboardCounts();
+        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
+
+        // Add click event listeners to clear "new" notifications
+        document
+          .getElementById("reservations-card")
+          .addEventListener("click", function () {
+            localStorage.setItem("viewedReservations", true);
+            checkViewedStatus();
+          });
+
+        document
+          .getElementById("orders-card")
+          .addEventListener("click", function () {
+            localStorage.setItem("viewedOrders", true);
+            checkViewedStatus();
+          });
+
+        document
+          .getElementById("payments-card")
+          .addEventListener("click", function () {
+            localStorage.setItem("viewedPayments", true);
+            checkViewedStatus();
+          });
+
+        // Ensure the notifications are cleared based on viewing status
+        checkViewedStatus();
+      });
+
+      function updateDashboardCounts() {
+        // Update Reservations Count
+        fetchAllReservations(1).then((reservations) => {
+          const totalReservations = reservations.length || 0;
+
+          document.getElementById("reservations-overview").textContent =
+            totalReservations;
+
+          if (
+            totalReservations > lastReservationCount &&
+            !localStorage.getItem("viewedReservations")
+          ) {
+            document.getElementById("reservations-new").style.display =
+              "inline";
+          } else {
+            document.getElementById("reservations-new").style.display = "none";
+          }
+
+          lastReservationCount = totalReservations;
+        });
+
+        // Update Orders Count
+        fetchAllOrders(1).then((orders) => {
+          const totalOrders = orders.length || 0;
+
+          document.getElementById("orders-overview").textContent = totalOrders;
+
+          if (
+            totalOrders > lastOrderCount &&
+            !localStorage.getItem("viewedOrders")
+          ) {
+            document.getElementById("orders-new").style.display = "inline";
+          } else {
+            document.getElementById("orders-new").style.display = "none";
+          }
+
+          lastOrderCount = totalOrders;
+        });
+
+        // Update Payments Count
+        fetchAllOrders(1).then((orders) => {
+          const totalRevenue =
+            orders.reduce((sum, order) => sum + order.amount_paid, 0) || 0;
+
+          document.getElementById(
+            "payments-overview"
+          ).textContent = `$${totalRevenue.toFixed(2)}`;
+
+          if (
+            totalRevenue > lastPaymentCount &&
+            !localStorage.getItem("viewedPayments")
+          ) {
+            document.getElementById("payments-new").style.display = "inline";
+          } else {
+            document.getElementById("payments-new").style.display = "none";
+          }
+
+          lastPaymentCount = totalRevenue;
+        });
+      }
+
+      function checkViewedStatus() {
+        if (localStorage.getItem("viewedReservations")) {
+          document.getElementById("reservations-new").style.display = "none";
+        }
+
+        if (localStorage.getItem("viewedOrders")) {
+          document.getElementById("orders-new").style.display = "none";
+        }
+
+        if (localStorage.getItem("viewedPayments")) {
+          document.getElementById("payments-new").style.display = "none";
+        }
+      }
+
+      function isNewReservation(reservation) {
+        const today = new Date();
+        const reservationDate = new Date(reservation.date_time);
+        return (
+          reservationDate.getDate() === today.getDate() &&
+          reservationDate.getMonth() === today.getMonth() &&
+          reservationDate.getFullYear() === today.getFullYear()
+        );
+      }
+
+      function isNewOrder(order) {
+        const today = new Date();
+        const orderDate = new Date(order.date);
+        return (
+          orderDate.getDate() === today.getDate() &&
+          orderDate.getMonth() === today.getMonth() &&
+          orderDate.getFullYear() === today.getFullYear()
+        );
+      }
+
+      function isNewPayment(order) {
+        const today = new Date();
+        const paymentDate = new Date(order.date);
+        return (
+          paymentDate.getDate() === today.getDate() &&
+          paymentDate.getMonth() === today.getMonth() &&
+          paymentDate.getFullYear() === today.getFullYear()
+        );
+      }
+    </script>
   </body>
 </html>

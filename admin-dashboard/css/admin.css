@@ -318,3 +318,13 @@ body {
     text-align: center;
   }
 }
+
+a .card-body {
+  text-decoration: none;
+  outline: none;
+  color: #333;
+}
+
+a:hover .card-body {
+  text-decoration: none;
+}
