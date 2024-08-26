@@ -71,7 +71,7 @@ function populateTable(reservations) {
       const row = `
                 <tr>
                     <td class="text-center">${reservation.id}</td>
-                    <td class="text-center">${reservation.user_id}</td>
+                    <td class="text-center">${reservation.user_name}</td>
                     <td class="text-center">${new Date(
                       reservation.date_time
                     ).toLocaleDateString()}</td>
@@ -82,15 +82,17 @@ function populateTable(reservations) {
                       minute: "2-digit",
                     })}</td>
                     <td class="text-center">${reservation.number_of_guests}</td>
-                    <td class="text-center">${reservation.user_name}</td>
-                    <td class="text-center">${reservation.user_email}</td>
-                    <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
+                    <td class="text-center">Confirmed</td>
+                    <td class="text-center">
+                        <button class="btn btn-info btn-sm">View</button>
+                    </td>
                 </tr>
             `;
       tableBody.insertAdjacentHTML("beforeend", row);
     });
   }
 }
+
 
 
 function updatePaginationControls() {
