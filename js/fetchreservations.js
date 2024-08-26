@@ -30,10 +30,12 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
 }
 
 let currentPage = 1;
+let nextUrl = null;
+let prevUrl = null;
 const rowsPerPage = 10;
 
-function fetchAllReservations(page = 1) {
-  const endpointUrl = `https://grublanerestaurant.com/api/reservations?page=${page}&limit=${rowsPerPage}`;
+function fetchAllReservations(url = null) {
+  const endpointUrl = url || `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
   return fetch(endpointUrl)
     .then((response) => {
@@ -46,18 +48,20 @@ function fetchAllReservations(page = 1) {
     .then((data) => {
       console.log("API Response:", data);
 
-      // Assuming data is an array of reservations
-      return data;
+      nextUrl = data.pagination.nextUrl;
+      prevUrl = data.pagination.prevUrl;
+
+      return data.users;
     })
     .catch((error) => {
       console.error("Error fetching reservations:", error.message);
-      return []; // Return an empty array in case of error
+      return [];
     });
 }
 
 function populateTable(reservations) {
   const tableBody = document.getElementById("reservation-table-body");
-  tableBody.innerHTML = ""; // Clear existing rows
+  tableBody.innerHTML = "";
 
   if (reservations.length === 0) {
     tableBody.innerHTML =
@@ -78,7 +82,7 @@ function populateTable(reservations) {
                       minute: "2-digit",
                     })}</td>
                     <td class="text-center">${reservation.number_of_guests}</td>
-                    <td class="text-center">Confirmed</td> <!-- Assuming status is always 'Confirmed' as it's not in the structure -->
+                    <td class="text-center">Confirmed</td>
                     <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
                 </tr>
             `;
@@ -87,37 +91,35 @@ function populateTable(reservations) {
   }
 }
 
-function updatePaginationControls(currentPage, totalPages) {
+function updatePaginationControls() {
   document.getElementById("page-info").textContent = `Page ${currentPage}`;
-  document.getElementById("prev-btn").disabled = currentPage === 1;
-  document.getElementById("next-btn").disabled = currentPage === totalPages;
+  document.getElementById("prev-btn").disabled = !prevUrl;
+  document.getElementById("next-btn").disabled = !nextUrl;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch and display the first page of reservations when the page loads
-  fetchAllReservations(currentPage).then((reservations) => {
+  fetchAllReservations().then((reservations) => {
     populateTable(reservations);
-    const totalPages = Math.ceil(reservations.length / rowsPerPage);
-    updatePaginationControls(currentPage, totalPages);
+    updatePaginationControls();
   });
 
   document.getElementById("prev-btn").addEventListener("click", function () {
-    if (currentPage > 1) {
+    if (prevUrl) {
       currentPage--;
-      fetchAllReservations(currentPage).then((reservations) => {
+      fetchAllReservations(prevUrl).then((reservations) => {
         populateTable(reservations);
-        const totalPages = Math.ceil(reservations.length / rowsPerPage);
-        updatePaginationControls(currentPage, totalPages);
+        updatePaginationControls();
       });
     }
   });
 
   document.getElementById("next-btn").addEventListener("click", function () {
-    currentPage++;
-    fetchAllReservations(currentPage).then((reservations) => {
-      populateTable(reservations);
-      const totalPages = Math.ceil(reservations.length / rowsPerPage);
-      updatePaginationControls(currentPage, totalPages);
-    });
+    if (nextUrl) {
+      currentPage++;
+      fetchAllReservations(nextUrl).then((reservations) => {
+        populateTable(reservations);
+        updatePaginationControls();
+      });
+    }
   });
 });

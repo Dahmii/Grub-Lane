@@ -74,27 +74,106 @@ router.post("/", (req, res) => {
  * @swagger
  * /users:
  *   get:
- *     description: Get all users
+ *     summary: Retrieve a paginated list of users
+ *     description: Get all users with pagination. You can specify the page number and page size.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number to retrieve.
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of users to retrieve per page.
  *     responses:
  *       200:
- *         description: List of users
+ *         description: A paginated list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                       phone:
+ *                         type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                     pageSize:
+ *                       type: integer
+ *                     nextUrl:
+ *                       type: string
+ *                       nullable: true
+ *                     prevUrl:
+ *                       type: string
+ *                       nullable: true
  *       400:
  *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
  */
 router.get("/", (req, res) => {
+  const { page = 1, pageSize = 10 } = req.query;
+
+  const limit = parseInt(pageSize);
+  const currentPage = parseInt(page);
+  const offset = (currentPage - 1) * limit;
+
   let db = new sqlite3.Database(databasePath);
-  let sql = `SELECT * FROM User`;
-  db.all(sql, [], (err, rows) => {
+  let sql = `SELECT * FROM User LIMIT ? OFFSET ?`;
+  let params = [limit, offset];
+
+  db.all(sql, params, (err, rows) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
-    res.status(200).json({ users: rows });
+
+    const nextPage = currentPage + 1;
+    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+    const nextUrl = rows.length < limit ? null : `${baseUrl}?page=${nextPage}&pageSize=${limit}`;
+    const prevUrl = prevPage ? `${baseUrl}?page=${prevPage}&pageSize=${limit}` : null;
+
+    res.status(200).json({
+      users: rows,
+      pagination: {
+        currentPage,
+        pageSize: limit,
+        nextUrl,
+        prevUrl
+      }
+    });
   });
+
   db.close((err) => {
     if (err) {
       console.error("Error closing database connection:", err.message);
     }
   });
 });
+
+
 
 module.exports = router;

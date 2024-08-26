@@ -52,33 +52,70 @@ router.post("/", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  const { user_id, date_time, table_number } = req.query;
-  
+  const { user_id, date_time, table_number, page = 1, pageSize = 10 } = req.query;
+
+  const limit = parseInt(pageSize);
+  const currentPage = parseInt(page);
+  const offset = (currentPage - 1) * limit;
+
   let db = new sqlite3.Database(databasePath);
-  let querySql = "SELECT * FROM Reservations WHERE 1=1";
+  let querySql = `
+    SELECT 
+      Reservations.*,
+      User.name AS user_name,
+      User.email AS user_email,
+      User.phone AS user_phone
+    FROM 
+      Reservations
+    JOIN 
+      User
+    ON 
+      Reservations.user_id = User.id
+    WHERE 
+      1=1
+  `;
   let params = [];
 
   if (user_id) {
-    querySql += " AND user_id = ?";
+    querySql += " AND Reservations.user_id = ?";
     params.push(user_id);
   }
 
   if (date_time) {
-    querySql += " AND date_time = ?";
+    querySql += " AND Reservations.date_time = ?";
     params.push(date_time);
   }
 
   if (table_number) {
-    querySql += " AND table_number = ?";
+    querySql += " AND Reservations.table_number = ?";
     params.push(table_number);
   }
+
+  querySql += " LIMIT ? OFFSET ?";
+  params.push(limit, offset);
 
   db.all(querySql, params, (err, rows) => {
     if (err) {
       console.error("Error fetching reservations:", err.message);
       return res.status(500).json({ error: "Internal server error." });
     }
-    res.status(200).json(rows);
+
+    const nextPage = currentPage + 1;
+    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+    const nextUrl = rows.length < limit ? null : `${baseUrl}?page=${nextPage}&pageSize=${limit}`;
+    const prevUrl = prevPage ? `${baseUrl}?page=${prevPage}&pageSize=${limit}` : null;
+
+    res.status(200).json({
+      data: rows,
+      pagination: {
+        currentPage,
+        pageSize: limit,
+        nextUrl,
+        prevUrl
+      }
+    });
   });
 
   db.close((err) => {
@@ -87,5 +124,7 @@ router.get("/", (req, res) => {
     }
   });
 });
+
+
 
 module.exports = router;
