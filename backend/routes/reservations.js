@@ -64,7 +64,7 @@ router.get("/", (req, res) => {
       Reservations.*,
       User.name AS user_name,
       User.email AS user_email,
-      User.phone AS user_phone
+      User.phone_number AS user_phone
     FROM 
       Reservations
     JOIN 
