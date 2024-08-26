@@ -51,7 +51,7 @@ function fetchAllReservations(url = null) {
       nextUrl = data.pagination.nextUrl;
       prevUrl = data.pagination.prevUrl;
 
-      return data.users;
+      return data.data;
     })
     .catch((error) => {
       console.error("Error fetching reservations:", error.message);
@@ -61,7 +61,7 @@ function fetchAllReservations(url = null) {
 
 function populateTable(reservations) {
   const tableBody = document.getElementById("reservation-table-body");
-  tableBody.innerHTML = "";
+  tableBody.innerHTML = ""; // Clear existing rows
 
   if (reservations.length === 0) {
     tableBody.innerHTML =
@@ -82,7 +82,8 @@ function populateTable(reservations) {
                       minute: "2-digit",
                     })}</td>
                     <td class="text-center">${reservation.number_of_guests}</td>
-                    <td class="text-center">Confirmed</td>
+                    <td class="text-center">${reservation.user_name}</td>
+                    <td class="text-center">${reservation.user_email}</td>
                     <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
                 </tr>
             `;
@@ -90,6 +91,7 @@ function populateTable(reservations) {
     });
   }
 }
+
 
 function updatePaginationControls() {
   document.getElementById("page-info").textContent = `Page ${currentPage}`;
