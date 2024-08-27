@@ -10,7 +10,7 @@ const db = new sqlite3.Database(databasePath);
  * /menu/create:
  *   post:
  *     summary: Create a new menu
- *      tags: [Menu]
+ *     tags: [Menu]
  *     description: Create a new menu with a name and take_out flag
  *     requestBody:
  *       required: true
