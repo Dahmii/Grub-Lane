@@ -1,6 +1,6 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
-const operationLogger = require('../loggers/loggerMiddleware/operationLogger');
+const operationLogger = require('../loggers/loggerMiddleWare/operationLogger');
 console.log('Module found:', operationLogger);
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
