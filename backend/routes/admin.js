@@ -1,9 +1,107 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const operationLogger = require('../loggers/loggerMiddleWare/operationLogger');
-console.log('Module found:', operationLogger);
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
+const SECRET_KEY = process.env.JWT_SECRET || "";
+
+function generateToken(admin) {
+    return jwt.sign({ id: admin.id, username: admin.username }, SECRET_KEY, { expiresIn: '1h' });
+}
+
+function authenticateToken(req, res, next) {
+    const token = req.headers['authorization']?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: "No token provided" });
+
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) return res.status(403).json({ error: "Invalid token" });
+
+        req.adminId = user.id; // Add admin ID to request
+        next();
+    });
+}
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Login an admin
+ *     tags: [Admin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Admin logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authorization
+ *       401:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ error: "Username and password are required" });
+    }
+
+    let db = new sqlite3.Database(databasePath);
+    let sql = `SELECT * FROM Admin WHERE username = ?`;
+
+    db.get(sql, [username], (err, admin) => {
+        if (err || !admin) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+
+        bcrypt.compare(password, admin.password, (err, isMatch) => {
+            if (err || !isMatch) {
+                return res.status(401).json({ error: "Invalid credentials" });
+            }
+
+            const token = generateToken(admin);
+            res.status(200).json({ message: "Login successful", token });
+
+            logOperation(admin.id, 'Logged in');
+        });
+    });
+
+    db.close();
+});
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout an admin
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Admin logged out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.post('/logout', authenticateToken, operationLogger('Logged out'), (req, res) => {
+    // Logout logic can involve invalidating the token on the client side
+    res.status(200).json({ message: "Logout successful" });
+});
 
 /**
  * @swagger
@@ -44,7 +142,9 @@ router.post('/createAdmin', operationLogger('Created a new admin'), (req, res) =
     let db = new sqlite3.Database(databasePath);
     let sql = `INSERT INTO Admin (username, password, email, role) VALUES (?, ?, ?, ?)`;
 
-    db.run(sql, [username, password, email, role], function (err) {
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    db.run(sql, [username, hashedPassword, email, role], function (err) {
         if (err) {
             return res.status(500).json({ error: "Error creating admin" });
         }
@@ -101,8 +201,9 @@ router.put('/updateAdmin/:id', operationLogger('Updated an admin'), (req, res) =
 
     const params = [username, email, role, id];
     if (password) {
+        const hashedPassword = bcrypt.hashSync(password, 10);
         sql = `UPDATE Admin SET username = ?, password = ?, email = ?, role = ? WHERE id = ?`;
-        params.splice(1, 0, password);
+        params.splice(1, 0, hashedPassword);
     }
 
     db.run(sql, params, function (err) {
