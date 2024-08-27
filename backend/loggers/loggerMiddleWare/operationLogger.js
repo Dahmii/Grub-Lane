@@ -1,5 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
 const databasePath = process.env.DATABASE_PATH;
+const express = require("express");
 
 function logOperation(adminId, activity) {
     let db = new sqlite3.Database(databasePath);
