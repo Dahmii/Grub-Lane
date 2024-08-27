@@ -18,14 +18,14 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) return res.status(403).json({ error: "Invalid token" });
 
-        req.adminId = user.id; // Add admin ID to request
+        req.adminId = user.id; 
         next();
     });
 }
 
 /**
  * @swagger
- * /api/login:
+ * /api/admin/login:
  *   post:
  *     summary: Login an admin
  *     tags: [Admin]
@@ -105,7 +105,7 @@ router.post('/logout', authenticateToken, operationLogger('Logged out'), (req, r
 
 /**
  * @swagger
- * /api/createAdmin:
+ * /api/admin/createAdmin:
  *   post:
  *     summary: Create a new admin
  *     tags: [Admin]
@@ -156,7 +156,7 @@ router.post('/createAdmin', operationLogger('Created a new admin'), (req, res) =
 
 /**
  * @swagger
- * /api/updateAdmin/{id}:
+ * /api/admin/updateAdmin/{id}:
  *   put:
  *     summary: Update an admin
  *     tags: [Admin]
@@ -252,7 +252,7 @@ router.delete('/deleteAdmin/:id', operationLogger('Deleted an admin'), (req, res
 
 /**
  * @swagger
- * /api/adminActivityLogs:
+ * /api/admin/adminActivityLogs:
  *   get:
  *     summary: Retrieve logs of admin activities
  *     tags: [Admin]
