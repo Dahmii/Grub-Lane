@@ -9,19 +9,65 @@ const databasePath = process.env.DATABASE_PATH;
  *   post:
  *     summary: Create a new payment
  *     tags: [Payments]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Payment'
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Payment object that needs to be created
+ *         required: true
+ *         schema:
+ *           type: object
+ *           required:
+ *             - order_id
+ *             - amount
+ *             - payment_date
+ *             - payment_method
+ *             - status
+ *           properties:
+ *             order_id:
+ *               type: string
+ *               description: The ID of the order
+ *             amount:
+ *               type: number
+ *               description: The amount of the payment
+ *             payment_date:
+ *               type: string
+ *               format: date
+ *               description: The date of the payment
+ *             payment_method:
+ *               type: string
+ *               description: The payment method used
+ *             status:
+ *               type: string
+ *               description: The status of the payment
+ *             paystack_refnumber:
+ *               type: string
+ *               description: The reference number from Paystack
  *     responses:
  *       201:
  *         description: Payment created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Payment'
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               description: The auto-generated ID of the payment
+ *             order_id:
+ *               type: string
+ *             amount:
+ *               type: number
+ *             payment_date:
+ *               type: string
+ *               format: date
+ *             payment_method:
+ *               type: string
+ *             status:
+ *               type: string
+ *             paystack_refnumber:
+ *               type: string
  *       400:
  *         description: Bad request
  *       500:
@@ -55,56 +101,73 @@ router.post('/createPayments', (req, res) => {
     db.close();
   });
   
-  /**
-   * @swagger
-   * /getPayments:
-   *   get:
-   *     summary: Retrieve a list of payments
-   *     tags: [Payments]
-   *     parameters:
-   *       - in: query
-   *         name: page
-   *         schema:
-   *           type: integer
-   *         description: The page number to retrieve
-   *       - in: query
-   *         name: pageSize
-   *         schema:
-   *           type: integer
-   *         description: The number of payments per page
-   *     responses:
-   *       200:
-   *         description: A list of payments with pagination information
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 data:
-   *                   type: array
-   *                   items:
-   *                     $ref: '#/components/schemas/Payment'
-   *                 pagination:
-   *                   type: object
-   *                   properties:
-   *                     currentPage:
-   *                       type: integer
-   *                     pageSize:
-   *                       type: integer
-   *                     totalPayments:
-   *                       type: integer
-   *                     totalPages:
-   *                       type: integer
-   *                     nextUrl:
-   *                       type: string
-   *                       nullable: true
-   *                     prevUrl:
-   *                       type: string
-   *                       nullable: true
-   *       500:
-   *         description: Server error
-   */
-  router.get('/getPayments', (req, res) => {
+/**
+ * @swagger
+ * /getPayments:
+ *   get:
+ *     summary: Retrieve a list of payments
+ *     tags: [Payments]
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number to retrieve
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         description: The number of payments per page
+ *     responses:
+ *       200:
+ *         description: A list of payments with pagination information
+ *         schema:
+ *           type: object
+ *           properties:
+ *             data:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: The auto-generated ID of the payment
+ *                   order_id:
+ *                     type: string
+ *                   amount:
+ *                     type: number
+ *                   payment_date:
+ *                     type: string
+ *                     format: date
+ *                   payment_method:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                   paystack_refnumber:
+ *                     type: string
+ *             pagination:
+ *               type: object
+ *               properties:
+ *                 currentPage:
+ *                   type: integer
+ *                 pageSize:
+ *                   type: integer
+ *                 totalPayments:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *                 nextUrl:
+ *                   type: string
+ *                   nullable: true
+ *                 prevUrl:
+ *                   type: string
+ *                   nullable: true
+ *       500:
+ *         description: Server error
+ */
+router.get('/getPayments', (req, res) => {
     const { page = 1, pageSize = 10 } = req.query;
   
     const limit = parseInt(pageSize);
@@ -160,4 +223,4 @@ router.post('/createPayments', (req, res) => {
     });
   });
   
-  module.exports = router;
+module.exports = router;
