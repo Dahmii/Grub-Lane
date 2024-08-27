@@ -61,7 +61,7 @@ function fetchAllReservations(url = null) {
 
 function populateTable(reservations) {
   const tableBody = document.getElementById("reservation-table-body");
-  tableBody.innerHTML = ""; // Clear existing rows
+  tableBody.innerHTML = ""; 
 
   if (reservations.length === 0) {
     tableBody.innerHTML =

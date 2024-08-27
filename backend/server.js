@@ -27,6 +27,7 @@ const orderRoutes = require("./routes/orders");
 const reservationRoutes = require("./routes/reservations");
 const menuRoutes = require('./routes/menu');
 const dishRoutes = require('./routes/dish');
+const paymentsRoutes=require('./routes/payments')
 
 initializeDatabase();
 
@@ -42,7 +43,7 @@ const swaggerOptions = {
       servers: ["https://0.0.0.0:3000"], 
     },
   },
-  apis: ["./routes/users.js", "./routes/orders.js", "./routes/reservations.js", "./routes/dish.js", "./routes/menu.js"],
+  apis: ["./routes/users.js", "./routes/orders.js", "./routes/reservations.js", "./routes/dish.js", "./routes/menu.js","./routes/payments.js"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -53,6 +54,7 @@ app.use("/orders", orderRoutes);
 app.use("/reservations", reservationRoutes);
 app.use('/menu', menuRoutes);
 app.use('/dish', dishRoutes);
+app.use("/payments",paymentsRoutes);
 
 https.createServer(sslOptions, app).listen(port, () => {
   console.log(`HTTPS Server is running on https://0.0.0.0:${port}`);

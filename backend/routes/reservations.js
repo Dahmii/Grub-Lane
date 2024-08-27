@@ -91,6 +91,7 @@ router.get("/", (req, res) => {
     params.push(table_number);
   }
 
+  querySql += " ORDER BY Reservations.date_time DESC";
   querySql += " LIMIT ? OFFSET ?";
   params.push(limit, offset);
 
@@ -124,6 +125,7 @@ router.get("/", (req, res) => {
     }
   });
 });
+
 
 
 
