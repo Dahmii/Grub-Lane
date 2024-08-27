@@ -8,6 +8,7 @@ const databasePath = process.env.DATABASE_PATH;
  * /users:
  *   post:
  *     description: Create a new user
+*      tags: [Customers]
  *     parameters:
  *       - name: email
  *         in: body
