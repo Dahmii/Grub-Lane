@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
 
-app.post('/createPayments', (req, res) => {
+router.post('/createPayments', (req, res) => {
     const { order_id, amount, payment_date, payment_method, status, paystack_refnumber } = req.body;
   
     if (!order_id || !amount || !payment_date || !payment_method || !status) {
@@ -32,7 +32,7 @@ app.post('/createPayments', (req, res) => {
   });
 
 
-  app.get('/getPayments', (req, res) => {
+  router.get('/getPayments', (req, res) => {
     const { page = 1, pageSize = 10 } = req.query;
   
     const limit = parseInt(pageSize);
