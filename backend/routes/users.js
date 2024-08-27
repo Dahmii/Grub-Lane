@@ -75,6 +75,7 @@ router.post("/", (req, res) => {
  * /users:
  *   get:
  *     summary: Retrieve a paginated list of users
+ * tags: [Customers]
  *     description: Get all users with pagination. You can specify the page number and page size.
  *     parameters:
  *       - in: query

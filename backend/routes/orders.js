@@ -8,6 +8,7 @@ const databasePath = process.env.DATABASE_PATH;
  * /orders:
  *   post:
  *     description: Create a new order
+ *     tags: [Orders]
  *     parameters:
  *       - name: user_id
  *         in: body

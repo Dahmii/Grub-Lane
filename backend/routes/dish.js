@@ -117,6 +117,7 @@ const upload = multer({
  * /dish/createDish:
  *   post:
  *     summary: Create a new dish
+*      tags: [Dishes]
  *     consumes:
  *       - multipart/form-data
  *     parameters:
