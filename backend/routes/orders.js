@@ -108,6 +108,7 @@ router.post("/", (req, res) => {
  * /orders:
  *   get:
  *     description: Get all orders
+ *     tags: [Orders]
  *     responses:
  *       200:
  *         description: List of orders
