@@ -3,6 +3,30 @@ const sqlite3 = require("sqlite3").verbose();
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
 
+/**
+ * @swagger
+ * /createPayments:
+ *   post:
+ *     summary: Create a new payment
+ *     tags: [Payments]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Payment'
+ *     responses:
+ *       201:
+ *         description: Payment created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Payment'
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Server error
+ */
 router.post('/createPayments', (req, res) => {
     const { order_id, amount, payment_date, payment_method, status, paystack_refnumber } = req.body;
   
@@ -17,12 +41,12 @@ router.post('/createPayments', (req, res) => {
       if (err) {
         return res.status(500).json({ error: "Error creating payment" });
       }
-      res.status(201).json({ 
-        id: this.lastID, 
-        order_id, 
-        amount, 
-        payment_date, 
-        payment_method, 
+      res.status(201).json({
+        id: this.lastID,
+        order_id,
+        amount,
+        payment_date,
+        payment_method,
         status,
         paystack_refnumber
       });
@@ -30,8 +54,56 @@ router.post('/createPayments', (req, res) => {
   
     db.close();
   });
-
-
+  
+  /**
+   * @swagger
+   * /getPayments:
+   *   get:
+   *     summary: Retrieve a list of payments
+   *     tags: [Payments]
+   *     parameters:
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *         description: The page number to retrieve
+   *       - in: query
+   *         name: pageSize
+   *         schema:
+   *           type: integer
+   *         description: The number of payments per page
+   *     responses:
+   *       200:
+   *         description: A list of payments with pagination information
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Payment'
+   *                 pagination:
+   *                   type: object
+   *                   properties:
+   *                     currentPage:
+   *                       type: integer
+   *                     pageSize:
+   *                       type: integer
+   *                     totalPayments:
+   *                       type: integer
+   *                     totalPages:
+   *                       type: integer
+   *                     nextUrl:
+   *                       type: string
+   *                       nullable: true
+   *                     prevUrl:
+   *                       type: string
+   *                       nullable: true
+   *       500:
+   *         description: Server error
+   */
   router.get('/getPayments', (req, res) => {
     const { page = 1, pageSize = 10 } = req.query;
   
