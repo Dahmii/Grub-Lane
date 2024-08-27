@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 /**
  * @swagger
- * /dish/getDishes:
+ * /api/dish/getDishes:
  *   get:
  *     tags: [Dishes] 
  *     summary: Get dishes based on the take_out flag of the menu
@@ -115,7 +115,7 @@ const upload = multer({
 
 /**
  * @swagger
- * /dish/createDish:
+ * /api/dish/createDish:
  *   post:
  *     summary: Create a new dish
  *     tags: [Dishes]

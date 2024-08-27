@@ -7,7 +7,7 @@ const db = new sqlite3.Database(databasePath);
 
 /**
  * @swagger
- * /menu/create:
+ * /api/menu/create:
  *   post:
  *     summary: Create a new menu
  *     tags: [Menu]

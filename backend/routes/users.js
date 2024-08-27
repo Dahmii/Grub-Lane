@@ -5,7 +5,7 @@ const databasePath = process.env.DATABASE_PATH;
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   post:
  *     description: Create a new user
 *      tags: [Customers]
@@ -73,7 +73,7 @@ router.post("/", (req, res) => {
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Retrieve a paginated list of users
  *     tags: [Customers]

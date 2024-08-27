@@ -5,7 +5,7 @@ const databasePath = process.env.DATABASE_PATH;
 
 /**
  * @swagger
- * /createPayments:
+ * /api/payments/createPayments:
  *   post:
  *     summary: Create a new payment
  *     tags: [Payments]
@@ -103,7 +103,7 @@ router.post('/createPayments', (req, res) => {
   
 /**
  * @swagger
- * /getPayments:
+ * /api/payments/getPayments:
  *   get:
  *     summary: Retrieve a list of payments
  *     tags: [Payments]

@@ -25,7 +25,7 @@ function authenticateToken(req, res, next) {
 
 /**
  * @swagger
- * /login:
+ * /api/login:
  *   post:
  *     summary: Login an admin
  *     tags: [Admin]
@@ -88,7 +88,7 @@ router.post('/login', (req, res) => {
 
 /**
  * @swagger
- * /logout:
+ * /api/logout:
  *   post:
  *     summary: Logout an admin
  *     tags: [Admin]
@@ -99,13 +99,13 @@ router.post('/login', (req, res) => {
  *         description: Unauthorized
  */
 router.post('/logout', authenticateToken, operationLogger('Logged out'), (req, res) => {
-    // Logout logic can involve invalidating the token on the client side
+  
     res.status(200).json({ message: "Logout successful" });
 });
 
 /**
  * @swagger
- * /createAdmin:
+ * /api/createAdmin:
  *   post:
  *     summary: Create a new admin
  *     tags: [Admin]
@@ -156,7 +156,7 @@ router.post('/createAdmin', operationLogger('Created a new admin'), (req, res) =
 
 /**
  * @swagger
- * /updateAdmin/{id}:
+ * /api/updateAdmin/{id}:
  *   put:
  *     summary: Update an admin
  *     tags: [Admin]
@@ -218,7 +218,7 @@ router.put('/updateAdmin/:id', operationLogger('Updated an admin'), (req, res) =
 
 /**
  * @swagger
- * /deleteAdmin/{id}:
+ * /api/deleteAdmin/{id}:
  *   delete:
  *     summary: Delete an admin
  *     tags: [Admin]
@@ -252,7 +252,7 @@ router.delete('/deleteAdmin/:id', operationLogger('Deleted an admin'), (req, res
 
 /**
  * @swagger
- * /adminActivityLogs:
+ * /api/adminActivityLogs:
  *   get:
  *     summary: Retrieve logs of admin activities
  *     tags: [Admin]

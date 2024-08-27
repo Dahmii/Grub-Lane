@@ -5,7 +5,7 @@ const databasePath = process.env.DATABASE_PATH;
 
 /**
  * @swagger
- * /reservations:
+ * /api/reservations:
  *   post:
  *     summary: Create a new reservation
  *     tags: [Reservations]
@@ -94,7 +94,7 @@ router.post("/", (req, res) => {
 
 /**
  * @swagger
- * /reservations:
+ * /api/reservations:
  *   get:
  *     summary: Retrieve a list of reservations
  *     tags: [Reservations]
