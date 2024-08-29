@@ -364,6 +364,7 @@
     <script src="js/main.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/fetchdishes.js"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
     <script
       async
@@ -392,10 +393,10 @@
           const cartItemDiv = document.createElement("div");
           cartItemDiv.classList.add("side-cart-item");
           cartItemDiv.innerHTML = `
-          <h4>${item.name}</h4>
-          <p>N${item.price} x ${item.quantity}</p>
-          <span class="remove-btn" data-index="${index}">&times;</span>
-        `;
+              <h4>${item.name}</h4>
+              <p>N${item.price} x ${item.quantity}</p>
+              <span class="remove-btn" data-index="${index}">&times;</span>
+          `;
           cartItemsContainer.appendChild(cartItemDiv);
 
           totalPrice += item.price * item.quantity;
@@ -439,9 +440,58 @@
       document
         .getElementById("checkout-button")
         .addEventListener("click", function () {
-          // Replace with your actual Paystack integration code
-          // alert("Checkout with Paystack");
+          payWithPaystack();
         });
+
+      function payWithPaystack() {
+        const email = prompt("Enter your email address");
+        const totalPrice =
+          cart.reduce((sum, item) => sum + item.price * item.quantity, 0) * 100; // Convert to kobo
+
+        const handler = PaystackPop.setup({
+          key: "YOUR_PUBLIC_KEY", // Replace with your Paystack public key
+          email: email,
+          amount: totalPrice,
+          currency: "NGN",
+          ref: "" + Math.floor(Math.random() * 1000000000 + 1), // Generate a unique reference
+          callback: function (response) {
+            // After successful payment, record the payment details in your backend
+            recordPayment(response.reference, email, totalPrice / 100); // Convert back to Naira for storage
+          },
+          onClose: function () {
+            alert("Transaction was not completed, window closed.");
+          },
+        });
+
+        handler.openIframe();
+      }
+
+      function recordPayment(reference, email, amount) {
+        const paymentDetails = {
+          order_id: "ORDER-" + new Date().getTime(), // Generate a unique order ID
+          amount: amount,
+          payment_date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
+          payment_method: "Paystack",
+          status: "Completed", // You might want to use dynamic status depending on actual payment confirmation
+          paystack_refnumber: reference,
+        };
+
+        // Send the payment details to your backend API
+        $.ajax({
+          url: "https://grublanerestaurant.com/api/payments/createPayments",
+          type: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(paymentDetails),
+          success: function (response) {
+            alert("Payment recorded successfully!");
+            localStorage.removeItem("cart"); // Clear the cart after successful payment
+            window.location.href = "thank-you.html"; // Redirect to a thank-you page or order confirmation
+          },
+          error: function (xhr) {
+            alert("Failed to record payment. Please contact support.");
+          },
+        });
+      }
     </script>
     <script
       defer
