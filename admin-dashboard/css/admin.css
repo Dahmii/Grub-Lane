@@ -317,6 +317,15 @@ body {
     font-size: 14px;
     text-align: center;
   }
+
+  #change-password-form .form-group {
+    margin-bottom: 15px;
+  }
+
+  #change-password-form .btn-primary {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
 }
 
 a .card-body {
@@ -327,4 +336,37 @@ a .card-body {
 
 a:hover .card-body {
   text-decoration: none;
+}
+
+/* Change Password */
+#change-password-form .form-group {
+  margin-bottom: 20px;
+}
+
+#change-password-form label {
+  font-weight: 500;
+  color: #343a40;
+}
+
+#change-password-form input {
+  height: 45px;
+  border-radius: 5px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+#change-password-form .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#change-password-form .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
 }

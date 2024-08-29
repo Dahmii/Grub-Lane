@@ -3,171 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - Overview</title>
+    <title>Admin Portal - Login</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/login.css" />
     <link rel="stylesheet" href="css/admin.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
+
+    <!-- Favicon -->
     <link rel="icon" href="../img/favicon.png" type="image/png" />
     <link rel="shortcut icon" href="../img/favicon-icon" type="image/png" />
   </head>
 
   <body>
-    <div class="wrapper">
-      <div class="hamburger-menu">
-        <i class="fas fa-bars" id="sidebarCollapse"></i>
-      </div>
-      <nav id="sidebar">
-        <div class="sidebar-header">
-          <h3>Welcome</h3>
-        </div>
-        <ul class="components">
-          <li class="active">
-            <a href="index.html"
-              ><i class="fas fa-tachometer-alt"></i> <span>Home</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-reservations.html"
-              ><i class="fas fa-calendar-alt"></i> <span>Reservations</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-takeout.html"
-              ><i class="fas fa-box"></i> <span>Take-Out Orders</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-payments.html"
-              ><i class="fas fa-money-check-alt"></i><span> Payments</span></a
-            >
-          </li>
-        </ul>
-      </nav>
-
-      <div id="content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div
-            class="container-fluid d-flex justify-content-between align-items-center"
-          >
-            <h4 class="dashboard-title mb-0">Dashboard Overview</h4>
-            <div class="navbar-icons d-flex align-items-center">
-              <div class="dropdown">
-                <a
-                  href="#"
-                  class="nav-link dropdown-toggle"
-                  id="profileDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-user"></i> Admin
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="profileDropdown"
-                >
-                  <a class="dropdown-item" href="edit-profile.html"
-                    ><i class="fas fa-user-edit"></i> Edit Profile</a
-                  >
-                  <a class="dropdown-item" href="change-password.html"
-                    ><i class="fas fa-key"></i> Change Password</a
-                  >
-                </div>
-              </div>
-              <a href="logout.html" class="nav-link ml-3">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-            </div>
+    <div class="container">
+      <div class="login-container">
+        <h2>Login</h2>
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              placeholder="Enter your username"
+              required
+            />
           </div>
-        </nav>
-
-        <div class="content-area">
-          <div class="dashboard-header">
-            <h2>Overview</h2>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
           </div>
-
-          <div class="dashboard-content">
-            <div class="row">
-              <!-- Reservations Overview -->
-              <div class="col-md-4">
-                <a href="manage-reservations.html">
-                  <div id="reservations-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-calendar-alt fa-3x text-primary"></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Reservations</h5>
-                          <p class="card-text" id="reservations-overview">0</p>
-                          <span
-                            id="reservations-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <!-- Orders Overview -->
-              <div class="col-md-4">
-                <a href="manage-takeout.html">
-                  <div id="orders-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-box fa-3x text-success"></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Orders Processed</h5>
-                          <p class="card-text" id="orders-overview">0</p>
-                          <span
-                            id="orders-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <!-- Payments Overview -->
-              <div class="col-md-4">
-                <a href="manage-payments.html">
-                  <div id="payments-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i
-                          class="fas fa-money-check-alt fa-3x text-warning"
-                        ></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Payments/Revenue</h5>
-                          <p class="card-text" id="payments-overview">0</p>
-                          <span
-                            id="payments-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-            <!-- Additional rows and cards can be added here -->
+          <div class="not-registered">
+            <p>Not registered? <a href="create-admin.html">Create Admin</a></p>
           </div>
-        </div>
+          <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <div id="error-message" class="error-message"></div>
       </div>
     </div>
 
@@ -175,147 +55,6 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/admin.js"></script>
-    <script src="../js/fetchreservations.js"></script>
-    <script src="../js/fetchorder.js"></script>
-    <script>
-      let lastReservationCount = 0;
-      let lastOrderCount = 0;
-      let lastPaymentCount = 0;
-
-      document.addEventListener("DOMContentLoaded", function () {
-        updateDashboardCounts();
-        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
-
-        // Add click event listeners to clear "new" notifications
-        document
-          .getElementById("reservations-card")
-          .addEventListener("click", function () {
-            localStorage.setItem("viewedReservations", true);
-            checkViewedStatus();
-          });
-
-        document
-          .getElementById("orders-card")
-          .addEventListener("click", function () {
-            localStorage.setItem("viewedOrders", true);
-            checkViewedStatus();
-          });
-
-        document
-          .getElementById("payments-card")
-          .addEventListener("click", function () {
-            localStorage.setItem("viewedPayments", true);
-            checkViewedStatus();
-          });
-
-        // Ensure the notifications are cleared based on viewing status
-        checkViewedStatus();
-      });
-
-      function updateDashboardCounts() {
-        // Update Reservations Count
-        fetchAllReservations(1).then((reservations) => {
-          const totalReservations = reservations.length || 0;
-
-          document.getElementById("reservations-overview").textContent =
-            totalReservations;
-
-          if (
-            totalReservations > lastReservationCount &&
-            !localStorage.getItem("viewedReservations")
-          ) {
-            document.getElementById("reservations-new").style.display =
-              "inline";
-          } else {
-            document.getElementById("reservations-new").style.display = "none";
-          }
-
-          lastReservationCount = totalReservations;
-        });
-
-        // Update Orders Count
-        fetchAllOrders(1).then((orders) => {
-          const totalOrders = orders.length || 0;
-
-          document.getElementById("orders-overview").textContent = totalOrders;
-
-          if (
-            totalOrders > lastOrderCount &&
-            !localStorage.getItem("viewedOrders")
-          ) {
-            document.getElementById("orders-new").style.display = "inline";
-          } else {
-            document.getElementById("orders-new").style.display = "none";
-          }
-
-          lastOrderCount = totalOrders;
-        });
-
-        // Update Payments Count
-        fetchAllOrders(1).then((orders) => {
-          const totalRevenue =
-            orders.reduce((sum, order) => sum + order.amount_paid, 0) || 0;
-
-          document.getElementById(
-            "payments-overview"
-          ).textContent = `$${totalRevenue.toFixed(2)}`;
-
-          if (
-            totalRevenue > lastPaymentCount &&
-            !localStorage.getItem("viewedPayments")
-          ) {
-            document.getElementById("payments-new").style.display = "inline";
-          } else {
-            document.getElementById("payments-new").style.display = "none";
-          }
-
-          lastPaymentCount = totalRevenue;
-        });
-      }
-
-      function checkViewedStatus() {
-        if (localStorage.getItem("viewedReservations")) {
-          document.getElementById("reservations-new").style.display = "none";
-        }
-
-        if (localStorage.getItem("viewedOrders")) {
-          document.getElementById("orders-new").style.display = "none";
-        }
-
-        if (localStorage.getItem("viewedPayments")) {
-          document.getElementById("payments-new").style.display = "none";
-        }
-      }
-
-      function isNewReservation(reservation) {
-        const today = new Date();
-        const reservationDate = new Date(reservation.date_time);
-        return (
-          reservationDate.getDate() === today.getDate() &&
-          reservationDate.getMonth() === today.getMonth() &&
-          reservationDate.getFullYear() === today.getFullYear()
-        );
-      }
-
-      function isNewOrder(order) {
-        const today = new Date();
-        const orderDate = new Date(order.date);
-        return (
-          orderDate.getDate() === today.getDate() &&
-          orderDate.getMonth() === today.getMonth() &&
-          orderDate.getFullYear() === today.getFullYear()
-        );
-      }
-
-      function isNewPayment(order) {
-        const today = new Date();
-        const paymentDate = new Date(order.date);
-        return (
-          paymentDate.getDate() === today.getDate() &&
-          paymentDate.getMonth() === today.getMonth() &&
-          paymentDate.getFullYear() === today.getFullYear()
-        );
-      }
-    </script>
+    <script src="js/admin-login.js"></script>
   </body>
 </html>

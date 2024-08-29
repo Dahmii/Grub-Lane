@@ -35,7 +35,9 @@ let prevUrl = null;
 const rowsPerPage = 10;
 
 function fetchAllReservations(url = null) {
-  const endpointUrl = url || `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
+  const endpointUrl =
+    url ||
+    `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
   return fetch(endpointUrl)
     .then((response) => {
@@ -61,7 +63,7 @@ function fetchAllReservations(url = null) {
 
 function populateTable(reservations) {
   const tableBody = document.getElementById("reservation-table-body");
-  tableBody.innerHTML = ""; 
+  tableBody.innerHTML = "";
 
   if (reservations.length === 0) {
     tableBody.innerHTML =
@@ -82,7 +84,7 @@ function populateTable(reservations) {
                       minute: "2-digit",
                     })}</td>
                     <td class="text-center">${reservation.number_of_guests}</td>
-                    <td class="text-center">Confirmed</td>
+                    
                     <td class="text-center">
                         <button class="btn btn-info btn-sm">View</button>
                     </td>
@@ -92,8 +94,6 @@ function populateTable(reservations) {
     });
   }
 }
-
-
 
 function updatePaginationControls() {
   document.getElementById("page-info").textContent = `Page ${currentPage}`;

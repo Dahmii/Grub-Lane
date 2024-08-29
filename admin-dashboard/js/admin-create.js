@@ -1,30 +1,29 @@
 $(document).ready(function () {
-  $("#adminLoginForm").submit(function (e) {
+  $("#adminCreateForm").submit(function (e) {
     e.preventDefault();
 
     const username = $("#username").val();
     const password = $("#password").val();
+    const email = $("#email").val();
+    const role = $("#role").val();
 
     $.ajax({
-      url: "https://grublanerestaurant.com/api/admin/login",
+      url: "https://grublanerestaurant.com/api/admin/createAdmin",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
         username: username,
         password: password,
+        email: email,
+        role: role,
       }),
       success: function (response) {
-        // Store the JWT token in local storage
-        localStorage.setItem("token", response.token);
-
-        // Redirect to the admin dashboard
-        window.location.href = "home.html";
+        // Notify the admin creation was successful
+        alert("Admin created successfully!");
       },
       error: function (xhr) {
-        if (xhr.status === 401) {
-          $("#error-message").text(
-            "Invalid username or password. Please try again."
-          );
+        if (xhr.status === 400) {
+          $("#error-message").text("All fields are required.");
         } else {
           $("#error-message").text(
             "An error occurred. Please try again later."
