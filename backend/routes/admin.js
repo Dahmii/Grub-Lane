@@ -81,7 +81,9 @@ router.post("/login", (req, res) => {
       }
 
       const token = generateToken(admin);
-      res.status(200).json({ message: "Login successful", token });
+      res
+        .status(200)
+        .json({ message: "Login successful", token, username: admin.username });
 
       logOperation(admin.id, "Logged in");
     });

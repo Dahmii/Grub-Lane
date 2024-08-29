@@ -20,6 +20,7 @@ $(document).ready(function () {
       success: function (response) {
         // Notify the admin creation was successful
         alert("Admin created successfully!");
+        window.location.href = "index.html";
       },
       error: function (xhr) {
         if (xhr.status === 400) {

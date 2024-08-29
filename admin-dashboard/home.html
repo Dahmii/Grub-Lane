@@ -25,7 +25,8 @@
       </div>
       <nav id="sidebar">
         <div class="sidebar-header">
-          <h3>Welcome</h3>
+          <h5>Welcome, <span id="adminUsername">Admin</span></h5>
+          <!-- Updated to include dynamic username -->
         </div>
         <ul class="components">
           <li class="active">
@@ -68,7 +69,8 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  <i class="fas fa-user"></i> Admin
+                  <i class="fas fa-user"></i>
+                  <span id="profileUsername">Admin</span>
                 </a>
                 <div
                   class="dropdown-menu dropdown-menu-right"
@@ -317,6 +319,24 @@
           paymentDate.getFullYear() === today.getFullYear()
         );
       }
+    </script>
+    <script>
+      // Display the admin username dynamically
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the username from localStorage
+        const username = localStorage.getItem("username");
+
+        // If the username exists, display it in the relevant places
+        if (username) {
+          document.getElementById("adminUsername").textContent = username;
+          document.getElementById("profileUsername").textContent = username;
+        }
+
+        // Other initialization logic (e.g., updating dashboard counts)
+        updateDashboardCounts();
+        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
+        checkViewedStatus();
+      });
     </script>
   </body>
 </html>

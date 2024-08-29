@@ -16,6 +16,7 @@ $(document).ready(function () {
       success: function (response) {
         // Store the JWT token in local storage
         localStorage.setItem("token", response.token);
+        localStorage.setItem("username", response.username);
 
         // Redirect to the admin dashboard
         window.location.href = "home.html";
