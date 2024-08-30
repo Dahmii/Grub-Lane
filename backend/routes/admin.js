@@ -40,8 +40,12 @@ function authenticateToken(req, res, next) {
  *             properties:
  *               username:
  *                 type: string
+ *                 description: The admin's username
+ *                 example: adminUser
  *               password:
  *                 type: string
+ *                 description: The admin's password
+ *                 example: password123
  *     responses:
  *       200:
  *         description: Admin logged in successfully
@@ -50,13 +54,47 @@ function authenticateToken(req, res, next) {
  *             schema:
  *               type: object
  *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login successful
  *                 token:
  *                   type: string
  *                   description: JWT token for authorization
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 username:
+ *                   type: string
+ *                   description: The admin's username
+ *                   example: adminUser
+ *       400:
+ *         description: Username and password are required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Username and password are required
  *       401:
  *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid credentials
  *       500:
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
  */
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -98,11 +136,29 @@ router.post("/login", (req, res) => {
  *   post:
  *     summary: Logout an admin
  *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Admin logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logout successful
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: No token provided
  */
 router.post(
   "/logout",
@@ -128,19 +184,60 @@ router.post(
  *             properties:
  *               username:
  *                 type: string
+ *                 description: The new admin's username
+ *                 example: newAdminUser
  *               password:
  *                 type: string
+ *                 description: The new admin's password
+ *                 example: password123
  *               email:
  *                 type: string
+ *                 description: The new admin's email address
+ *                 example: admin@example.com
  *               role:
  *                 type: string
+ *                 description: The new admin's role
+ *                 example: superadmin
  *     responses:
  *       201:
  *         description: Admin created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 username:
+ *                   type: string
+ *                   example: newAdminUser
+ *                 email:
+ *                   type: string
+ *                   example: admin@example.com
+ *                 role:
+ *                   type: string
+ *                   example: superadmin
  *       400:
  *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: All fields are required
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error creating admin
  */
 router.post(
   "/createAdmin",
@@ -180,27 +277,62 @@ router.post(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *       - in: body
  *         name: body
  *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             username:
- *               type: string
- *             password:
- *               type: string
- *             email:
- *               type: string
- *             role:
- *               type: string
+ *         content:
+ *           application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The admin's username
+ *                 example: updatedAdminUser
+ *               password:
+ *                 type: string
+ *                 description: The admin's password (optional)
+ *                 example: newPassword123
+ *               email:
+ *                 type: string
+ *                 description: The admin's email address
+ *                 example: updatedAdmin@example.com
+ *               role:
+ *                 type: string
+ *                 description: The admin's role
+ *                 example: admin
  *     responses:
  *       200:
  *         description: Admin updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Admin updated successfully
  *       400:
  *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Username, email, and role are required
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error updating admin
  */
 router.put(
   "/updateAdmin/:id",
@@ -248,11 +380,28 @@ router.put(
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *     responses:
  *       200:
  *         description: Admin deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Admin deleted successfully
  *       500:
  *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error deleting admin
  */
 router.delete(
   "/deleteAdmin/:id",
@@ -285,21 +434,40 @@ router.delete(
  *     responses:
  *       200:
  *         description: A list of admin activities
- *         schema:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
- *                 description: The auto-generated ID of the log entry
- *               admin_id:
- *                 type: integer
- *               activity:
- *                 type: string
- *               timestamp:
- *                 type: string
- *                 format: date-time
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: The auto-generated ID of the log entry
+ *                     example: 1
+ *                   admin_id:
+ *                     type: integer
+ *                     description: The ID of the admin who performed the activity
+ *                     example: 1
+ *                   activity:
+ *                     type: string
+ *                     description: The description of the admin's activity
+ *                     example: Logged in
+ *                   timestamp:
+ *                     type: string
+ *                     format: date-time
+ *                     description: The timestamp of the activity
+ *                     example: 2023-08-30T14:48:00.000Z
+ *       500:
+ *         description: Error fetching activity logs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error fetching activity logs
  */
 router.get("/adminActivityLogs", (req, res) => {
   let db = new sqlite3.Database(databasePath);

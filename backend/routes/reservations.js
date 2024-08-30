@@ -1,7 +1,21 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
+const SECRET_KEY = process.env.JWT_SECRET || "";
+
+function authenticateToken(req, res, next) {
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "No token provided" });
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ error: "Invalid token" });
+
+    req.userId = user.id;
+    next();
+  });
+}
 
 /**
  * @swagger
@@ -98,6 +112,8 @@ router.post("/", (req, res) => {
  *   get:
  *     summary: Retrieve a list of reservations
  *     tags: [Reservations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: user_id
@@ -127,7 +143,7 @@ router.post("/", (req, res) => {
  *         description: Number of items per page for pagination
  *     responses:
  *       200:
- *         description: A list of reservations with pagination details
+ *         description: A list of reservations with pagination details and total count
  *         content:
  *           application/json:
  *             schema:
@@ -168,10 +184,15 @@ router.post("/", (req, res) => {
  *                     prevUrl:
  *                       type: string
  *                       nullable: true
+ *                 total:
+ *                   type: integer
+ *                   description: Total number of reservations
+ *       401:
+ *         description: Unauthorized, token required
  *       500:
  *         description: Internal server error
  */
-router.get("/", (req, res) => {
+router.get("/", authenticateToken, (req, res) => {
   const { user_id, date_time, table_number, page = 1, pageSize = 10 } = req.query;
 
   const limit = parseInt(pageSize);
@@ -179,70 +200,102 @@ router.get("/", (req, res) => {
   const offset = (currentPage - 1) * limit;
 
   let db = new sqlite3.Database(databasePath);
-  let querySql = `
+  
+  // Count total number of reservations
+  let countSql = `
     SELECT 
-      Reservations.*,
-      User.name AS user_name,
-      User.email AS user_email,
-      User.phone_number AS user_phone
+      COUNT(*) AS total 
     FROM 
-      Reservations
-    JOIN 
-      User
-    ON 
-      Reservations.user_id = User.id
+      Reservations 
     WHERE 
       1=1
   `;
   let params = [];
 
   if (user_id) {
-    querySql += " AND Reservations.user_id = ?";
+    countSql += " AND user_id = ?";
     params.push(user_id);
   }
 
   if (date_time) {
-    querySql += " AND Reservations.date_time = ?";
+    countSql += " AND date_time = ?";
     params.push(date_time);
   }
 
   if (table_number) {
-    querySql += " AND Reservations.table_number = ?";
+    countSql += " AND table_number = ?";
     params.push(table_number);
   }
 
-  querySql += " ORDER BY Reservations.date_time DESC";
-  querySql += " LIMIT ? OFFSET ?";
-  params.push(limit, offset);
-
-  db.all(querySql, params, (err, rows) => {
+  db.get(countSql, params, (err, countResult) => {
     if (err) {
-      console.error("Error fetching reservations:", err.message);
+      console.error("Error counting reservations:", err.message);
       return res.status(500).json({ error: "Internal server error." });
     }
 
-    const nextPage = currentPage + 1;
-    const prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+    let querySql = `
+      SELECT 
+        Reservations.*,
+        User.name AS user_name,
+        User.email AS user_email,
+        User.phone_number AS user_phone
+      FROM 
+        Reservations
+      JOIN 
+        User
+      ON 
+        Reservations.user_id = User.id
+      WHERE 
+        1=1
+    `;
 
-    const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
-    const nextUrl = rows.length < limit ? null : `${baseUrl}?page=${nextPage}&pageSize=${limit}`;
-    const prevUrl = prevPage ? `${baseUrl}?page=${prevPage}&pageSize=${limit}` : null;
+    if (user_id) {
+      querySql += " AND Reservations.user_id = ?";
+    }
 
-    res.status(200).json({
-      data: rows,
-      pagination: {
-        currentPage,
-        pageSize: limit,
-        nextUrl,
-        prevUrl
+    if (date_time) {
+      querySql += " AND Reservations.date_time = ?";
+    }
+
+    if (table_number) {
+      querySql += " AND Reservations.table_number = ?";
+    }
+
+    querySql += " ORDER BY Reservations.date_time DESC";
+    querySql += " LIMIT ? OFFSET ?";
+    params.push(limit, offset);
+
+    db.all(querySql, params, (err, rows) => {
+      if (err) {
+        console.error("Error fetching reservations:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
+      }
+
+      const total = countResult.total;
+      const nextPage = currentPage + 1;
+      const prevPage = currentPage - 1 > 0 ? currentPage - 1 : null;
+
+      const baseUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+      const nextUrl = rows.length < limit ? null : `${baseUrl}?page=${nextPage}&pageSize=${limit}`;
+      const prevUrl = prevPage ? `${baseUrl}?page=${prevPage}&pageSize=${limit}` : null;
+
+      res.status(200).json({
+        data: rows,
+        pagination: {
+          currentPage,
+          pageSize: limit,
+          nextUrl,
+          prevUrl
+        },
+        total
+      });
+    });
+
+    db.close((err) => {
+      if (err) {
+        console.error("Error closing database connection:", err.message);
       }
     });
-  });
-
-  db.close((err) => {
-    if (err) {
-      console.error("Error closing database connection:", err.message);
-    }
   });
 });
 
