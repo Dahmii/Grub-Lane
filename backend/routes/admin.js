@@ -208,15 +208,19 @@ router.post(
  *               properties:
  *                 id:
  *                   type: integer
+ *                   description: The ID of the created admin
  *                   example: 1
  *                 username:
  *                   type: string
+ *                   description: The new admin's username
  *                   example: newAdminUser
  *                 email:
  *                   type: string
+ *                   description: The new admin's email address
  *                   example: admin@example.com
  *                 role:
  *                   type: string
+ *                   description: The new admin's role
  *                   example: superadmin
  *       400:
  *         description: Bad request
@@ -227,6 +231,7 @@ router.post(
  *               properties:
  *                 error:
  *                   type: string
+ *                   description: Error message
  *                   example: All fields are required
  *       500:
  *         description: Server error
@@ -237,8 +242,10 @@ router.post(
  *               properties:
  *                 error:
  *                   type: string
+ *                   description: Error message
  *                   example: Error creating admin
  */
+
 router.post(
   "/createAdmin",
   operationLogger("Created a new admin"),

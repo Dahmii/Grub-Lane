@@ -201,7 +201,6 @@ router.get("/", authenticateToken, (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
   
-  // Count total number of reservations
   let countSql = `
     SELECT 
       COUNT(*) AS total 
