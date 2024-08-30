@@ -130,7 +130,7 @@
                   <th class="text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="payment-table-body">
                 <!-- Example rows (will be populated dynamically) -->
                 <!-- <tr>
                                 <td class="text-center">1</td>
@@ -153,6 +153,40 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/admin-logout.js"></script>
+
+    <script>
+      // Display the admin username dynamically
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the username from localStorage
+        const username = localStorage.getItem("username");
+
+        // If the username exists, display it in the relevant places
+        if (username) {
+          document.getElementById("adminUsername").textContent = username;
+          document.getElementById("profileUsername").textContent = username;
+        }
+
+        // Other initialization logic (e.g., updating dashboard counts)
+        updateDashboardCounts();
+        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
+        checkViewedStatus();
+      });
+
+      // Search functionality for the reservation table
+      document.getElementById("search").addEventListener("keyup", function () {
+        const searchValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll("#payment-table-body tr");
+
+        tableRows.forEach(function (row) {
+          const rowText = row.textContent.toLowerCase();
+          if (rowText.includes(searchValue)) {
+            row.style.display = ""; // Show the row
+          } else {
+            row.style.display = "none"; // Hide the row
+          }
+        });
+      });
+    </script>
 
     <script>
       // Display the admin username dynamically
