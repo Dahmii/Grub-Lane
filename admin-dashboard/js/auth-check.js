@@ -1,7 +1,6 @@
 (function () {
-  const token = localStorage.getItem("token"); // Replace 'token' with the actual key used to store the JWT
+  const token = localStorage.getItem("token"); 
   if (!token) {
-    // Redirect immediately if no token is found
     window.location.href = "index.html";
   }
 })();
