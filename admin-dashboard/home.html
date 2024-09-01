@@ -1,253 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - Overview</title>
-    <script src="js/auth-check.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/admin.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <link rel="icon" href="../img/favicon.png" type="image/png" />
-    <link rel="shortcut icon" href="../img/favicon-icon" type="image/png" />
-  </head>
 
-  <body>
-    <div class="wrapper">
-      <div class="hamburger-menu">
-        <i class="fas fa-bars" id="sidebarCollapse"></i>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Overview</title>
+  <script src="js/auth-check.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="icon" href="../img/favicon.png" type="image/png" />
+  <link rel="shortcut icon" href="../img/favicon-icon" type="image/png" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="hamburger-menu">
+      <i class="fas fa-bars" id="sidebarCollapse"></i>
+    </div>
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h5>Welcome, <span id="adminUsername">Admin</span></h5>
       </div>
-      <nav id="sidebar">
-        <div class="sidebar-header">
-          <h5>Welcome, <span id="adminUsername">Admin</span></h5>
+      <ul class="components">
+        <li class="active">
+          <a href="home.html"><i class="fas fa-tachometer-alt"></i> <span>Home</span></a>
+        </li>
+        <li>
+          <a href="manage-reservations.html"><i class="fas fa-calendar-alt"></i> <span>Reservations</span></a>
+        </li>
+        <li>
+          <a href="manage-takeout.html"><i class="fas fa-box"></i> <span>Take-Out Orders</span></a>
+        </li>
+        <li>
+          <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
+        </li>
+        <li>
+          <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="content">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+          <h4 class="dashboard-title mb-0">Dashboard Overview</h4>
+          <div class="navbar-icons d-flex align-items-center">
+            <div class="dropdown">
+              <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i>
+                <span id="profileUsername">Admin</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                <a class="dropdown-item" href="change-password.html"><i class="fas fa-key"></i> Change Password</a>
+              </div>
+            </div>
+            <button id="logoutButton" class="btn btn-danger">
+              <i class="fas fa-sign-out-alt"></i>Logout
+            </button>
+          </div>
         </div>
-        <ul class="components">
-          <li class="active">
-            <a href="home.html"
-              ><i class="fas fa-tachometer-alt"></i> <span>Home</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-reservations.html"
-              ><i class="fas fa-calendar-alt"></i> <span>Reservations</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-takeout.html"
-              ><i class="fas fa-box"></i> <span>Take-Out Orders</span></a
-            >
-          </li>
-          <li>
-            <a href="manage-payments.html"
-              ><i class="fas fa-money-check-alt"></i><span> Payments</span></a
-            >
-          </li>
-          <li>
-            <a href="create-admin.html"
-              ><i class="fas fa-user-plus"></i> <span>Create Admin</span></a
-            >
-          </li>
-        </ul>
       </nav>
 
-      <div id="content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div
-            class="container-fluid d-flex justify-content-between align-items-center"
-          >
-            <h4 class="dashboard-title mb-0">Dashboard Overview</h4>
-            <div class="navbar-icons d-flex align-items-center">
-              <div class="dropdown">
-                <a
-                  href="#"
-                  class="nav-link dropdown-toggle"
-                  id="profileDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-user"></i>
-                  <span id="profileUsername">Admin</span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="profileDropdown"
-                >
-                  <a class="dropdown-item" href="edit-profile.html"
-                    ><i class="fas fa-user-edit"></i> Edit Profile</a
-                  >
-                  <a class="dropdown-item" href="change-password.html"
-                    ><i class="fas fa-key"></i> Change Password</a
-                  >
+      <div class="content-area">
+        <div class="dashboard-header">
+          <h2>Overview</h2>
+        </div>
+
+        <div class="dashboard-content">
+          <div class="row">
+            <!-- Reservations Overview -->
+            <div class="col-md-4">
+              <a href="manage-reservations.html">
+                <div id="reservations-card" class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                      <div class="ml-3">
+                        <h5 class="card-title">Reservations</h5>
+                        <p class="card-text" id="reservations-overview">0</p>
+                        <span id="reservations-new" class="badge badge-danger" style="display: none">New</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <button id="logoutButton" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt"></i>Logout
-              </button>
+              </a>
+            </div>
+            <!-- Orders Overview -->
+            <div class="col-md-4">
+              <a href="manage-takeout.html">
+                <div id="orders-card" class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-box fa-3x text-success"></i>
+                      <div class="ml-3">
+                        <h5 class="card-title">Orders Processed</h5>
+                        <p class="card-text" id="orders-overview">0</p>
+                        <span id="orders-new" class="badge badge-danger" style="display: none">New</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <!-- Payments Overview -->
+            <div class="col-md-4">
+              <a href="manage-payments.html">
+                <div id="payments-card" class="card">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <i class="fas fa-money-check-alt fa-3x text-warning"></i>
+                      <div class="ml-3">
+                        <h5 class="card-title">Payments/Revenue</h5>
+                        <p class="card-text" id="payments-overview">0</p>
+                        <span id="payments-new" class="badge badge-danger" style="display: none">New</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
-        </nav>
-
-        <div class="content-area">
-          <div class="dashboard-header">
-            <h2>Overview</h2>
-          </div>
-
-          <div class="dashboard-content">
-            <div class="row">
-              <!-- Reservations Overview -->
-              <div class="col-md-4">
-                <a href="manage-reservations.html">
-                  <div id="reservations-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-calendar-alt fa-3x text-primary"></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Reservations</h5>
-                          <p class="card-text" id="reservations-overview">0</p>
-                          <span
-                            id="reservations-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <!-- Orders Overview -->
-              <div class="col-md-4">
-                <a href="manage-takeout.html">
-                  <div id="orders-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i class="fas fa-box fa-3x text-success"></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Orders Processed</h5>
-                          <p class="card-text" id="orders-overview">0</p>
-                          <span
-                            id="orders-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <!-- Payments Overview -->
-              <div class="col-md-4">
-                <a href="manage-payments.html">
-                  <div id="payments-card" class="card">
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <i
-                          class="fas fa-money-check-alt fa-3x text-warning"
-                        ></i>
-                        <div class="ml-3">
-                          <h5 class="card-title">Payments/Revenue</h5>
-                          <p class="card-text" id="payments-overview">0</p>
-                          <span
-                            id="payments-new"
-                            class="badge badge-danger"
-                            style="display: none"
-                            >New</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-            <!-- Additional rows and cards can be added here -->
-          </div>
+          <!-- Additional rows and cards can be added here -->
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="../js/fetchreservations.js"></script>
-    <script src="../js/fetchorder.js"></script>
-    <script src="js/admin-logout.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="../js/fetchreservations.js"></script>
+  <script src="../js/fetchorder.js"></script>
+  <script src="js/admin-logout.js"></script>
 
-    <script>
-      let lastReservationCount = 0;
+  <script>
+    let lastReservationCount = 0;
 
-      document.addEventListener("DOMContentLoaded", function () {
-       
-        updateReservationCount();
-        setInterval(updateReservationCount, 100000); 
+    document.addEventListener("DOMContentLoaded", function () {
 
-        document
-          .getElementById("reservations-card")
-          .addEventListener("click", function () {
-            localStorage.setItem("viewedReservations", true);
-            checkViewedStatus();
-          });
+      updateReservationCount();
+      setInterval(updateReservationCount, 100000);
 
-        checkViewedStatus();
-      });
+      document
+        .getElementById("reservations-card")
+        .addEventListener("click", function () {
+          localStorage.setItem("viewedReservations", true);
+          checkViewedStatus();
+        });
 
-      function updateReservationCount() {
-        
-        fetchReservationCount()
-          .then((reservations) => {
-            console.log(reservations);
-            const totalReservations = reservations || 0;
+      checkViewedStatus();
+    });
 
-            
-            document.getElementById("reservations-overview").textContent =
-              totalReservations;
+    function updateReservationCount() {
 
-            if (
-              totalReservations > lastReservationCount &&
-              !localStorage.getItem("viewedReservations")
-            ) {
-              document.getElementById("reservations-new").style.display =
-                "inline";
-            } else {
-              document.getElementById("reservations-new").style.display =
-                "none";
-            }
+      fetchReservationCount()
+        .then((reservations) => {
+          console.log(reservations);
+          const totalReservations = reservations || 0;
 
-            lastReservationCount = totalReservations;
-          })
-          .catch((error) => {
-            console.error("Error fetching reservations:", error);
-          });
+
+          document.getElementById("reservations-overview").textContent =
+            totalReservations;
+
+          if (
+            totalReservations > lastReservationCount &&
+            !localStorage.getItem("viewedReservations")
+          ) {
+            document.getElementById("reservations-new").style.display =
+              "inline";
+          } else {
+            document.getElementById("reservations-new").style.display =
+              "none";
+          }
+
+          lastReservationCount = totalReservations;
+        })
+        .catch((error) => {
+          console.error("Error fetching reservations:", error);
+        });
+    }
+
+    function checkViewedStatus() {
+      if (localStorage.getItem("viewedReservations")) {
+        document.getElementById("reservations-new").style.display = "none";
       }
+    }
 
-      function checkViewedStatus() {
-        if (localStorage.getItem("viewedReservations")) {
-          document.getElementById("reservations-new").style.display = "none";
-        }
+    // Display the admin username dynamically
+    document.addEventListener("DOMContentLoaded", function () {
+      const username = localStorage.getItem("username");
+
+      if (username) {
+        document.getElementById("adminUsername").textContent = username;
+        document.getElementById("profileUsername").textContent = username;
       }
+    });
+  </script>
+</body>
 
-      // Display the admin username dynamically
-      document.addEventListener("DOMContentLoaded", function () {
-        const username = localStorage.getItem("username");
-
-        if (username) {
-          document.getElementById("adminUsername").textContent = username;
-          document.getElementById("profileUsername").textContent = username;
-        }
-      });
-    </script>
-  </body>
 </html>
