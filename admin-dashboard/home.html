@@ -190,9 +190,9 @@
       let lastReservationCount = 0;
 
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("Page loaded. Initializing reservation count update.");
+       
         updateReservationCount();
-        setInterval(updateReservationCount, 10000); 
+        setInterval(updateReservationCount, 100000); 
 
         document
           .getElementById("reservations-card")
@@ -210,9 +210,8 @@
           .then((reservations) => {
             console.log(reservations);
             const totalReservations = reservations || 0;
-            console.log(totalReservations)
 
-            console.log("Total reservations: ", totalReservations);
+            
             document.getElementById("reservations-overview").textContent =
               totalReservations;
 
