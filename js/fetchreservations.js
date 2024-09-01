@@ -60,7 +60,6 @@ function fetchReservationCount(url = null) {
       }
     })
     .then((data) => {
-      console.log("API Response:", data);
 
       
 
