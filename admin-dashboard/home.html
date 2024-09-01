@@ -190,11 +190,10 @@
       let lastReservationCount = 0;
 
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("Page loaded. Initializing reservation count update.");
+       
         updateReservationCount();
-        setInterval(updateReservationCount, 10000); // Polling every 10 seconds
+        setInterval(updateReservationCount, 100000); 
 
-        // Add click event listeners to clear "new" notifications
         document
           .getElementById("reservations-card")
           .addEventListener("click", function () {
@@ -206,13 +205,13 @@
       });
 
       function updateReservationCount() {
-        console.log("Fetching reservations to update count...");
-        fetchAllReservations(1)
+        
+        fetchReservationCount()
           .then((reservations) => {
-            console.log("Reservations fetched: ", reservations);
-            const totalReservations = reservations.length || 0;
+            console.log(reservations);
+            const totalReservations = reservations || 0;
 
-            console.log("Total reservations: ", totalReservations);
+            
             document.getElementById("reservations-overview").textContent =
               totalReservations;
 

@@ -245,7 +245,7 @@ router.post(
  *                   description: Error message
  *                   example: Error creating admin
  */
-
+ 
 router.post(
   "/createAdmin",
   operationLogger("Created a new admin"),

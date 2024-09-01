@@ -155,24 +155,19 @@
     <script src="js/admin-logout.js"></script>
 
     <script>
-      // Display the admin username dynamically
       document.addEventListener("DOMContentLoaded", function () {
-        // Get the username from localStorage
         const username = localStorage.getItem("username");
 
-        // If the username exists, display it in the relevant places
         if (username) {
           document.getElementById("adminUsername").textContent = username;
           document.getElementById("profileUsername").textContent = username;
         }
 
-        // Other initialization logic (e.g., updating dashboard counts)
         updateDashboardCounts();
-        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
+        setInterval(updateDashboardCounts, 10000); 
         checkViewedStatus();
       });
 
-      // Search functionality for the reservation table
       document.getElementById("search").addEventListener("keyup", function () {
         const searchValue = this.value.toLowerCase();
         const tableRows = document.querySelectorAll(
@@ -191,20 +186,16 @@
     </script>
 
     <script>
-      // Display the admin username dynamically
       document.addEventListener("DOMContentLoaded", function () {
-        // Get the username from localStorage
         const username = localStorage.getItem("username");
 
-        // If the username exists, display it in the relevant places
         if (username) {
           document.getElementById("adminUsername").textContent = username;
           document.getElementById("profileUsername").textContent = username;
         }
 
-        // Other initialization logic (e.g., updating dashboard counts)
         updateDashboardCounts();
-        setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
+        setInterval(updateDashboardCounts, 10000); 
         checkViewedStatus();
       });
     </script>

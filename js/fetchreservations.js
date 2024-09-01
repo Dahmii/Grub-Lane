@@ -34,16 +34,67 @@ let nextUrl = null;
 let prevUrl = null;
 const rowsPerPage = 10;
 
+
+function fetchReservationCount(url = null) {
+  const endpointUrl =
+    url ||
+    `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
+
+  const token = localStorage.getItem("token");
+  console.log(token);
+
+  return fetch(endpointUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  })
+  
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      }
+       else {
+        throw new Error("Failed to fetch reservations.");
+      }
+    })
+    .then((data) => {
+
+      
+
+      return data.total;
+    })
+    .catch((error) => {
+      console.error("Error fetching reservations:", error.message);
+      return [];
+    });
+}
+
+
+
+
 function fetchAllReservations(url = null) {
   const endpointUrl =
     url ||
     `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
-  return fetch(endpointUrl)
+  const token = localStorage.getItem("token");
+  console.log(token);
+
+  return fetch(endpointUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  })
+  
     .then((response) => {
       if (response.status === 200) {
         return response.json();
-      } else {
+      }
+       else {
         throw new Error("Failed to fetch reservations.");
       }
     })
