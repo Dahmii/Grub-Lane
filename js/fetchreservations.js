@@ -39,7 +39,15 @@ function fetchAllReservations(url = null) {
     url ||
     `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
-  return fetch(endpointUrl)
+  const token = localStorage.getItem("token");
+
+  return fetch(endpointUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  })
     .then((response) => {
       if (response.status === 200) {
         return response.json();

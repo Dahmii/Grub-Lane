@@ -45,8 +45,15 @@ const rowsPerPage = 10;
 
 function fetchAllOrders(page = 1) {
   const endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
+  const token = localStorage.getItem("token");
 
-  return fetch(endpointUrl)
+  return fetch(endpointUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+  })
     .then((response) => {
       if (response.status === 200) {
         return response.json();
@@ -57,19 +64,18 @@ function fetchAllOrders(page = 1) {
     .then((data) => {
       console.log("API Response:", data);
 
-      // Assuming the response is an array of orders
       const orders = data.orders || data;
       return orders;
     })
     .catch((error) => {
       console.error("Error fetching orders:", error.message);
-      return []; // Return an empty array in case of error
+      return [];
     });
 }
 
 function populateTable(orders) {
   const tableBody = document.getElementById("order-table-body");
-  tableBody.innerHTML = ""; // Clear existing rows
+  tableBody.innerHTML = "";
 
   if (orders.length === 0) {
     tableBody.innerHTML =
@@ -102,7 +108,6 @@ function updatePaginationControls(currentPage, totalPages) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch and display the first page of orders when the page loads
   fetchAllOrders(currentPage).then((orders) => {
     populateTable(orders);
     const totalPages = Math.ceil(orders.length / rowsPerPage);
