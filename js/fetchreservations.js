@@ -62,8 +62,7 @@ function fetchReservationCount(url = null) {
     .then((data) => {
       console.log("API Response:", data);
 
-      nextUrl = data.pagination.nextUrl;
-      prevUrl = data.pagination.prevUrl;
+      
 
       return data.total;
     })
