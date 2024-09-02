@@ -1,6 +1,6 @@
 function payWithPaystack(amount, email, orderId) {
   let handler = PaystackPop.setup({
-    key: "pk_test_8168df975740a7daac50c926c60f4a4694fc9d50", // Replace with your public key
+    key: "", // Replace with your public key
     email: email,
     amount: amount * 100, // Paystack expects amount in kobo??
     currency: "NGN",
