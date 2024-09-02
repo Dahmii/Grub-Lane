@@ -28,7 +28,8 @@ function fetchPayments(page = 1, status = "") {
 }
 
 function displayPayments(payments) {
-  const tableBody = document.getElementById("payments-body");
+  const tableBody = document.getElementById("payment-table-body");
+
   tableBody.innerHTML = "";
 
   if (payments.length === 0) {
@@ -85,7 +86,7 @@ function setupPagination(pagination) {
 
 function changePage(page) {
   currentPage = page;
-  fetchPayments(currentPage, document.getElementById("status-filter").value);
+  fetchPayments(currentPage, document.getElementById("filter").value);
 }
 
 function viewPaymentDetails(paymentId) {
@@ -93,11 +94,9 @@ function viewPaymentDetails(paymentId) {
   console.log("Viewing details for payment:", paymentId);
 }
 
-document
-  .getElementById("status-filter")
-  .addEventListener("change", function () {
-    fetchPayments(1, this.value);
-  });
+document.getElementById("filter").addEventListener("change", function () {
+  fetchPayments(1, this.value);
+});
 
 document.getElementById("export").addEventListener("click", function () {
   exportToCSV(currentPayments, "payments");

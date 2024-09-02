@@ -36,7 +36,7 @@
         <li>
           <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
         </li>
-        <li>
+        <li class="staff-role">
           <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
         </li>
       </ul>
@@ -160,6 +160,13 @@
         document.getElementById("profileUsername").textContent = username;
       }
 
+      //Display "create Admin" for just Super Admin
+      let role = localStorage.getItem('role');
+      if (role === 'super admin') {
+        document.querySelector(".staff-role").style.display = 'block';
+      } else {
+        document.querySelector(".staff-role").style.display = 'none';
+      }
 
       updateDashboardCounts();
       setInterval(updateDashboardCounts, 10000);

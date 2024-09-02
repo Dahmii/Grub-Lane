@@ -21,7 +21,7 @@
     </div>
     <nav id="sidebar">
       <div class="sidebar-header">
-        <h5>Welcome, <span id="adminUsername">Admin</span></h5>
+        <h5>Welcome, <span id="adminUsername"></span></h5>
       </div>
       <ul class="components">
         <li class="active">
@@ -36,7 +36,8 @@
         <li>
           <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
         </li>
-        <li>
+
+        <li class="staff-role">
           <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
         </li>
       </ul>
@@ -198,6 +199,13 @@
       if (username) {
         document.getElementById("adminUsername").textContent = username;
         document.getElementById("profileUsername").textContent = username;
+      }
+
+      let role = localStorage.getItem('role');
+      if (role === 'super admin') {
+        document.querySelector(".staff-role").style.display = 'block';
+      } else {
+        document.querySelector(".staff-role").style.display = 'block';
       }
     });
   </script>

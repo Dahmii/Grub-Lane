@@ -1,10 +1,10 @@
 function payWithPaystack(amount, email, orderId) {
   let handler = PaystackPop.setup({
-    key: "YOUR_PAYSTACK_PUBLIC_KEY", // Replace with your public key
+    key: "pk_test_8168df975740a7daac50c926c60f4a4694fc9d50", // Replace with your public key
     email: email,
-    amount: amount * 100, // Paystack expects amount in kobo
+    amount: amount * 100, // Paystack expects amount in kobo??
     currency: "NGN",
-    ref: orderId, // Use the order ID as the reference
+    ref: orderId,
     callback: function (response) {
       // This function is called when the payment is successful
       if (response.status === "success") {
