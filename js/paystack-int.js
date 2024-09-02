@@ -1,8 +1,8 @@
 function payWithPaystack(amount, email, orderId) {
   let handler = PaystackPop.setup({
-    key: "", // Replace with your public key
+    key: "YOUR_PUBLIC_KEY", // Replace with your Paystack public key
     email: email,
-    amount: amount * 100, // Paystack expects amount in kobo??
+    amount: amount * 100, // Paystack expects amount in kobo
     currency: "NGN",
     ref: orderId,
     callback: function (response) {
@@ -27,10 +27,14 @@ function payWithPaystack(amount, email, orderId) {
           .then((data) => {
             console.log("Payment recorded:", data);
             alert("Payment successful!");
-            // You can redirect the user or update the UI here
+            // Redirect to the order confirmation page
+            window.location.href = "/order-confirmation.html";
           })
           .catch((error) => {
             console.error("Error recording payment:", error);
+            alert(
+              "There was an error processing your payment. Please contact support."
+            );
           });
       }
     },

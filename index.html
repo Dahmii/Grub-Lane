@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Mirrored from preview.colorlib.com/theme/gourmet/about.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 15 Jul 2024 19:20:08 GMT -->
+
 
 <head>
   <title>Grub Lane</title>
@@ -27,6 +27,8 @@
   <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
 
   <link rel="stylesheet" href="css/style.css" />
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 
 <body>
@@ -350,9 +352,10 @@
     </div>
     <div class="side-cart-footer">
       <h3 id="total-price">Total: N0</h3>
-      <button onclick="payWithPaystack(totalAmount, userEmail, orderId)">Checkout with Paystack</button>
+      <button id="checkout-button" disabled>Checkout with Paystack</button>
     </div>
   </div>
+
 
   <!-- OVERLAY -->
   <div id="overlay" class="overlay"></div>
@@ -460,7 +463,7 @@
   <script src="js/cart.js"></script>
 
   <!-- PAYMENTS INTEGRATION -->
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+
   <script src="js/paystack-int.js"></script>
 
 

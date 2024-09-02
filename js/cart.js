@@ -1,5 +1,3 @@
-// cart.js
-
 // Initialize cart
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -25,13 +23,17 @@ function renderCart() {
 
   document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
 
+  // Enable or disable checkout button based on cart items
+  const checkoutButton = document.getElementById("checkout-button");
+  checkoutButton.disabled = cart.length === 0;
+
   // Add event listeners for remove buttons
   document.querySelectorAll(".remove-btn").forEach((button) => {
     button.addEventListener("click", function () {
       const itemIndex = this.getAttribute("data-index");
       cart.splice(itemIndex, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
+      renderCart(); // Re-render cart after item is removed
     });
   });
 }
@@ -89,10 +91,27 @@ document.getElementById("overlay").addEventListener("click", function () {
   document.getElementById("overlay").classList.remove("active");
 });
 
-// Checkout with Paystack (sample implementation)
+// Checkout with Paystack
 document
   .getElementById("checkout-button")
   .addEventListener("click", function () {
-    // Replace with your actual Paystack integration code
-    // alert("Checkout with Paystack");
+    if (cart.length === 0) {
+      alert("No items in cart. Please add items before checking out.");
+      return;
+    }
+
+    // Calculate the total amount
+    let totalAmount = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    // Get the user's email (replace this with actual user email retrieval)
+    let userEmail = localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
+
+    // Generate an order ID (this could also be generated on the server)
+    let orderId = "ORDER_" + new Date().getTime(); // Example order ID
+
+    // Call the Paystack payment function
+    payWithPaystack(totalAmount, userEmail, orderId);
   });

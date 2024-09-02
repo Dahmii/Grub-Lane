@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Grub Lane</title>
+    <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css" />
+    <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/order-confirmation.css">
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.png" type="image/png" />
+    <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <a class="navbar-brand" href="index.html"><img src="img/GrublaneBC-03.png" alt="grublane logo"
+                            class="site-logo" /></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ORDER CONFIRMATION SECTION -->
+    <section class="order-confirmation">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <h2 class="mb-4">Thank You for Your Order!</h2>
+                    <p>Your order has been successfully placed.</p>
+                    <div id="order-details" class="order-details">
+                        <!-- Order details will be inserted here by JavaScript -->
+                    </div>
+                    <a href="index.html" class="btn btn-primary mt-4">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>&copy;
+                        <script>document.write(new Date().getFullYear());</script> Grub Lane. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            let params = {};
+            window.location.search.substring(1).split("&").forEach(function (pair) {
+                let [key, value] = pair.split("=");
+                params[decodeURIComponent(key)] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        // Function to display order details
+        function displayOrderDetails() {
+            let params = getQueryParams();
+            let orderId = params.orderId || "Not Available";
+            let amount = params.amount || "Not Available";
+            let paymentMethod = params.paymentMethod || "Paystack";
+            let status = params.status || "Success";
+
+            let orderDetailsDiv = document.getElementById("order-details");
+
+            orderDetailsDiv.innerHTML = `
+                <p><strong>Order ID:</strong> ${orderId}</p>
+                <p><strong>Amount Paid:</strong> ₦${amount}</p>
+                <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+                <p><strong>Status:</strong> ${status}</p>
+            `;
+        }
+
+        // Display order details on page load
+        document.addEventListener("DOMContentLoaded", displayOrderDetails);
+    </script>
+</body>
+
+</html>
