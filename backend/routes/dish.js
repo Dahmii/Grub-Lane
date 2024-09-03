@@ -22,13 +22,13 @@ const storage = multer.diskStorage({
  * /api/dish/getDishes:
  *   get:
  *     tags: [Dishes] 
- *     summary: Get dishes based on the take_out flag of the menu
+ *     summary: Get dishes based on the take_out flag of the menu. If the take_out flag is not provided, return all dishes.
  *     parameters:
  *       - in: query
  *         name: take_out
  *         schema:
  *           type: boolean
- *         required: true
+ *         required: false
  *         description: The take_out flag of the menu
  *     responses:
  *       200:
@@ -66,15 +66,21 @@ const storage = multer.diskStorage({
  *                   description: Error message
  */
 router.get("/getDishes", (req, res) => {
-  const take_out = req.query.take_out === "true"; 
-  const query = `
+  const take_out = req.query.take_out;
+  let query = `
         SELECT Dish.id, Dish.name, Dish.price, Dish.menu_id, Dish.image_link 
         FROM Dish
         INNER JOIN Menu ON Dish.menu_id = Menu.id
-        WHERE Menu.take_out = ?
     `;
 
-  db.all(query, [take_out], (err, rows) => {
+  const queryParams = [];
+
+  if (take_out !== undefined) {
+    query += ` WHERE Menu.take_out = ?`;
+    queryParams.push(take_out === "true");
+  }
+
+  db.all(query, queryParams, (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -93,6 +99,7 @@ router.get("/getDishes", (req, res) => {
     res.json({ dishes });
   });
 });
+
 
 
 const upload = multer({
