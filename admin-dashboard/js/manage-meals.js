@@ -36,10 +36,10 @@ function displayMeals(filteredMeals = meals) {
     const row = `
             <tr>
                 <td>${meal.name}</td>
-                <td>${meal.description}</td>
+                <td>${meal.description || ''}</td>
                 <td>$${meal.price.toFixed(2)}</td>
-                <td>${meal.serviceType}</td>
-                <td>${meal.category}</td>
+                <td>${meal.servicetype}</td>
+                <td>${meal.subcategory || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-primary" onclick="editMeal(${meal.id})">Edit</button>
                     <button class="btn btn-sm btn-danger" onclick="deleteMeal(${meal.id})">Delete</button>
@@ -58,7 +58,7 @@ async function addMeal(event) {
     description: document.getElementById("mealDescription").value,
     price: parseFloat(document.getElementById("mealPrice").value),
     serviceType: document.getElementById("mealServiceType").value,
-    category: document.getElementById("mealCategory").value,
+    subcategory: document.getElementById("mealCategory").value,
   };
 
   try {
@@ -87,10 +87,10 @@ function editMeal(id) {
   if (meal) {
     document.getElementById("editMealId").value = meal.id;
     document.getElementById("editMealName").value = meal.name;
-    document.getElementById("editMealDescription").value = meal.description;
+    document.getElementById("editMealDescription").value = meal.description || '';
     document.getElementById("editMealPrice").value = meal.price;
-    document.getElementById("editMealServiceType").value = meal.serviceType;
-    document.getElementById("editMealCategory").value = meal.category;
+    document.getElementById("editMealServiceType").value = meal.servicetype;
+    document.getElementById("editMealCategory").value = meal.subcategory || '';
     $("#editMealModal").modal("show");
   }
 }
@@ -103,7 +103,7 @@ async function saveMealEdit() {
     description: document.getElementById("editMealDescription").value,
     price: parseFloat(document.getElementById("editMealPrice").value),
     serviceType: document.getElementById("editMealServiceType").value,
-    category: document.getElementById("editMealCategory").value,
+    subcategory: document.getElementById("editMealCategory").value,
   };
 
   try {
@@ -124,6 +124,7 @@ async function saveMealEdit() {
       }
     }
   } catch (error) {
+    // Handle error
   }
 }
 
@@ -139,21 +140,22 @@ async function deleteMeal(id) {
         displayMeals();
       }
     } catch (error) {
+      // Handle error
     }
   }
 }
 
 function filterAndSearchMeals() {
-  const serviceType = document.getElementById("filterServiceType").value.toLowerCase();
-  const category = document.getElementById("filterCategory").value.toLowerCase();
+  const servicetype = document.getElementById("filterServiceType").value.toLowerCase();
+  const subcategory = document.getElementById("filterCategory").value.toLowerCase();
   const searchQuery = document.getElementById("searchMeal").value.toLowerCase();
 
   const filteredMeals = meals.filter(meal => {
-    const matchesServiceType = !serviceType || meal.serviceType.toLowerCase().includes(serviceType);
-    const matchesCategory = !category || meal.category.toLowerCase().includes(category);
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery) || meal.description.toLowerCase().includes(searchQuery);
+    const matchesServiceType = !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
+    const matchesSubcategory = !subcategory || (meal.subcategory && meal.subcategory.toLowerCase().includes(subcategory));
+    const matchesSearch = meal.name.toLowerCase().includes(searchQuery) || (meal.description && meal.description.toLowerCase().includes(searchQuery));
 
-    return matchesServiceType && matchesCategory && matchesSearch;
+    return matchesServiceType && matchesSubcategory && matchesSearch;
   });
 
   displayMeals(filteredMeals);
