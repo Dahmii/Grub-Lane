@@ -37,7 +37,7 @@ function displayMeals(filteredMeals = meals) {
             <tr>
                 <td>${meal.name}</td>
                 <td>${meal.description || ''}</td>
-                <td>$${meal.price.toFixed(2)}</td>
+                <td>₦${meal.price.toFixed(2)}</td>             
                 <td>${meal.servicetype}</td>
                 <td>${meal.subcategory || ''}</td>
                 <td>
