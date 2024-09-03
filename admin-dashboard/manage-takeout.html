@@ -24,22 +24,22 @@
         <h5>Welcome, <span id="adminUsername">Admin</span></h5>
       </div>
       <ul class="components">
-        <li class="active">
+        <li data-page="home">
           <a href="home.html"><i class="fas fa-tachometer-alt"></i> <span>Home</span></a>
         </li>
-        <li>
+        <li data-page="manage-reservations">
           <a href="manage-reservations.html"><i class="fas fa-calendar-alt"></i> <span>Reservations</span></a>
         </li>
-        <li>
+        <li data-page="manage-takeout">
           <a href="manage-takeout.html"><i class="fas fa-box"></i> <span>Take-Out Orders</span></a>
         </li>
-        <li>
+        <li data-page="manage-payments">
           <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
         </li>
-        <li>
+        <li data-page="manage-meals">
           <a href="manage-meals.html"><i class="fas fa-utensils"></i> <span>Manage Meals</span></a>
         </li>
-        <li class="staff-role">
+        <li class="staff-role" data-page="create-admin">
           <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
         </li>
       </ul>
@@ -132,48 +132,81 @@
         document.getElementById("profileUsername").textContent = username;
       }
 
-      updateDashboardCounts();
-      setInterval(updateDashboardCounts, 10000);
-      checkViewedStatus();
-    });
+      loadOrders(); // Load orders on page load
 
-    document.getElementById("search").addEventListener("keyup", function () {
-      const searchValue = this.value.toLowerCase();
-      const tableRows = document.querySelectorAll("#order-table-body tr");
+      document.getElementById("search").addEventListener("keyup", function () {
+        const searchValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll("#order-table-body tr");
 
-      tableRows.forEach(function (row) {
-        const rowText = row.textContent.toLowerCase();
-        if (rowText.includes(searchValue)) {
-          row.style.display = ""; // Show the row
-        } else {
-          row.style.display = "none"; // Hide the row
+        tableRows.forEach(function (row) {
+          const rowText = row.textContent.toLowerCase();
+          if (rowText.includes(searchValue)) {
+            row.style.display = ""; // Show the row
+          } else {
+            row.style.display = "none"; // Hide the row
+          }
+        });
+      });
+
+      function setActiveMenuItem() {
+        const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
+        const menuItems = document.querySelectorAll("#sidebar ul.components li");
+
+        menuItems.forEach(item => {
+          item.classList.remove("active");
+          if (item.dataset.page === currentPage) {
+            item.classList.add("active");
+          }
+        });
+
+        // Special case for the home page
+        if (currentPage === "" || currentPage === "index") {
+          document.querySelector('li[data-page="home"]').classList.add("active");
         }
+      }
+
+      // Call the function when the DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        setActiveMenuItem();
+        // ... (other existing DOMContentLoaded event listeners) ...
+      });
+
+      document.getElementById("filter").addEventListener("change", function () {
+        const filterValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll("#order-table-body tr");
+
+        tableRows.forEach(function (row) {
+          const statusText = row.querySelector("td:nth-child(5)").textContent.toLowerCase();
+          if (filterValue === "" || statusText === filterValue) {
+            row.style.display = ""; // Show the row
+          } else {
+            row.style.display = "none"; // Hide the row
+          }
+        });
       });
     });
-  </script>
 
-  <script>
+    function setActiveMenuItem() {
+      const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
+      const menuItems = document.querySelectorAll("#sidebar ul.components li");
 
+      menuItems.forEach(item => {
+        item.classList.remove("active");
+        if (item.dataset.page === currentPage) {
+          item.classList.add("active");
+        }
+      });
+
+      // Special case for the home page
+      if (currentPage === "" || currentPage === "index") {
+        document.querySelector('li[data-page="home"]').classList.add("active");
+      }
+    }
+
+    // Call the function when the DOM is loaded
     document.addEventListener("DOMContentLoaded", function () {
-      const username = localStorage.getItem("username");
-
-
-      if (username) {
-        document.getElementById("adminUsername").textContent = username;
-        document.getElementById("profileUsername").textContent = username;
-      }
-
-      //Display "create Admin" for just Super Admin
-      let role = localStorage.getItem('role');
-      if (role === 'super admin') {
-        document.querySelector(".staff-role").style.display = 'block';
-      } else {
-        document.querySelector(".staff-role").style.display = 'none';
-      }
-
-      updateDashboardCounts();
-      setInterval(updateDashboardCounts, 10000);
-      checkViewedStatus();
+      setActiveMenuItem();
+      // ... (other existing DOMContentLoaded event listeners) ...
     });
   </script>
 </body>

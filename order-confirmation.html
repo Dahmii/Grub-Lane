@@ -61,6 +61,7 @@
     <!-- SCRIPTS -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/fetchorder.js"></script>
     <script>
         // Function to get query parameters from the URL
         function getQueryParams() {
@@ -72,25 +73,44 @@
             return params;
         }
 
-        // Function to display order details
+        // Function to fetch and display order details
         function displayOrderDetails() {
             let params = getQueryParams();
-            let orderId = params.orderId || "Not Available";
-            let amount = params.amount || "Not Available";
-            let paymentMethod = params.paymentMethod || "Paystack";
-            let status = params.status || "Success";
+            let orderId = params.orderId;
 
-            let orderDetailsDiv = document.getElementById("order-details");
+            if (!orderId) {
+                document.getElementById("order-details").innerHTML = `
+                    <p><strong>Error:</strong> No order ID found.</p>
+                `;
+                return;
+            }
 
-            orderDetailsDiv.innerHTML = `
-                <p><strong>Order ID:</strong> ${orderId}</p>
-                <p><strong>Amount Paid:</strong> ₦${amount}</p>
-                <p><strong>Payment Method:</strong> ${paymentMethod}</p>
-                <p><strong>Status:</strong> ${status}</p>
-            `;
+            fetchAllOrders() // Reusing the fetchAllOrders function to get all orders
+                .then(orders => {
+                    const order = orders.find(order => order.id == orderId);
+
+                    if (order) {
+                        document.getElementById("order-details").innerHTML = `
+                            <p><strong>Order ID:</strong> ${order.order_number}</p>
+                            <p><strong>Amount Paid:</strong> ₦${order.amount_paid}</p>
+                            <p><strong>Payment Method:</strong> ${order.paystack_reference ? 'Paystack' : 'N/A'}</p>
+                            <p><strong>Status:</strong> ${order.status || 'In Progress'}</p>
+                            <p><strong>Order Details:</strong> ${order.order_details}</p>
+                        `;
+                    } else {
+                        document.getElementById("order-details").innerHTML = `
+                            <p><strong>Error:</strong> Order not found.</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("order-details").innerHTML = `
+                        <p><strong>Error:</strong> Unable to fetch order details. Please try again later.</p>
+                    `;
+                    console.error("Error fetching order details:", error);
+                });
         }
 
-        // Display order details on page load
         document.addEventListener("DOMContentLoaded", displayOrderDetails);
     </script>
 </body>

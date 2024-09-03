@@ -13,39 +13,41 @@ function fetchMenuData(menuType) {
       const menuContainer = document.getElementById("menu-container");
       let menuHtml = "";
 
-      if (Object.keys(data).length === 0) {
+      // Check if data is valid
+      if (!data || Object.keys(data).length === 0) {
         menuHtml = `
-            <div class="text-center">
-              <h2>Oops! Something went wrong!</h2>
-              <p>We couldn't find any menu items at the moment. Please try again later.</p>
-            </div>
-          `;
+          <div class="text-center">
+            <h2>Oops! Something went wrong!</h2>
+            <p>We couldn't find any menu items at the moment. Please try again later.</p>
+          </div>
+        `;
       } else {
+        // Process menu data
         for (const category in data) {
           menuHtml += `<h2 class="text-center">${category}</h2><div class="row">`;
 
-          data[category].forEach((item) => {
-            menuHtml += `
+          if (Array.isArray(data[category])) {
+            data[category].forEach((item) => {
+              menuHtml += `
                 <div class="col-md-4 mb-4">
                   <div class="menu-item">
-                    <img src="${item.image_url}" alt="${
-              item.name
-            }" class="img-fluid" />
+                    <img src="${item.image_url}" alt="${item.name}" class="img-fluid" />
                     <h4>${item.name}</h4>
                     <p>N${item.price}</p>
-                    ${
-                      menuType === "take_out"
-                        ? `
                     <button class="add-to-cart-btn" data-item="${item.name}" data-price="${item.price}">
                       Add to cart
                     </button>
-                    `
-                        : ""
-                    }
                   </div>
                 </div>
               `;
-          });
+            });
+          } else {
+            menuHtml += `
+              <div class="col-12 text-center">
+                <p>No items available in this category.</p>
+              </div>
+            `;
+          }
 
           menuHtml += "</div>";
         }
@@ -53,18 +55,17 @@ function fetchMenuData(menuType) {
 
       menuContainer.innerHTML = menuHtml;
 
-      if (menuType === "take_out") {
-        addCartFunctionality();
-      }
+      // Ensure cart functionality is available after rendering the menu
+      addCartFunctionality();
     })
     .catch((error) => {
       const menuContainer = document.getElementById("menu-container");
       menuContainer.innerHTML = `
-          <div class="text-center">
-            <h2>Oops! Something went wrong!</h2>
-            <p>We couldn't fetch the menu data. Please try again later.</p>
-          </div>
-        `;
+        <div class="text-center">
+          <h2>Oops! Something went wrong!</h2>
+          <p>We couldn't fetch the menu data. Please try again later.</p>
+        </div>
+      `;
       console.error("Error fetching menu data:", error);
     });
 }

@@ -43,8 +43,14 @@ function createOrder(
 let currentPage = 1;
 const rowsPerPage = 10;
 
-function fetchAllOrders(page = 1) {
-  const endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
+function fetchAllOrders(page = 1, searchValue = "", filterValue = "") {
+  let endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
+  if (searchValue) {
+    endpointUrl += `&search=${searchValue}`;
+  }
+  if (filterValue) {
+    endpointUrl += `&status=${filterValue}`;
+  }
   const token = localStorage.getItem("token");
 
   return fetch(endpointUrl, {
@@ -63,7 +69,6 @@ function fetchAllOrders(page = 1) {
     })
     .then((data) => {
       console.log("API Response:", data);
-
       const orders = data.orders || data;
       return orders;
     })
@@ -83,19 +88,17 @@ function populateTable(orders) {
   } else {
     orders.forEach((order) => {
       const row = `
-                <tr>
-                    <td class="text-center">${order.id}</td>
-                    <td class="text-center">${order.user_id}</td>
-                    <td class="text-center">${new Date(
-                      order.date
-                    ).toLocaleDateString()}</td>
-                    <td class="text-center">${order.order_details}</td>
-                    <td class="text-center">${
-                      order.status || "In Progress"
-                    }</td>
-                    <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
-                </tr>
-            `;
+        <tr>
+            <td class="text-center">${order.id}</td>
+            <td class="text-center">${order.user_id}</td>
+            <td class="text-center">${new Date(
+              order.date
+            ).toLocaleDateString()}</td>
+            <td class="text-center">${order.order_details}</td>
+            <td class="text-center">${order.status || "In Progress"}</td>
+            <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
+        </tr>
+      `;
       tableBody.insertAdjacentHTML("beforeend", row);
     });
   }
@@ -108,35 +111,43 @@ function updatePaginationControls(currentPage, totalPages) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetchAllOrders(currentPage).then((orders) => {
-    populateTable(orders);
-    const totalPages = Math.ceil(orders.length / rowsPerPage);
-    updatePaginationControls(currentPage, totalPages);
-  });
+  function loadOrders() {
+    const searchValue = document.getElementById("search").value.toLowerCase();
+    const filterValue = document.getElementById("filter").value.toLowerCase();
+
+    fetchAllOrders(currentPage, searchValue, filterValue).then((orders) => {
+      populateTable(orders);
+      const totalPages = Math.ceil(orders.length / rowsPerPage);
+      updatePaginationControls(currentPage, totalPages);
+    });
+  }
+
+  loadOrders(); // Load orders on page load
 
   document.getElementById("prev-btn").addEventListener("click", function () {
     if (currentPage > 1) {
       currentPage--;
-      fetchAllOrders(currentPage).then((orders) => {
-        populateTable(orders);
-        const totalPages = Math.ceil(orders.length / rowsPerPage);
-        updatePaginationControls(currentPage, totalPages);
-      });
+      loadOrders();
     }
   });
 
   document.getElementById("next-btn").addEventListener("click", function () {
     currentPage++;
-    fetchAllOrders(currentPage).then((orders) => {
-      populateTable(orders);
-      const totalPages = Math.ceil(orders.length / rowsPerPage);
-      updatePaginationControls(currentPage, totalPages);
-    });
+    loadOrders();
   });
 
-  // Event listener for the export to CSV button
+  document.getElementById("search").addEventListener("keyup", function () {
+    currentPage = 1; // Reset to first page on new search
+    loadOrders();
+  });
+
+  document.getElementById("filter").addEventListener("change", function () {
+    currentPage = 1; // Reset to first page on new filter
+    loadOrders();
+  });
+
   document.getElementById("export").addEventListener("click", function () {
-    fetchAllOrders().then((orders) => {
+    fetchAllOrders(1, "", "").then((orders) => {
       const fields = ["id", "user_id", "date", "order_details", "status"];
       exportToCSV(orders, "takeout_orders", fields);
     });

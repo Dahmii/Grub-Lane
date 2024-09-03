@@ -6,7 +6,7 @@ function fetchPayments(page = 1, status = "") {
   const endpointUrl = `https://grublanerestaurant.com/api/payments/getPayments?page=${page}&pageSize=${pageSize}&status=${status}`;
   const token = localStorage.getItem("token");
 
-  fetch(endpointUrl, {
+  return fetch(endpointUrl, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -23,8 +23,12 @@ function fetchPayments(page = 1, status = "") {
       currentPayments = data.data; // Store the payments for export
       displayPayments(data.data);
       setupPagination(data.pagination);
+      return data.data; // Return payment data for further use
     })
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => {
+      console.error("Error:", error);
+      return []; // Return an empty array in case of an error
+    });
 }
 
 function displayPayments(payments) {

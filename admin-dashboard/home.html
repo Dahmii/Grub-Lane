@@ -24,22 +24,22 @@
         <h5>Welcome, <span id="adminUsername"></span></h5>
       </div>
       <ul class="components">
-        <li class="active">
+        <li data-page="home">
           <a href="home.html"><i class="fas fa-tachometer-alt"></i> <span>Home</span></a>
         </li>
-        <li>
+        <li data-page="manage-reservations">
           <a href="manage-reservations.html"><i class="fas fa-calendar-alt"></i> <span>Reservations</span></a>
         </li>
-        <li>
+        <li data-page="manage-takeout">
           <a href="manage-takeout.html"><i class="fas fa-box"></i> <span>Take-Out Orders</span></a>
         </li>
-        <li>
+        <li data-page="manage-payments">
           <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
         </li>
-        <li>
+        <li data-page="manage-meals">
           <a href="manage-meals.html"><i class="fas fa-utensils"></i> <span>Manage Meals</span></a>
         </li>
-        <li class="staff-role">
+        <li class="staff-role" data-page="create-admin">
           <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
         </li>
       </ul>
@@ -138,47 +138,45 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="js/admin.js"></script>
   <script src="../js/fetchreservations.js"></script>
-  <script src="../js/fetchorder.js"></script>
+  <script src="../js/fetchpayments.js"></script> <!-- Updated to include fetchpayments.js -->
   <script src="js/admin-logout.js"></script>
 
   <script>
     let lastReservationCount = 0;
+    let lastPaymentCount = 0;
 
     document.addEventListener("DOMContentLoaded", function () {
-
       updateReservationCount();
-      setInterval(updateReservationCount, 100000);
+      updatePaymentCount(); // Ensure this is called after fetchPayments.js is loaded
+      setInterval(updateReservationCount, 10000);
+      setInterval(updatePaymentCount, 10000);
 
-      document
-        .getElementById("reservations-card")
-        .addEventListener("click", function () {
-          localStorage.setItem("viewedReservations", true);
-          checkViewedStatus();
-        });
+      document.getElementById("reservations-card").addEventListener("click", function () {
+        localStorage.setItem("viewedReservations", true);
+        checkViewedStatus();
+      });
+
+      document.getElementById("payments-card").addEventListener("click", function () {
+        localStorage.setItem("viewedPayments", true);
+        checkViewedStatus();
+      });
 
       checkViewedStatus();
     });
 
     function updateReservationCount() {
-
       fetchReservationCount()
         .then((reservations) => {
-          console.log(reservations);
           const totalReservations = reservations || 0;
-
-
-          document.getElementById("reservations-overview").textContent =
-            totalReservations;
+          document.getElementById("reservations-overview").textContent = totalReservations;
 
           if (
             totalReservations > lastReservationCount &&
             !localStorage.getItem("viewedReservations")
           ) {
-            document.getElementById("reservations-new").style.display =
-              "inline";
+            document.getElementById("reservations-new").style.display = "inline";
           } else {
-            document.getElementById("reservations-new").style.display =
-              "none";
+            document.getElementById("reservations-new").style.display = "none";
           }
 
           lastReservationCount = totalReservations;
@@ -188,13 +186,58 @@
         });
     }
 
+    function updatePaymentCount() {
+      fetchPayments() // This will now return the payment data
+        .then((payments) => {
+          const totalPayments = payments.length || 0;
+          document.getElementById("payments-overview").textContent = totalPayments;
+
+          if (
+            totalPayments > lastPaymentCount &&
+            !localStorage.getItem("viewedPayments")
+          ) {
+            document.getElementById("payments-new").style.display = "inline";
+          } else {
+            document.getElementById("payments-new").style.display = "none";
+          }
+
+          lastPaymentCount = totalPayments;
+        })
+        .catch((error) => {
+          console.error("Error fetching payments:", error);
+        });
+    }
+
     function checkViewedStatus() {
       if (localStorage.getItem("viewedReservations")) {
         document.getElementById("reservations-new").style.display = "none";
       }
+      if (localStorage.getItem("viewedPayments")) {
+        document.getElementById("payments-new").style.display = "none";
+      }
     }
 
-    // Display the admin username dynamically
+    function setActiveMenuItem() {
+      const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
+      const menuItems = document.querySelectorAll("#sidebar ul.components li");
+
+      menuItems.forEach(item => {
+        item.classList.remove("active");
+        if (item.dataset.page === currentPage) {
+          item.classList.add("active");
+        }
+      });
+
+      // Special case for the home page
+      if (currentPage === "" || currentPage === "index") {
+        document.querySelector('li[data-page="home"]').classList.add("active");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      setActiveMenuItem();
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       const username = localStorage.getItem("username");
 
@@ -207,7 +250,7 @@
       if (role === 'super admin') {
         document.querySelector(".staff-role").style.display = 'block';
       } else {
-        document.querySelector(".staff-role").style.display = 'block';
+        document.querySelector(".staff-role").style.display = 'none';
       }
     });
   </script>

@@ -91,6 +91,52 @@ document.getElementById("overlay").addEventListener("click", function () {
   document.getElementById("overlay").classList.remove("active");
 });
 
+// Paystack payment integration
+function payWithPaystack(totalAmount, userEmail, orderId) {
+  const handler = PaystackPop.setup({
+    key: "pk_test_8168df975740a7daac50c926c60f4a4694fc9d50", // Replace with your Paystack public key
+    email: userEmail,
+    amount: totalAmount * 100, // Convert to kobo
+    currency: "NGN",
+    ref: orderId, // Use generated order ID
+    callback: function (response) {
+      recordPayment(response.reference, userEmail, totalAmount);
+    },
+    onClose: function () {
+      alert("Transaction was not completed, window closed.");
+    },
+  });
+  handler.openIframe();
+}
+
+// Function to record payment details
+function recordPayment(reference, email, amount) {
+  const paymentDetails = {
+    order_id: reference,
+    amount: amount,
+    payment_date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
+    payment_method: "Paystack",
+    status: "Completed",
+    paystack_refnumber: reference,
+  };
+
+  // Send the payment details to your backend API
+  $.ajax({
+    url: "https://grublanerestaurant.com/api/payments/createPayments",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(paymentDetails),
+    success: function (response) {
+      alert("Payment recorded successfully!");
+      localStorage.removeItem("cart"); // Clear the cart after successful payment
+      window.location.href = "order-confirmation.html?orderId=${orderId}"; // Redirect to a thank-you page or order confirmation
+    },
+    error: function (xhr) {
+      alert("Failed to record payment. Please contact support.");
+    },
+  });
+}
+
 // Checkout with Paystack
 document
   .getElementById("checkout-button")
