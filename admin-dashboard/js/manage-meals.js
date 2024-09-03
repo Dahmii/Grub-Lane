@@ -1,58 +1,48 @@
-// Replace these URLs with your actual API endpoints
 const API_FETCH_URL = "https://grublanerestaurant.com/api/dish/getDishes";
 const API_CREATE_URL = "https://grublanerestaurant.com/api/dish/createDish";
-const API_UPDATE_URL = "https://grublanerestaurant.com/api/dish/updateDish"; // Assuming there's an endpoint for updating
-const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish"; // Assuming there's an endpoint for deleting
+const API_UPDATE_URL = "https://grublanerestaurant.com/api/dish/updateDish";
+const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish";
 
-// Fetch meals from the backend
+let meals = [];
+
 async function fetchMeals() {
   try {
     const response = await fetch(API_FETCH_URL);
-
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     const data = await response.json();
-    console.log("Fetched data:", data); // Log the fetched data
-
-    // Ensure that 'meals' is correctly set to the array of dishes
     if (data.dishes && Array.isArray(data.dishes)) {
       meals = data.dishes;
     } else {
       throw new Error("Invalid data format: Expected an array of meals");
     }
-
     displayMeals();
   } catch (error) {
-    console.error("Error fetching meals:", error.message);
     document.getElementById("mealsTableBody").innerHTML = `
         <tr>
-          <td colspan="5" class="text-center text-danger">
+          <td colspan="6" class="text-center text-danger">
             Failed to load meals. Please try again later.
           </td>
         </tr>`;
   }
 }
 
-function displayMeals() {
+function displayMeals(filteredMeals = meals) {
   const tableBody = document.getElementById("mealsTableBody");
   tableBody.innerHTML = "";
 
-  meals.forEach((meal) => {
+  filteredMeals.forEach((meal) => {
     const row = `
             <tr>
                 <td>${meal.name}</td>
                 <td>${meal.description}</td>
                 <td>$${meal.price.toFixed(2)}</td>
+                <td>${meal.serviceType}</td>
                 <td>${meal.category}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary" onclick="editMeal(${
-                      meal.id
-                    })">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
-                      meal.id
-                    })">Delete</button>
+                    <button class="btn btn-sm btn-primary" onclick="editMeal(${meal.id})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${meal.id})">Delete</button>
                 </td>
             </tr>
         `;
@@ -67,11 +57,11 @@ async function addMeal(event) {
     name: document.getElementById("mealName").value,
     description: document.getElementById("mealDescription").value,
     price: parseFloat(document.getElementById("mealPrice").value),
+    serviceType: document.getElementById("mealServiceType").value,
     category: document.getElementById("mealCategory").value,
   };
 
   try {
-    console.log("Sending new meal data:", JSON.stringify(newMeal)); // Debugging line
     const response = await fetch(API_CREATE_URL, {
       method: "POST",
       headers: {
@@ -82,16 +72,13 @@ async function addMeal(event) {
 
     if (response.ok) {
       const createdMeal = await response.json();
-      console.log("Meal added successfully:", createdMeal); // Debugging line
-      meals.push(createdMeal); // Add the new meal to the local array
+      meals.push(createdMeal);
       displayMeals();
       document.getElementById("addMealForm").reset();
-    } else {
-      const errorText = await response.text(); // Capture error response from the server
-      console.error("Failed to add meal:", errorText); // More detailed error logging
+      $('#addMealFormCollapse').collapse('hide');
     }
   } catch (error) {
-    console.error("Error adding meal:", error); // Capturing network or other errors
+    // Handle error
   }
 }
 
@@ -102,6 +89,7 @@ function editMeal(id) {
     document.getElementById("editMealName").value = meal.name;
     document.getElementById("editMealDescription").value = meal.description;
     document.getElementById("editMealPrice").value = meal.price;
+    document.getElementById("editMealServiceType").value = meal.serviceType;
     document.getElementById("editMealCategory").value = meal.category;
     $("#editMealModal").modal("show");
   }
@@ -114,6 +102,7 @@ async function saveMealEdit() {
     name: document.getElementById("editMealName").value,
     description: document.getElementById("editMealDescription").value,
     price: parseFloat(document.getElementById("editMealPrice").value),
+    serviceType: document.getElementById("editMealServiceType").value,
     category: document.getElementById("editMealCategory").value,
   };
 
@@ -129,15 +118,12 @@ async function saveMealEdit() {
     if (response.ok) {
       const mealIndex = meals.findIndex((m) => m.id === id);
       if (mealIndex !== -1) {
-        meals[mealIndex] = updatedMeal; // Update the meal in the local array
+        meals[mealIndex] = updatedMeal;
         displayMeals();
         $("#editMealModal").modal("hide");
       }
-    } else {
-      console.error("Failed to update meal");
     }
   } catch (error) {
-    console.error("Error updating meal:", error);
   }
 }
 
@@ -149,22 +135,35 @@ async function deleteMeal(id) {
       });
 
       if (response.ok) {
-        meals = meals.filter((meal) => meal.id !== id); // Remove the deleted meal from the local array
+        meals = meals.filter((meal) => meal.id !== id);
         displayMeals();
-      } else {
-        console.error("Failed to delete meal");
       }
     } catch (error) {
-      console.error("Error deleting meal:", error);
     }
   }
 }
 
-// Event listeners
+function filterAndSearchMeals() {
+  const serviceType = document.getElementById("filterServiceType").value.toLowerCase();
+  const category = document.getElementById("filterCategory").value.toLowerCase();
+  const searchQuery = document.getElementById("searchMeal").value.toLowerCase();
+
+  const filteredMeals = meals.filter(meal => {
+    const matchesServiceType = !serviceType || meal.serviceType.toLowerCase().includes(serviceType);
+    const matchesCategory = !category || meal.category.toLowerCase().includes(category);
+    const matchesSearch = meal.name.toLowerCase().includes(searchQuery) || meal.description.toLowerCase().includes(searchQuery);
+
+    return matchesServiceType && matchesCategory && matchesSearch;
+  });
+
+  displayMeals(filteredMeals);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  fetchMeals(); // Fetch meals when the page loads
+  fetchMeals();
   document.getElementById("addMealForm").addEventListener("submit", addMeal);
-  document
-    .getElementById("saveEditMeal")
-    .addEventListener("click", saveMealEdit);
+  document.getElementById("saveEditMeal").addEventListener("click", saveMealEdit);
+  document.getElementById("filterServiceType").addEventListener("input", filterAndSearchMeals);
+  document.getElementById("filterCategory").addEventListener("input", filterAndSearchMeals);
+  document.getElementById("searchMeal").addEventListener("input", filterAndSearchMeals);
 });

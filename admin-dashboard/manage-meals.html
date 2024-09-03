@@ -36,7 +36,6 @@
                 <li>
                     <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
                 </li>
-
                 <li class="staff-role">
                     <a href="create-admin.html"><i class="fas fa-user-plus"></i> <span>Create Admin</span></a>
                 </li>
@@ -49,16 +48,13 @@
                     <h4 class="dashboard-title mb-0">Dashboard Overview</h4>
                     <div class="navbar-icons d-flex align-items-center">
                         <div class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user"></i>
                                 <span id="profileUsername">Admin</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                <a class="dropdown-item" href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit
-                                    Profile</a>
-                                <a class="dropdown-item" href="change-password.html"><i class="fas fa-key"></i> Change
-                                    Password</a>
+                                <a class="dropdown-item" href="edit-profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                                <a class="dropdown-item" href="change-password.html"><i class="fas fa-key"></i> Change Password</a>
                             </div>
                         </div>
                         <button id="logoutButton" class="btn btn-danger">
@@ -73,12 +69,11 @@
                     <h2>Manage Meals</h2>
                 </div>
 
-                <div class="dashboard-content">
-                    <!-- Add Meal Form -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>Add New Meal</h5>
-                        </div>
+                <div class="card mb-4">
+                    <div class="card-header" data-toggle="collapse" data-target="#addMealFormCollapse" aria-expanded="true" aria-controls="addMealFormCollapse">
+                        <h5 class="mb-0">Add New Meal</h5>
+                    </div>
+                    <div id="addMealFormCollapse" class="collapse show">
                         <div class="card-body">
                             <form id="addMealForm">
                                 <div class="form-group">
@@ -96,9 +91,9 @@
                                 <div class="form-group">
                                     <label for="mealServiceType">Service Type</label>
                                     <select class="form-control" id="mealServiceType" required>
-                                        <option value="">Select Service Type</option>
+                                        <option value="">Select a service type</option>
+                                        <option value="dine-in">Dine-In</option>
                                         <option value="takeout">Take-Out</option>
-                                        <option value="dinein">Dine-In</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -115,36 +110,75 @@
                             </form>
                         </div>
                     </div>
-                    <!-- Meals Table -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Existing Meals</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>Category</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="mealsTableBody">
-                                    <!-- Meal rows will be dynamically added here -->
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Filter and Search Meals</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="filterForm">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="filterServiceType">Service Type</label>
+                                        <select class="form-control" id="filterServiceType">
+                                            <option value="">All</option>
+                                            <option value="dine-in">Dine-In</option>
+                                            <option value="takeout">Take-Out</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="filterCategory">Subcategory</label>
+                                        <select class="form-control" id="filterCategory">
+                                            <option value="">All</option>
+                                            <option value="appetizer">Appetizer</option>
+                                            <option value="main">Main Course</option>
+                                            <option value="dessert">Dessert</option>
+                                            <option value="beverage">Beverage</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="searchMeal">Search</label>
+                                        <input type="text" class="form-control" id="searchMeal" placeholder="Search by meal name or description">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Existing Meals</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    <th>Service Type</th>
+                                    <th>Subcategory</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mealsTableBody">
+                                <!-- Meal rows will be dynamically added here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Edit Meal Modal -->
-    <div class="modal fade" id="editMealModal" tabindex="-1" role="dialog" aria-labelledby="editMealModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="editMealModal" tabindex="-1" role="dialog" aria-labelledby="editMealModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -169,9 +203,15 @@
                             <input type="number" class="form-control" id="editMealPrice" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="editMealCategory">Category</label>
+                            <label for="editMealServiceType">Service Type</label>
+                            <select class="form-control" id="editMealServiceType" required>
+                                <option value="dine-in">Dine-In</option>
+                                <option value="takeout">Take-Out</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMealCategory">Subcategory</label>
                             <select class="form-control" id="editMealCategory" required>
-                                <option value="">Select a category</option>
                                 <option value="appetizer">Appetizer</option>
                                 <option value="main">Main Course</option>
                                 <option value="dessert">Dessert</option>
