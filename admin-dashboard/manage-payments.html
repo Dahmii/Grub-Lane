@@ -112,8 +112,8 @@
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="js/admin.js"></script>
   <script src="../js/fetchpayments.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/admin-logout.js"></script>
 
   <script>
@@ -135,10 +135,7 @@
         document.querySelector(".staff-role").style.display = 'block';
       }
 
-      // Other initialization logic (e.g., updating dashboard counts)
-      updateDashboardCounts();
-      setInterval(updateDashboardCounts, 10000); // Polling every 10 seconds
-      checkViewedStatus();
+
     });
 
     function setActiveMenuItem() {

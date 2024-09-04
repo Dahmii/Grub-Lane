@@ -127,7 +127,6 @@
               </a>
             </div>
           </div>
-          <!-- Additional rows and cards can be added here -->
         </div>
       </div>
     </div>
@@ -136,9 +135,9 @@
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="js/admin.js"></script>
   <script src="../js/fetchreservations.js"></script>
-  <script src="../js/fetchpayments.js"></script> <!-- Updated to include fetchpayments.js -->
+  <script src="../js/fetchpayments.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/admin-logout.js"></script>
 
   <script>
@@ -187,9 +186,9 @@
     }
 
     function updatePaymentCount() {
-      fetchPayments() // This will now return the payment data
+      fetchPayments()
         .then((payments) => {
-          const totalPayments = payments.length || 0;
+          const totalPayments = payments || 0;
           document.getElementById("payments-overview").textContent = totalPayments;
 
           if (
@@ -250,7 +249,7 @@
       if (role === 'super admin') {
         document.querySelector(".staff-role").style.display = 'block';
       } else {
-        document.querySelector(".staff-role").style.display = 'none';
+        document.querySelector(".staff-role").style.display = 'block';
       }
     });
   </script>

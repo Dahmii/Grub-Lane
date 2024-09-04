@@ -33,19 +33,28 @@ function displayMeals(filteredMeals = meals) {
   tableBody.innerHTML = "";
 
   filteredMeals.forEach((meal) => {
+    // Convert price to a number and handle the case where price is not valid
+    const price = parseFloat(meal.price);
+    const formattedPrice = !isNaN(price) ? `₦${price.toFixed(2)}` : "N/A"; // Show "N/A" if price is invalid
+
     const row = `
-            <tr>
-                <td>${meal.name}</td>
-                <td>${meal.description || ''}</td>
-                <td>₦${meal.price.toFixed(2)}</td>             
-                <td>${meal.servicetype}</td>
-                <td>${meal.subcategory || ''}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editMeal(${meal.id})">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${meal.id})">Delete</button>
-                </td>
-            </tr>
-        `;
+      <tr>
+          <td>${meal.name}</td>
+          <td>${meal.description || ""}</td>
+          <td>${formattedPrice}</td>             
+          <td>${meal.servicetype || ""}</td>
+          <td>${meal.subcategory || ""}</td>
+          <td>
+              <button class="btn btn-sm btn-primary" onclick="editMeal(${
+                meal.id
+              })">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
+                meal.id
+              })">Delete</button>
+          </td>
+      </tr>
+    `;
+
     tableBody.innerHTML += row;
   });
 }
@@ -53,44 +62,65 @@ function displayMeals(filteredMeals = meals) {
 async function addMeal(event) {
   event.preventDefault();
 
-  const newMeal = {
-    name: document.getElementById("mealName").value,
-    description: document.getElementById("mealDescription").value,
-    price: parseFloat(document.getElementById("mealPrice").value),
-    serviceType: document.getElementById("mealServiceType").value,
-    subcategory: document.getElementById("mealCategory").value,
-  };
+  const formData = new FormData();
+  formData.append("name", document.getElementById("mealName").value);
+  formData.append(
+    "description",
+    document.getElementById("mealDescription").value
+  );
+  formData.append(
+    "price",
+    parseFloat(document.getElementById("mealPrice").value)
+  );
+  formData.append(
+    "serviceType",
+    document.getElementById("mealServiceType").value
+  );
+  formData.append("subcategory", document.getElementById("mealCategory").value);
+  formData.append("menu_id", document.getElementById("mealMenuId").value);
+
+  // Add the image file
+  const imageFile = document.getElementById("mealImage").files[0];
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
 
   try {
     const response = await fetch(API_CREATE_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization if needed
       },
-      body: JSON.stringify(newMeal),
+      body: formData, // Use FormData to handle both text and file data
     });
 
     if (response.ok) {
       const createdMeal = await response.json();
-      meals.push(createdMeal);
-      displayMeals();
+      meals.push(createdMeal); // Assuming 'meals' is your array of meals
+      displayMeals(); // Update the meal list
       document.getElementById("addMealForm").reset();
-      $('#addMealFormCollapse').collapse('hide');
+      $("#addMealFormCollapse").collapse("hide");
+    } else {
+      const errorResponse = await response.json();
+      console.error("Error creating meal:", errorResponse);
     }
   } catch (error) {
-    // Handle error
+    console.error("Network or server error:", error);
   }
 }
+
+document.getElementById("addMealForm").addEventListener("submit", addMeal);
 
 function editMeal(id) {
   const meal = meals.find((m) => m.id === id);
   if (meal) {
     document.getElementById("editMealId").value = meal.id;
     document.getElementById("editMealName").value = meal.name;
-    document.getElementById("editMealDescription").value = meal.description || '';
+    document.getElementById("editMealDescription").value =
+      meal.description || "";
     document.getElementById("editMealPrice").value = meal.price;
     document.getElementById("editMealServiceType").value = meal.servicetype;
-    document.getElementById("editMealCategory").value = meal.subcategory || '';
+    document.getElementById("editMealCategory").value = meal.subcategory || "";
     $("#editMealModal").modal("show");
   }
 }
@@ -146,14 +176,25 @@ async function deleteMeal(id) {
 }
 
 function filterAndSearchMeals() {
-  const servicetype = document.getElementById("filterServiceType").value.toLowerCase();
-  const subcategory = document.getElementById("filterCategory").value.toLowerCase();
+  const servicetype = document
+    .getElementById("filterServiceType")
+    .value.toLowerCase();
+  const subcategory = document
+    .getElementById("filterCategory")
+    .value.toLowerCase();
   const searchQuery = document.getElementById("searchMeal").value.toLowerCase();
 
-  const filteredMeals = meals.filter(meal => {
-    const matchesServiceType = !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
-    const matchesSubcategory = !subcategory || (meal.subcategory && meal.subcategory.toLowerCase().includes(subcategory));
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery) || (meal.description && meal.description.toLowerCase().includes(searchQuery));
+  const filteredMeals = meals.filter((meal) => {
+    const matchesServiceType =
+      !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
+    const matchesSubcategory =
+      !subcategory ||
+      (meal.subcategory &&
+        meal.subcategory.toLowerCase().includes(subcategory));
+    const matchesSearch =
+      meal.name.toLowerCase().includes(searchQuery) ||
+      (meal.description &&
+        meal.description.toLowerCase().includes(searchQuery));
 
     return matchesServiceType && matchesSubcategory && matchesSearch;
   });
@@ -164,8 +205,16 @@ function filterAndSearchMeals() {
 document.addEventListener("DOMContentLoaded", () => {
   fetchMeals();
   document.getElementById("addMealForm").addEventListener("submit", addMeal);
-  document.getElementById("saveEditMeal").addEventListener("click", saveMealEdit);
-  document.getElementById("filterServiceType").addEventListener("input", filterAndSearchMeals);
-  document.getElementById("filterCategory").addEventListener("input", filterAndSearchMeals);
-  document.getElementById("searchMeal").addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("saveEditMeal")
+    .addEventListener("click", saveMealEdit);
+  document
+    .getElementById("filterServiceType")
+    .addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("filterCategory")
+    .addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("searchMeal")
+    .addEventListener("input", filterAndSearchMeals);
 });

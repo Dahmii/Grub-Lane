@@ -1,3 +1,5 @@
+// Payment Management Functions
+
 let currentPage = 1;
 const pageSize = 10;
 let currentPayments = []; // To store the current page's payments for export
@@ -20,14 +22,13 @@ function fetchPayments(page = 1, status = "") {
       return response.json();
     })
     .then((data) => {
-      currentPayments = data.data; // Store the payments for export
-      displayPayments(data.data);
-      setupPagination(data.pagination);
-      return data.data; // Return payment data for further use
+      currentPayments = data.data; // Store payments data for export
+      displayPayments(data.data); // Display payments on the table
+      setupPagination(data.pagination); // Setup pagination controls
+      return data.data;
     })
     .catch((error) => {
-      console.error("Error:", error);
-      return []; // Return an empty array in case of an error
+      console.error("Error fetching payments:", error);
     });
 }
 
@@ -98,16 +99,15 @@ function viewPaymentDetails(paymentId) {
   console.log("Viewing details for payment:", paymentId);
 }
 
-document.getElementById("filter").addEventListener("change", function () {
-  fetchPayments(1, this.value);
-});
+function updateHomePagePaymentCount(count) {
+  const paymentCountElement = document.querySelector("#payments-overview");
+  if (paymentCountElement) {
+    paymentCountElement.textContent = count;
+  }
+}
 
-document.getElementById("export").addEventListener("click", function () {
-  exportToCSV(currentPayments, "payments");
-});
-
+// Export Payments to CSV
 function exportToCSV(data, filename) {
-  // Define the fields you want to include in the CSV
   const fields = [
     "id",
     "order_id",
@@ -118,21 +118,17 @@ function exportToCSV(data, filename) {
     "paystack_refnumber",
   ];
 
-  // Create CSV header row
   let csv = fields.join(",") + "\n";
 
-  // Add data rows
   data.forEach((item) => {
     let row = fields
       .map((field) => {
         let value = item[field];
-        // Handle special cases
         if (field === "payment_date") {
           value = new Date(value).toLocaleString();
         } else if (field === "amount") {
           value = parseFloat(value).toFixed(2);
         }
-        // Escape commas and wrap in quotes if necessary
         if (value && value.toString().includes(",")) {
           value = `"${value}"`;
         }
@@ -142,10 +138,8 @@ function exportToCSV(data, filename) {
     csv += row + "\n";
   });
 
-  // Create a Blob with the CSV data
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
 
-  // Create a download link
   const link = document.createElement("a");
   if (link.download !== undefined) {
     const url = URL.createObjectURL(blob);
@@ -160,6 +154,23 @@ function exportToCSV(data, filename) {
     document.body.removeChild(link);
   }
 }
+
+// Event Listeners for the Payments Page
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Fetch and display payments on page load
+  fetchPayments(); // Fetch first page with no status filter
+
+  // Event listener for the filter dropdown
+  document.getElementById("filter").addEventListener("change", function () {
+    fetchPayments(1, this.value);
+  });
+
+  // Event listener for the export to CSV button
+  document.getElementById("export").addEventListener("click", function () {
+    exportToCSV(currentPayments, "payments");
+  });
+});
 
 // Initial fetch
 fetchPayments();

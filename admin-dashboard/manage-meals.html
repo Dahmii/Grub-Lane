@@ -160,19 +160,26 @@
                     </div>
                     <div id="addMealFormCollapse" class="collapse">
                         <div class="card-body">
-                            <form id="addMealForm">
+                            <form id="addMealForm" enctype="multipart/form-data">
+                                <!-- Meal Name -->
                                 <div class="form-group">
                                     <label for="mealName">Meal Name</label>
                                     <input type="text" class="form-control" id="mealName" required>
                                 </div>
+
+                                <!-- Meal Description -->
                                 <div class="form-group">
                                     <label for="mealDescription">Description</label>
                                     <textarea class="form-control" id="mealDescription" rows="3" required></textarea>
                                 </div>
+
+                                <!-- Meal Price -->
                                 <div class="form-group">
                                     <label for="mealPrice">Price</label>
                                     <input type="number" class="form-control" id="mealPrice" step="0.01" required>
                                 </div>
+
+                                <!-- Service Type -->
                                 <div class="form-group">
                                     <label for="mealServiceType">Service Type</label>
                                     <select class="form-control" id="mealServiceType" required>
@@ -181,6 +188,8 @@
                                         <option value="takeout">Take-Out</option>
                                     </select>
                                 </div>
+
+                                <!-- Subcategory -->
                                 <div class="form-group">
                                     <label for="mealCategory">Subcategory</label>
                                     <select class="form-control" id="mealCategory" required>
@@ -191,62 +200,28 @@
                                         <option value="beverage">Beverage</option>
                                     </select>
                                 </div>
+
+                                <!-- Menu ID (can be hidden or a dropdown) -->
+                                <div class="form-group">
+                                    <label for="mealMenuId">Menu</label>
+                                    <select class="form-control" id="mealMenuId" required>
+                                        <option value="1">Menu 1</option> <!-- Example options -->
+                                        <option value="2">Menu 2</option>
+                                    </select>
+                                </div>
+
+                                <!-- Meal Image -->
+                                <div class="form-group">
+                                    <label for="mealImage">Meal Image</label>
+                                    <input type="file" class="form-control" id="mealImage" accept="image/*" required>
+                                </div>
+
                                 <button type="submit" class="btn btn-primary">Add Meal</button>
                             </form>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="editMealModal" tabindex="-1" role="dialog" aria-labelledby="editMealModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editMealModalLabel">Edit Meal</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editMealForm">
-                        <input type="hidden" id="editMealId">
-                        <div class="form-group">
-                            <label for="editMealName">Meal Name</label>
-                            <input type="text" class="form-control" id="editMealName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMealDescription">Description</label>
-                            <textarea class="form-control" id="editMealDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMealPrice">Price</label>
-                            <input type="number" class="form-control" id="editMealPrice" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMealServiceType">Service Type</label>
-                            <select class="form-control" id="editMealServiceType" required>
-                                <option value="dine-in">Dine-In</option>
-                                <option value="takeout">Take-Out</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="editMealCategory">Subcategory</label>
-                            <select class="form-control" id="editMealCategory" required>
-                                <option value="appetizer">Appetizer</option>
-                                <option value="main">Main Course</option>
-                                <option value="dessert">Dessert</option>
-                                <option value="beverage">Beverage</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveEditMeal">Save changes</button>
-                </div>
             </div>
         </div>
     </div>
@@ -257,6 +232,7 @@
     <script src="js/admin.js"></script>
     <script src="js/admin-logout.js"></script>
     <script src="js/manage-meals.js"></script>
+
 
     <script>
         function setActiveMenuItem() {
