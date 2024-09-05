@@ -14,6 +14,8 @@ function renderCart() {
     cartItemDiv.innerHTML = `
       <h4>${item.name}</h4>
       <p>N${item.price} x ${item.quantity}</p>
+      <button class="decrease-quantity" data-index="${index}">-</button>
+      <button class="increase-quantity" data-index="${index}">+</button>
       <span class="remove-btn" data-index="${index}">&times;</span>
     `;
     cartItemsContainer.appendChild(cartItemDiv);
@@ -34,6 +36,28 @@ function renderCart() {
       cart.splice(itemIndex, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       renderCart(); // Re-render cart after item is removed
+    });
+  });
+
+  // Add event listeners for decrease quantity buttons
+  document.querySelectorAll(".decrease-quantity").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemIndex = this.getAttribute("data-index");
+      if (cart[itemIndex].quantity > 1) {
+        cart[itemIndex].quantity -= 1;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart(); // Re-render cart after quantity is decreased
+      }
+    });
+  });
+
+  // Add event listeners for increase quantity buttons
+  document.querySelectorAll(".increase-quantity").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemIndex = this.getAttribute("data-index");
+      cart[itemIndex].quantity += 1;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart(); // Re-render cart after quantity is increased
     });
   });
 }
@@ -129,7 +153,7 @@ function recordPayment(reference, email, amount) {
     success: function (response) {
       alert("Payment recorded successfully!");
       localStorage.removeItem("cart"); // Clear the cart after successful payment
-      window.location.href = "order-confirmation.html?orderId=${orderId}"; // Redirect to a thank-you page or order confirmation
+      window.location.href = `order-confirmation.html?orderId=${reference}`; // Redirect to a thank-you page or order confirmation
     },
     error: function (xhr) {
       alert("Failed to record payment. Please contact support.");

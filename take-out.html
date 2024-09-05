@@ -161,6 +161,40 @@
         margin-left: auto;
       }
     }
+
+    /* Styles for increase and decrease buttons */
+    .side-cart-item button {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      margin: 0 5px;
+    }
+
+    .side-cart-item button:hover {
+      background: #ddd;
+    }
+
+    .side-cart-item .decrease-quantity {
+      background: #ff6666;
+      color: white;
+    }
+
+    .side-cart-item .increase-quantity {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .side-cart-item .decrease-quantity:hover {
+      background: #cc0000;
+    }
+
+    .side-cart-item .increase-quantity:hover {
+      background: #45a049;
+    }
   </style>
 </head>
 
@@ -175,7 +209,7 @@
             aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
+
         </div>
         <div class="collapse navbar-collapse" id="navbarsExample05">
           <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
@@ -199,13 +233,14 @@
             </li>
           </ul>
         </div>
+        <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
       </div>
     </nav>
   </header>
 
   <!-- HERO SECTION -->
   <div class="slider-wrap">
-    <div class="slider-item" style="background-image: url('img/restuarant-home.jpg')">
+    <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg')">
       <div class="container">
         <div class="row slider-text align-items-center justify-content-center">
           <div class="col-md-8 text-center col-sm-12">
@@ -285,9 +320,10 @@
         <div class="col-md-3 mb-5">
           <h3>Quick Links</h3>
           <ul class="list-unstyled footer-link">
+            <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="dine-in.html">Dine-In</a></li>
-            <li><a href="take-out.html">Take-Out</a></li>
+            <li><a href="reservation.html">Reservations</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>

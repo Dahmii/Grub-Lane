@@ -1291,4 +1291,8 @@ header .navbar .dropdown-menu a {
     color: white;
   }
 }
+
+.brand-face {
+  width: 40% !important;
+}
 /*# sourceMappingURL=style.css.map */
