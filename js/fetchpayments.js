@@ -1,36 +1,36 @@
-// Payment Management Functions
-
 let currentPage = 1;
 const pageSize = 10;
 let currentPayments = []; // To store the current page's payments for export
 
-function fetchPayments(page = 1, status = "") {
+// Ensure fetchPayments function is available globally
+window.fetchPayments = async function (page = 1, status = "") {
   const endpointUrl = `https://grublanerestaurant.com/api/payments/getPayments?page=${page}&pageSize=${pageSize}&status=${status}`;
   const token = localStorage.getItem("token");
 
-  return fetch(endpointUrl, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch payments.");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      currentPayments = data.data; // Store payments data for export
-      displayPayments(data.data); // Display payments on the table
-      setupPagination(data.pagination); // Setup pagination controls
-      return data.data;
-    })
-    .catch((error) => {
-      console.error("Error fetching payments:", error);
+  try {
+    const response = await fetch(endpointUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
-}
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch payments.");
+    }
+
+    const data = await response.json();
+    currentPayments = data.data;
+    displayPayments(data.data);
+    setupPagination(data.pagination);
+    updateHomePagePaymentCount(data.pagination.totalCount); // Update the total count on the homepage
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    return []; // Return an empty array on error
+  }
+};
 
 function displayPayments(payments) {
   const tableBody = document.getElementById("payment-table-body");
@@ -171,6 +171,3 @@ document.addEventListener("DOMContentLoaded", function () {
     exportToCSV(currentPayments, "payments");
   });
 });
-
-// Initial fetch
-fetchPayments();

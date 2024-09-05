@@ -235,6 +235,19 @@
 
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const username = localStorage.getItem("username");
+
+            if (username) {
+                document.getElementById("adminUsername").textContent = username;
+                document.getElementById("profileUsername").textContent = username;
+            }
+
+            updateDashboardCounts();
+            setInterval(updateDashboardCounts, 10000);
+            checkViewedStatus();
+        });
+
         function setActiveMenuItem() {
             const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
             const menuItems = document.querySelectorAll("#sidebar ul.components li");

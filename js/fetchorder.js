@@ -78,7 +78,7 @@ function fetchAllOrders(page = 1, searchValue = "", filterValue = "") {
     });
 }
 
-function populateTable(orders) {
+function populateOrderTable(orders) {
   const tableBody = document.getElementById("order-table-body");
   tableBody.innerHTML = "";
 
@@ -116,7 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterValue = document.getElementById("filter").value.toLowerCase();
 
     fetchAllOrders(currentPage, searchValue, filterValue).then((orders) => {
-      populateTable(orders);
+      populateOrderTable(orders);
+      // Assume totalPages is calculated here based on the response data
       const totalPages = Math.ceil(orders.length / rowsPerPage);
       updatePaginationControls(currentPage, totalPages);
     });

@@ -116,13 +116,6 @@
     </div>
   </div>
 
-  <script src="js/jquery-3.2.1.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/admin.js"></script>
-  <script src="../js/fetchorder.js"></script>
-  <script src="js/admin-logout.js"></script>
-
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const username = localStorage.getItem("username");
@@ -132,59 +125,67 @@
         document.getElementById("profileUsername").textContent = username;
       }
 
-      loadOrders(); // Load orders on page load
+      loadOrders(); // Initial load
+      setInterval(loadOrders, 10000); // Polling every 10 seconds
 
+      // Search functionality
       document.getElementById("search").addEventListener("keyup", function () {
         const searchValue = this.value.toLowerCase();
         const tableRows = document.querySelectorAll("#order-table-body tr");
 
         tableRows.forEach(function (row) {
           const rowText = row.textContent.toLowerCase();
-          if (rowText.includes(searchValue)) {
-            row.style.display = ""; // Show the row
-          } else {
-            row.style.display = "none"; // Hide the row
-          }
+          row.style.display = rowText.includes(searchValue) ? "" : "none";
         });
       });
 
-      function setActiveMenuItem() {
-        const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
-        const menuItems = document.querySelectorAll("#sidebar ul.components li");
-
-        menuItems.forEach(item => {
-          item.classList.remove("active");
-          if (item.dataset.page === currentPage) {
-            item.classList.add("active");
-          }
-        });
-
-        // Special case for the home page
-        if (currentPage === "" || currentPage === "index") {
-          document.querySelector('li[data-page="home"]').classList.add("active");
-        }
-      }
-
-      // Call the function when the DOM is loaded
-      document.addEventListener("DOMContentLoaded", function () {
-        setActiveMenuItem();
-        // ... (other existing DOMContentLoaded event listeners) ...
-      });
-
+      // Filter by order status
       document.getElementById("filter").addEventListener("change", function () {
         const filterValue = this.value.toLowerCase();
         const tableRows = document.querySelectorAll("#order-table-body tr");
 
         tableRows.forEach(function (row) {
           const statusText = row.querySelector("td:nth-child(5)").textContent.toLowerCase();
-          if (filterValue === "" || statusText === filterValue) {
-            row.style.display = ""; // Show the row
-          } else {
-            row.style.display = "none"; // Hide the row
-          }
+          row.style.display = filterValue === "" || statusText === filterValue ? "" : "none";
         });
       });
     });
+
+    function loadOrders() {
+      fetch('https://grublanerestaurant.com/api/orders') // Replace with your actual API endpoint
+        .then(response => response.json())
+        .then(data => {
+          const orders = data.orders;
+          // console.log(orders); 
+          const orderTableBody = document.getElementById("order-table-body");
+          orderTableBody.innerHTML = "";
+
+          if (Array.isArray(orders) && orders.length > 0) {
+            orders.forEach(order => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+            <td class="text-center">${order.id}</td>
+            <td class="text-center">${order.customerName}</td>
+            <td class="text-center">${order.date}</td>
+            <td class="text-center">${order.items}</td>
+            <td class="text-center">${order.status}</td>
+            <td class="text-center">
+              <button class="btn btn-primary">View</button>
+              <button class="btn btn-danger">Cancel</button>
+            </td>
+          `;
+
+              orderTableBody.appendChild(row);
+            });
+          } else {
+            orderTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No orders available</td></tr>';
+          }
+        })
+        .catch(error => {
+          console.error('Error loading orders:', error);
+        });
+    }
 
     function setActiveMenuItem() {
       const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
@@ -208,7 +209,39 @@
       setActiveMenuItem();
       // ... (other existing DOMContentLoaded event listeners) ...
     });
+
+
+
   </script>
+
+
+
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="../js/fetchorder.js"></script>
+  <script src="js/admin-logout.js"></script>
+
+
+
+  <!-- <script>
+    document.getElementById("filter").addEventListener("change", function () {
+      const filterValue = this.value.toLowerCase();
+      const tableRows = document.querySelectorAll("#order-table-body tr");
+
+      tableRows.forEach(function (row) {
+        const statusText = row.querySelector("td:nth-child(5)").textContent.toLowerCase();
+        if (filterValue === "" || statusText === filterValue) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  </script> -->
+
+
 </body>
 
 </html>

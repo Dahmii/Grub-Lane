@@ -40,7 +40,7 @@ function fetchReservationCount(url = null) {
     `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
   const token = localStorage.getItem("token");
-  console.log(token);
+  // console.log(token);
 
   return fetch(endpointUrl, {
     method: "GET",
@@ -71,7 +71,6 @@ function fetchAllReservations(url = null) {
     `https://grublanerestaurant.com/api/reservations?page=${currentPage}&pageSize=${rowsPerPage}`;
 
   const token = localStorage.getItem("token");
-  console.log(token);
 
   return fetch(endpointUrl, {
     method: "GET",

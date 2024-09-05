@@ -137,21 +137,42 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="../js/fetchreservations.js"></script>
   <script src="../js/fetchpayments.js"></script>
+  <script src="../js/fetchorder.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/admin-logout.js"></script>
 
   <script>
+    // Ensure fetchPayments function is available globally
+    window.fetchPayments = async function () {
+      try {
+        const response = await fetch('https://grublanerestaurant.com/api/payments/getPayments'); // Replace with your actual API endpoint
+        const data = await response.json();
+        return data.totalPayments; // Adjust this based on the actual response structure from your API
+      } catch (error) {
+        console.error('Error fetching payments:', error);
+        return 0;
+      }
+    };
+
     let lastReservationCount = 0;
+    let lastOrderCount = 0;
     let lastPaymentCount = 0;
 
     document.addEventListener("DOMContentLoaded", function () {
       updateReservationCount();
-      updatePaymentCount(); // Ensure this is called after fetchPayments.js is loaded
-      setInterval(updateReservationCount, 10000);
-      setInterval(updatePaymentCount, 10000);
+      updateOrderCount();
+      updatePaymentCount();
+      setInterval(updateReservationCount, 10000); // Update every 10 seconds
+      setInterval(updateOrderCount, 10000); // Update every 10 seconds
+      setInterval(updatePaymentCount, 10000); // Update every 10 seconds
 
       document.getElementById("reservations-card").addEventListener("click", function () {
         localStorage.setItem("viewedReservations", true);
+        checkViewedStatus();
+      });
+
+      document.getElementById("orders-card").addEventListener("click", function () {
+        localStorage.setItem("viewedOrders", true);
         checkViewedStatus();
       });
 
@@ -185,8 +206,30 @@
         });
     }
 
+    function updateOrderCount() {
+      fetchOrderCount()
+        .then((orders) => {
+          const totalOrders = orders || 0;
+          document.getElementById("orders-overview").textContent = totalOrders;
+
+          if (
+            totalOrders > lastOrderCount &&
+            !localStorage.getItem("viewedOrders")
+          ) {
+            document.getElementById("orders-new").style.display = "inline";
+          } else {
+            document.getElementById("orders-new").style.display = "none";
+          }
+
+          lastOrderCount = totalOrders;
+        })
+        .catch((error) => {
+          console.error("Error fetching orders:", error);
+        });
+    }
+
     function updatePaymentCount() {
-      fetchPayments()
+      window.fetchPayments()
         .then((payments) => {
           const totalPayments = payments || 0;
           document.getElementById("payments-overview").textContent = totalPayments;
@@ -211,6 +254,9 @@
       if (localStorage.getItem("viewedReservations")) {
         document.getElementById("reservations-new").style.display = "none";
       }
+      if (localStorage.getItem("viewedOrders")) {
+        document.getElementById("orders-new").style.display = "none";
+      }
       if (localStorage.getItem("viewedPayments")) {
         document.getElementById("payments-new").style.display = "none";
       }
@@ -227,7 +273,6 @@
         }
       });
 
-      // Special case for the home page
       if (currentPage === "" || currentPage === "index") {
         document.querySelector('li[data-page="home"]').classList.add("active");
       }
@@ -249,7 +294,7 @@
       if (role === 'super admin') {
         document.querySelector(".staff-role").style.display = 'block';
       } else {
-        document.querySelector(".staff-role").style.display = 'block';
+        document.querySelector(".staff-role").style.display = 'none';
       }
     });
   </script>
