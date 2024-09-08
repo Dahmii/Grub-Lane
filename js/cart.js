@@ -1,5 +1,3 @@
-// cart.js
-
 // Initialize cart
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -16,6 +14,8 @@ function renderCart() {
     cartItemDiv.innerHTML = `
       <h4>${item.name}</h4>
       <p>N${item.price} x ${item.quantity}</p>
+      <button class="decrease-quantity" data-index="${index}">-</button>
+      <button class="increase-quantity" data-index="${index}">+</button>
       <span class="remove-btn" data-index="${index}">&times;</span>
     `;
     cartItemsContainer.appendChild(cartItemDiv);
@@ -25,13 +25,39 @@ function renderCart() {
 
   document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
 
+  // Enable or disable checkout button based on cart items
+  const checkoutButton = document.getElementById("checkout-button");
+  checkoutButton.disabled = cart.length === 0;
+
   // Add event listeners for remove buttons
   document.querySelectorAll(".remove-btn").forEach((button) => {
     button.addEventListener("click", function () {
       const itemIndex = this.getAttribute("data-index");
       cart.splice(itemIndex, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
+      renderCart(); // Re-render cart after item is removed
+    });
+  });
+
+  // Add event listeners for decrease quantity buttons
+  document.querySelectorAll(".decrease-quantity").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemIndex = this.getAttribute("data-index");
+      if (cart[itemIndex].quantity > 1) {
+        cart[itemIndex].quantity -= 1;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart(); // Re-render cart after quantity is decreased
+      }
+    });
+  });
+
+  // Add event listeners for increase quantity buttons
+  document.querySelectorAll(".increase-quantity").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemIndex = this.getAttribute("data-index");
+      cart[itemIndex].quantity += 1;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart(); // Re-render cart after quantity is increased
     });
   });
 }
@@ -89,10 +115,73 @@ document.getElementById("overlay").addEventListener("click", function () {
   document.getElementById("overlay").classList.remove("active");
 });
 
-// Checkout with Paystack (sample implementation)
+// Paystack payment integration
+function payWithPaystack(totalAmount, userEmail, orderId) {
+  const handler = PaystackPop.setup({
+    key: "pk_test_8168df975740a7daac50c926c60f4a4694fc9d50", // Replace with your Paystack public key
+    email: userEmail,
+    amount: totalAmount * 100, // Convert to kobo
+    currency: "NGN",
+    ref: orderId, // Use generated order ID
+    callback: function (response) {
+      recordPayment(response.reference, userEmail, totalAmount);
+    },
+    onClose: function () {
+      alert("Transaction was not completed, window closed.");
+    },
+  });
+  handler.openIframe();
+}
+
+// Function to record payment details
+function recordPayment(reference, email, amount) {
+  const paymentDetails = {
+    order_id: reference,
+    amount: amount,
+    payment_date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
+    payment_method: "Paystack",
+    status: "Completed",
+    paystack_refnumber: reference,
+  };
+
+  // Send the payment details to your backend API
+  $.ajax({
+    url: "https://grublanerestaurant.com/api/payments/createPayments",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(paymentDetails),
+    success: function (response) {
+      alert("Payment recorded successfully!");
+      localStorage.removeItem("cart"); // Clear the cart after successful payment
+      window.location.href = `order-confirmation.html?orderId=${reference}`; // Redirect to a thank-you page or order confirmation
+    },
+    error: function (xhr) {
+      alert("Failed to record payment. Please contact support.");
+    },
+  });
+}
+
+// Checkout with Paystack
 document
   .getElementById("checkout-button")
   .addEventListener("click", function () {
-    // Replace with your actual Paystack integration code
-    // alert("Checkout with Paystack");
+    if (cart.length === 0) {
+      alert("No items in cart. Please add items before checking out.");
+      return;
+    }
+
+    // Calculate the total amount
+    let totalAmount = cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    // Get the user's email (replace this with actual user email retrieval)
+    let userEmail = localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
+
+    // Generate an order ID (this could also be generated on the server)
+    let orderId = "ORDER_" + new Date().getTime(); // Example order ID
+
+    // Call the Paystack payment function
+    payWithPaystack(totalAmount, userEmail, orderId);
   });

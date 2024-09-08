@@ -240,7 +240,7 @@ header .navbar .dropdown-menu a {
 /* Hide cart button on larger screens */
 @media (min-width: 768px) {
   #cart-button {
-    display: none;
+    display: block;
   }
 }
 
@@ -273,8 +273,8 @@ header .navbar .dropdown-menu a {
 /* RESERVATION STYLES */
 .banner {
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
-    url("../img/banner-1.jpg") center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+    url("../img/grublane-home2.jpg") center/cover no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;

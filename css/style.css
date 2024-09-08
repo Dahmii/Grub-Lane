@@ -1261,7 +1261,7 @@ header .navbar .dropdown-menu a {
 /* Hide cart button on larger screens */
 @media (min-width: 768px) {
   #cart-button {
-    display: none;
+    display: block;
   }
 }
 
@@ -1290,5 +1290,9 @@ header .navbar .dropdown-menu a {
     padding: 0.5rem;
     color: white;
   }
+}
+
+.brand-face {
+  width: 40% !important;
 }
 /*# sourceMappingURL=style.css.map */

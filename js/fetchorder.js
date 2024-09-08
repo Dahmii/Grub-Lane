@@ -43,10 +43,23 @@ function createOrder(
 let currentPage = 1;
 const rowsPerPage = 10;
 
-function fetchAllOrders(page = 1) {
-  const endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
+function fetchAllOrders(page = 1, searchValue = "", filterValue = "") {
+  let endpointUrl = `https://grublanerestaurant.com/api/orders?page=${page}&limit=${rowsPerPage}`;
+  if (searchValue) {
+    endpointUrl += `&search=${searchValue}`;
+  }
+  if (filterValue) {
+    endpointUrl += `&status=${filterValue}`;
+  }
+  const token = localStorage.getItem("token");
 
-  return fetch(endpointUrl)
+  return fetch(endpointUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
     .then((response) => {
       if (response.status === 200) {
         return response.json();
@@ -56,20 +69,18 @@ function fetchAllOrders(page = 1) {
     })
     .then((data) => {
       console.log("API Response:", data);
-
-      // Assuming the response is an array of orders
       const orders = data.orders || data;
       return orders;
     })
     .catch((error) => {
       console.error("Error fetching orders:", error.message);
-      return []; // Return an empty array in case of error
+      return [];
     });
 }
 
-function populateTable(orders) {
+function populateOrderTable(orders) {
   const tableBody = document.getElementById("order-table-body");
-  tableBody.innerHTML = ""; // Clear existing rows
+  tableBody.innerHTML = "";
 
   if (orders.length === 0) {
     tableBody.innerHTML =
@@ -77,19 +88,17 @@ function populateTable(orders) {
   } else {
     orders.forEach((order) => {
       const row = `
-                <tr>
-                    <td class="text-center">${order.id}</td>
-                    <td class="text-center">${order.user_id}</td>
-                    <td class="text-center">${new Date(
-                      order.date
-                    ).toLocaleDateString()}</td>
-                    <td class="text-center">${order.order_details}</td>
-                    <td class="text-center">${
-                      order.status || "In Progress"
-                    }</td>
-                    <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
-                </tr>
-            `;
+        <tr>
+            <td class="text-center">${order.id}</td>
+            <td class="text-center">${order.user_id}</td>
+            <td class="text-center">${new Date(
+              order.date
+            ).toLocaleDateString()}</td>
+            <td class="text-center">${order.order_details}</td>
+            <td class="text-center">${order.status || "In Progress"}</td>
+            <td class="text-center"><button class="btn btn-info btn-sm">View</button></td>
+        </tr>
+      `;
       tableBody.insertAdjacentHTML("beforeend", row);
     });
   }
@@ -102,30 +111,84 @@ function updatePaginationControls(currentPage, totalPages) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch and display the first page of orders when the page loads
-  fetchAllOrders(currentPage).then((orders) => {
-    populateTable(orders);
-    const totalPages = Math.ceil(orders.length / rowsPerPage);
-    updatePaginationControls(currentPage, totalPages);
-  });
+  function loadOrders() {
+    const searchValue = document.getElementById("search").value.toLowerCase();
+    const filterValue = document.getElementById("filter").value.toLowerCase();
+
+    fetchAllOrders(currentPage, searchValue, filterValue).then((orders) => {
+      populateOrderTable(orders);
+      // Assume totalPages is calculated here based on the response data
+      const totalPages = Math.ceil(orders.length / rowsPerPage);
+      updatePaginationControls(currentPage, totalPages);
+    });
+  }
+
+  loadOrders(); // Load orders on page load
 
   document.getElementById("prev-btn").addEventListener("click", function () {
     if (currentPage > 1) {
       currentPage--;
-      fetchAllOrders(currentPage).then((orders) => {
-        populateTable(orders);
-        const totalPages = Math.ceil(orders.length / rowsPerPage);
-        updatePaginationControls(currentPage, totalPages);
-      });
+      loadOrders();
     }
   });
 
   document.getElementById("next-btn").addEventListener("click", function () {
     currentPage++;
-    fetchAllOrders(currentPage).then((orders) => {
-      populateTable(orders);
-      const totalPages = Math.ceil(orders.length / rowsPerPage);
-      updatePaginationControls(currentPage, totalPages);
+    loadOrders();
+  });
+
+  document.getElementById("search").addEventListener("keyup", function () {
+    currentPage = 1; // Reset to first page on new search
+    loadOrders();
+  });
+
+  document.getElementById("filter").addEventListener("change", function () {
+    currentPage = 1; // Reset to first page on new filter
+    loadOrders();
+  });
+
+  document.getElementById("export").addEventListener("click", function () {
+    fetchAllOrders(1, "", "").then((orders) => {
+      const fields = ["id", "user_id", "date", "order_details", "status"];
+      exportToCSV(orders, "takeout_orders", fields);
     });
   });
 });
+
+function exportToCSV(data, filename, fields) {
+  let csv = fields.join(",") + "\n";
+
+  data.forEach((item) => {
+    let row = fields
+      .map((field) => {
+        let value = item[field];
+        if (field.includes("date") || field.includes("time")) {
+          value = new Date(value).toLocaleString();
+        } else if (typeof value === "number") {
+          value = value.toFixed(2);
+        }
+        if (value && value.toString().includes(",")) {
+          value = `"${value}"`;
+        }
+        return value;
+      })
+      .join(",");
+    csv += row + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+  const link = document.createElement("a");
+  if (link.download !== undefined) {
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `${filename}_${new Date().toISOString().split("T")[0]}.csv`
+    );
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}

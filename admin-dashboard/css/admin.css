@@ -64,15 +64,50 @@ body {
   z-index: 1001;
   margin-left: 0;
   width: 250px;
-  background: #343a40;
-  color: #fff;
+  background: #343a40; /* Dark background for the sidebar */
+  color: #ffffff; /* White text color for better contrast */
   transition: margin-left 0.3s ease, width 0.3s ease;
   height: 100%;
   padding-top: 60px;
 }
 
-#sidebar.active {
+#sidebar ul.components li.active {
+  background-color: #ffffff; /* Light background for active state */
+  border-left: 4px solid #007bff; /* Primary blue border */
+  color: #343a40; /* Dark text for better readability */
+}
+
+#content {
+  width: calc(100% - 250px);
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+#content.active {
+  margin-left: 250px;
+}
+
+/* Sidebar Header */
+#sidebar {
+  position: fixed;
+  z-index: 1001;
   margin-left: 0;
+  width: 250px;
+  background: #343a40; /* Dark background for the sidebar */
+  color: #ffffff; /* White text color for better contrast */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  height: 100%;
+  padding-top: 60px;
+}
+
+#sidebar ul.components li.active {
+  background-color: #ffffff; /* Light background for active state */
+  border-left: 4px solid #007bff; /* Primary blue border */
+  color: #343a40; /* Dark text color for the active state */
+}
+
+#sidebar ul.components li.active a {
+  color: #343a40; /* Ensuring the text color in active state is #343a40 */
 }
 
 #content {
@@ -88,11 +123,11 @@ body {
 /* Sidebar Header */
 #sidebar .sidebar-header {
   padding: 20px;
-  background: #343a40;
+  background: #343a40; /* Keeping the dark background for header consistency */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #47748b;
+  border-bottom: 1px solid #dee2e6; /* Light border for separation */
   white-space: nowrap;
   overflow: hidden;
 }
@@ -104,7 +139,7 @@ body {
 /* Sidebar Links */
 #sidebar ul.components {
   padding: 20px 0;
-  border-bottom: 1px solid #47748b;
+  border-bottom: 1px solid #dee2e6; /* Light border for better separation */
 }
 
 #sidebar ul li {
@@ -115,11 +150,15 @@ body {
 }
 
 #sidebar ul li a {
-  color: #fff;
+  color: #ffffff; /* White text color */
   text-decoration: none;
   display: flex;
   align-items: center;
   transition: 0.3s;
+}
+
+#sidebar ul li a.active {
+  color: #343a40; /* Dark text color on active state */
 }
 
 #sidebar ul li a i {
@@ -133,8 +172,8 @@ body {
 }
 
 #sidebar ul li a:hover {
-  color: #7386d5;
-  background: #fff;
+  color: #343a40; /* Dark text on hover */
+  background: #e9ecef; /* Light background on hover for contrast */
 }
 
 /* Content Area */
