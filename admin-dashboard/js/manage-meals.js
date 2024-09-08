@@ -2,35 +2,69 @@ const API_FETCH_URL = "https://grublanerestaurant.com/api/dish/getDishes";
 const API_CREATE_URL = "https://grublanerestaurant.com/api/dish/createDish";
 const API_UPDATE_URL = "https://grublanerestaurant.com/api/dish/updateDish";
 const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish";
+const API_MENU_URL = "https://grublanerestaurant.com/api/menu/getMenus"; // For fetching menu IDs
 
 let meals = [];
+let menuId = null; // Will be dynamically fetched from the backend
+
+// Function to fetch menu ID from the backend
+async function fetchMenuId() {
+  try {
+    const response = await fetch(API_MENU_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Ensure the response is OK and parse JSON
+    if (!response.ok) {
+      throw new Error(`Failed to fetch menu ID: ${response.status}`);
+    }
+
+    const menus = await response.json();
+
+    // Check if valid menus are received
+    if (menus && menus.length > 0) {
+      menuId = menus[0].id; // Use the first menu ID or adjust as needed
+    } else {
+      throw new Error("No menus found.");
+    }
+  } catch (error) {
+    console.error("Error fetching menu ID:", error);
+  }
+}
 
 // Function to fetch meals from the API and display them
 async function fetchMeals() {
   try {
     const response = await fetch(API_FETCH_URL, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is set
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
     });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
     const data = await response.json();
+
     if (data.dishes && Array.isArray(data.dishes)) {
       meals = data.dishes;
     } else {
       throw new Error("Invalid data format: Expected an array of meals");
     }
+
     displayMeals();
   } catch (error) {
     document.getElementById("mealsTableBody").innerHTML = `
-        <tr>
-          <td colspan="6" class="text-center text-danger">
-            Failed to load meals. Please try again later.
-          </td>
-        </tr>`;
+      <tr>
+        <td colspan="6" class="text-center text-danger">
+          Failed to load meals. Please try again later.
+        </td>
+      </tr>`;
     console.error("Error fetching meals:", error);
   }
 }
@@ -42,23 +76,23 @@ function displayMeals(filteredMeals = meals) {
 
   filteredMeals.forEach((meal) => {
     const price = parseFloat(meal.price);
-    const formattedPrice = !isNaN(price) ? `₦${price.toFixed(2)}` : "N/A"; // Show "N/A" if price is invalid
+    const formattedPrice = !isNaN(price) ? `₦${price.toFixed(2)}` : "N/A";
 
     const row = `
       <tr>
-          <td>${meal.name}</td>
-          <td>${meal.description || ""}</td>
-          <td>${formattedPrice}</td>             
-          <td>${meal.servicetype || ""}</td>
-          <td>${meal.subcategory || ""}</td>
-          <td>
-              <button class="btn btn-sm btn-primary" onclick="editMeal(${
-                meal.id
-              })">Edit</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
-                meal.id
-              })">Delete</button>
-          </td>
+        <td>${meal.name}</td>
+        <td>${meal.description || ""}</td>
+        <td>${formattedPrice}</td>
+        <td>${meal.servicetype || ""}</td>
+        <td>${meal.subcategory || ""}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" onclick="editMeal(${
+            meal.id
+          })">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
+            meal.id
+          })">Delete</button>
+        </td>
       </tr>
     `;
     tableBody.innerHTML += row;
@@ -82,11 +116,10 @@ async function addMeal(event) {
   formData.append(
     "servicetype",
     document.getElementById("mealServiceType").value
-  ); // Ensure this is set correctly (e.g., dine-in or take-out)
+  );
   formData.append("subcategory", document.getElementById("mealCategory").value);
-  formData.append("menu_id", document.getElementById("mealMenuId").value);
+  formData.append("menu_id", menuId); // Use the dynamically fetched menu ID
 
-  // Add the image file if provided
   const imageFile = document.getElementById("mealImage").files[0];
   if (imageFile) {
     formData.append("image", imageFile);
@@ -96,17 +129,17 @@ async function addMeal(event) {
     const response = await fetch(API_CREATE_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is provided
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: formData, // Use FormData to handle both text and file data
+      body: formData,
     });
 
     if (response.ok) {
       const createdMeal = await response.json();
-      meals.push(createdMeal); // Add the newly created meal to the array
-      displayMeals(); // Update the meal list to include the new meal
-      document.getElementById("addMealForm").reset(); // Clear the form
-      $("#addMealFormCollapse").collapse("hide"); // Collapse the form
+      meals.push(createdMeal);
+      displayMeals();
+      document.getElementById("addMealForm").reset();
+      $("#addMealFormCollapse").collapse("hide");
     } else {
       const errorResponse = await response.json();
       console.error("Error creating meal:", errorResponse);
@@ -184,8 +217,8 @@ async function deleteMeal(id) {
       });
 
       if (response.ok) {
-        meals = meals.filter((meal) => meal.id !== id); // Remove the meal from the list
-        displayMeals(); // Update the display
+        meals = meals.filter((meal) => meal.id !== id);
+        displayMeals();
       } else {
         console.error("Error deleting meal:", await response.json());
       }
@@ -195,7 +228,9 @@ async function deleteMeal(id) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize the meal management when the page is loaded
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchMenuId(); // Fetch menu ID from the backend
   fetchMeals(); // Fetch meals when the page loads
   document.getElementById("addMealForm").addEventListener("submit", addMeal); // Add meal form handler
 });

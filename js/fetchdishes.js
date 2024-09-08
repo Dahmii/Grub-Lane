@@ -1,7 +1,7 @@
 // Function to fetch and display menu data dynamically
 function fetchMenuData(menuType) {
   // Set takeOut flag based on menu type (dine_in or take_out)
-  const takeOut = menuType === "dine_in" ? "true" : "false";
+  const takeOut = menuType === "take_out" ? "true" : "false"; // Ensure correct boolean flag
   const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
 
   fetch(endpointUrl)
@@ -119,8 +119,44 @@ function addCartFunctionality() {
   });
 }
 
+// Function to render the cart
+function renderCart() {
+  const cartItemsContainer = document.getElementById("side-cart-items");
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cartItemsContainer.innerHTML = "";
+
+  let totalPrice = 0;
+  cart.forEach((item) => {
+    const cartItemDiv = document.createElement("div");
+    cartItemDiv.classList.add("side-cart-item");
+    cartItemDiv.innerHTML = `
+      <h4>${item.name}</h4>
+      <p>N${item.price} x ${item.quantity}</p>
+      <span class="remove-btn" data-item="${item.name}">&times;</span>
+    `;
+    cartItemsContainer.appendChild(cartItemDiv);
+
+    totalPrice += item.price * item.quantity;
+  });
+
+  document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
+
+  // Enable or disable checkout button based on cart items
+  document.getElementById("checkout-button").disabled = cart.length === 0;
+
+  // Add remove functionality to cart items
+  document.querySelectorAll(".remove-btn").forEach((button) => {
+    button.addEventListener("click", function () {
+      const itemName = this.getAttribute("data-item");
+      cart = cart.filter((item) => item.name !== itemName);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart(); // Re-render the cart
+    });
+  });
+}
+
 // Initialize menu data fetch on page load
 document.addEventListener("DOMContentLoaded", () => {
-  const pageType = document.body.dataset.pageType;
-  fetchMenuData(pageType);
+  const pageType = document.body.dataset.pageType; // Detect whether it's dine_in or take_out page
+  fetchMenuData(pageType); // Fetch menu based on the page type
 });
