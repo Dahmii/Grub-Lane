@@ -1,617 +1,568 @@
 <!DOCTYPE html>
 <html lang="en" data-page-type="take_out">
-  <head>
-    <title>Grub Lane</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="shortcut icon" href="ftco-32x32.html" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="css/bootstrap.css" />
-    <link rel="stylesheet" href="css/animate.css" />
-    <link rel="stylesheet" href="css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="css/aos.css" />
-    <link rel="stylesheet" href="css/magnific-popup.css" />
-    <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css" />
-    <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="img/favicon.png" type="image/png" />
-    <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
+<head>
+  <title>Grub Lane</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&amp;display=swap"
+    rel="stylesheet" />
+  <link rel="shortcut icon" href="ftco-32x32.html" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" />
+  <link rel="stylesheet" href="css/bootstrap.css" />
+  <link rel="stylesheet" href="css/animate.css" />
+  <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/aos.css" />
+  <link rel="stylesheet" href="css/magnific-popup.css" />
+  <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css" />
+  <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
 
-    <link rel="stylesheet" href="css/style.css" />
-    <style>
-      .side-cart {
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: 300px;
-        height: 100%;
-        background: white;
-        border-left: 1px solid #ccc;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-        overflow-y: auto;
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
-        z-index: 1000;
-      }
+  <!-- Favicon -->
+  <link rel="icon" href="img/favicon.png" type="image/png" />
+  <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
 
-      .side-cart.active {
-        transform: translateX(0);
-      }
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .side-cart {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background: white;
+      border-left: 1px solid #ccc;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+    }
 
-      .side-cart-header {
-        background: #ff7404;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        font-size: 18px;
-        position: relative;
-      }
+    .side-cart.active {
+      transform: translateX(0);
+    }
 
-      .side-cart-close {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        cursor: pointer;
-      }
+    .side-cart-header {
+      background: #ff7404;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 18px;
+      position: relative;
+    }
 
-      .side-cart-items {
-        padding: 10px;
-      }
+    .side-cart-close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+    }
 
-      .side-cart-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-      }
+    .side-cart-items {
+      padding: 10px;
+    }
 
-      .side-cart-item h4 {
-        margin: 0;
-        font-size: 16px;
-      }
+    .side-cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
 
-      .side-cart-item p {
-        margin: 0;
-        font-size: 14px;
-      }
+    .side-cart-item h4 {
+      margin: 0;
+      font-size: 16px;
+    }
 
-      .side-cart-item .remove-btn {
-        cursor: pointer;
-        color: red;
-      }
+    .side-cart-item p {
+      margin: 0;
+      font-size: 14px;
+    }
 
-      .side-cart-footer {
-        padding: 10px;
-        text-align: center;
-      }
+    .side-cart-item .remove-btn {
+      cursor: pointer;
+      color: red;
+    }
 
-      .side-cart-footer h3 {
-        margin: 0 0 10px;
-        font-size: 18px;
-      }
+    .side-cart-footer {
+      padding: 10px;
+      text-align: center;
+    }
 
-      .side-cart-footer button {
-        background: #ff7404;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
+    .side-cart-footer h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
 
-      .add-to-cart-btn {
-        background: #ff7404;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 10px;
-      }
+    .side-cart-footer button {
+      background: #ff7404;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        display: none;
-      }
+    .add-to-cart-btn {
+      background: #ff7404;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
 
-      .overlay.active {
-        display: block;
-      }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+    }
 
-      /* Custom styles for cart icon and navbar */
-      .navbar-nav {
-        display: flex;
-        align-items: center;
+    .overlay.active {
+      display: block;
+    }
+
+    /* Custom styles for cart icon and navbar */
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-item-cart {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-item-cart a {
+      padding: 0.5rem;
+      color: white;
+    }
+
+    .nav-item-cart a:hover {
+      color: #ff7404;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-toggler {
+        margin-right: 0.5rem;
       }
 
       .nav-item-cart {
-        display: flex;
-        align-items: center;
+        order: 1;
+        margin-left: auto;
       }
+    }
 
-      .nav-item-cart a {
-        padding: 0.5rem;
-        color: white;
-      }
+    /* Styles for increase and decrease buttons */
+    .side-cart-item button {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      margin: 0 5px;
+    }
 
-      .nav-item-cart a:hover {
-        color: #ff7404;
-      }
+    .side-cart-item button:hover {
+      background: #ddd;
+    }
 
-      @media (max-width: 768px) {
-        .navbar-toggler {
-          margin-right: 0.5rem;
-        }
+    .side-cart-item .decrease-quantity {
+      background: #ff6666;
+      color: white;
+    }
 
-        .nav-item-cart {
-          order: 1;
-          margin-left: auto;
-        }
-      }
+    .side-cart-item .increase-quantity {
+      background: #4caf50;
+      color: white;
+    }
 
-      /* Styles for increase and decrease buttons */
-      .side-cart-item button {
-        background: #f4f4f4;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 5px 10px;
-        cursor: pointer;
-        font-size: 14px;
-        color: #333;
-        margin: 0 5px;
-      }
+    .side-cart-item .decrease-quantity:hover {
+      background: #cc0000;
+    }
 
-      .side-cart-item button:hover {
-        background: #ddd;
-      }
+    .side-cart-item .increase-quantity:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
 
-      .side-cart-item .decrease-quantity {
-        background: #ff6666;
-        color: white;
-      }
-
-      .side-cart-item .increase-quantity {
-        background: #4caf50;
-        color: white;
-      }
-
-      .side-cart-item .decrease-quantity:hover {
-        background: #cc0000;
-      }
-
-      .side-cart-item .increase-quantity:hover {
-        background: #45a049;
-      }
-    </style>
-  </head>
-
-  <body>
-    <header role="banner">
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container">
-          <a class="navbar-brand" href="index.html"
-            ><img
-              src="img/GrublaneBC-03.png"
-              alt="grublane logo"
-              style="width: 200px"
-          /></a>
-          <div class="d-flex">
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarsExample05"
-              aria-controls="navbarsExample05"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          </div>
-          <div class="collapse navbar-collapse" id="navbarsExample05">
-            <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
-              <li class="nav-item">
-                <a class="nav-link" href="index.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about.html">About Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="dine-in.html">Dine-In Menu</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="take-out.html">Take-Out Menu</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="reservation.html"
-                  >Table Reservations</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="contact.html">Contact Us</a>
-              </li>
-            </ul>
-          </div>
-          <a class="nav-link" href="#" id="cart-button"
-            ><i class="fa fa-shopping-cart"></i
-          ></a>
-        </div>
-      </nav>
-    </header>
-
-    <!-- HERO SECTION -->
-    <div class="slider-wrap">
-      <div
-        class="slider-item"
-        style="background-image: url('img/grublane-interior4.jpg')"
-      >
-        <div class="container">
-          <div
-            class="row slider-text align-items-center justify-content-center"
-          >
-            <div class="col-md-8 text-center col-sm-12">
-              <h1>Explore <br />Our Take-Out Menu</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MENU SECTION -->
-    <section class="section">
-      <div class="container" id="menu-container">
-        <!-- Menu items will be inserted here by JavaScript -->
-      </div>
-    </section>
-    <!-- MENU END -->
-
-    <!-- SIDE CART -->
-    <div id="side-cart" class="side-cart">
-      <div class="side-cart-header">
-        Your Cart
-        <span id="side-cart-close" class="side-cart-close">&times;</span>
-      </div>
-      <div id="side-cart-items" class="side-cart-items">
-        <!-- Cart items will be inserted here by JavaScript -->
-      </div>
-      <div class="side-cart-footer">
-        <h3 id="total-price">Total: N0</h3>
-        <button id="checkout-button">Checkout with Paystack</button>
-      </div>
-    </div>
-
-    <!-- OVERLAY -->
-    <div id="overlay" class="overlay"></div>
-
-    <!-- FOOTER -->
-    <footer class="site-footer" role="contentinfo">
+<body>
+  <header role="banner">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
-        <div class="row mb-5">
-          <div class="col-md-4 mb-5">
-            <ul class="list-unstyled footer-link d-flex footer-social">
-              <li>
-                <a
-                  href="https://www.instagram.com/grub_lane_lagos?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                  class="p-2"
-                  ><span class="fa fa-instagram"></span
-                ></a>
-                <br />
-                <p>Instagram</p>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md-5 mb-5">
-            <div class="mb-5">
-              <h3>Opening Hours</h3>
-              <p>
-                <strong class="d-block font-weight-normal text-black"
-                  >Monday-Friday</strong
-                >
-                8AM - 10PM
-              </p>
-              <p>
-                <strong class="d-block font-weight-normal text-black"
-                  >Closed on Tuesdays</strong
-                >
-              </p>
-            </div>
-            <div>
-              <h3>Contact Info</h3>
-              <ul class="list-unstyled footer-link">
-                <li class="d-block">
-                  <span class="d-block text-black">Address:</span>
-                  <span
-                    >19A Sinari Daranijo Street, Victoria Island, Lagos</span
-                  >
-                </li>
-                <li class="d-block">
-                  <span class="d-block text-black">Phone:</span
-                  ><span> +234 808 912 8657</span>
-                </li>
-                <li class="d-block">
-                  <span class="d-block text-black">Email:</span
-                  ><span
-                    ><a
-                      href="mailto:grublane@yahoo.com"
-                      class="__cf_email__"
-                      data-cfemail="7910171f163900160c0b1d1614181017571a1614"
-                      >grublane@yahoo.com</a
-                    ></span
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-3 mb-5">
-            <h3>Quick Links</h3>
-            <ul class="list-unstyled footer-link">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="about.html">About</a></li>
-              <li><a href="dine-in.html">Dine-In</a></li>
-              <li><a href="reservation.html">Reservations</a></li>
-              <li><a href="contact.html">Contact</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3"></div>
+        <a class="navbar-brand" href="index.html"><img src="img/GrublaneBC-03.png" alt="grublane logo"
+            style="width: 200px" /></a>
+        <div class="d-flex">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
+            aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
-        <div class="row">
-          <div class="col-12 text-md-center text-left">
+        <div class="collapse navbar-collapse" id="navbarsExample05">
+          <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="dine-in.html">Dine-In Menu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="take-out.html">Take-Out Menu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reservation.html">Table Reservations</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+        <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION -->
+  <div class="slider-wrap">
+    <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg')">
+      <div class="container">
+        <div class="row slider-text align-items-center justify-content-center">
+          <div class="col-md-8 text-center col-sm-12">
+            <h1>Explore <br />Our Take-Out Menu</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU SECTION -->
+  <section class="section">
+    <div class="container" id="menu-container">
+      <!-- Menu items will be inserted here by JavaScript -->
+    </div>
+  </section>
+  <!-- MENU END -->
+
+  <!-- SIDE CART -->
+  <div id="side-cart" class="side-cart">
+    <div class="side-cart-header">
+      Your Cart
+      <span id="side-cart-close" class="side-cart-close">&times;</span>
+    </div>
+    <div id="side-cart-items" class="side-cart-items">
+      <!-- Cart items will be inserted here by JavaScript -->
+    </div>
+    <div class="side-cart-footer">
+      <h3 id="total-price">Total: N0</h3>
+      <button id="checkout-button">Checkout with Paystack</button>
+    </div>
+  </div>
+
+  <!-- OVERLAY -->
+  <div id="overlay" class="overlay"></div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-md-4 mb-5">
+          <ul class="list-unstyled footer-link d-flex footer-social">
+            <li>
+              <a href="https://www.instagram.com/grub_lane_lagos?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                class="p-2"><span class="fa fa-instagram"></span></a>
+              <br />
+              <p>Instagram</p>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-5 mb-5">
+          <div class="mb-5">
+            <h3>Opening Hours</h3>
             <p>
-              Copyright &copy;
-              <script
-                data-cfasync="false"
-                src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-              ></script>
-              <script>
-                document.write(new Date().getFullYear());
-              </script>
-              All rights reserved
-              <i class="fa fa-heart-o" aria-hidden="true"></i>
-              <a href="#" target="_blank">Grublane</a>
+              <strong class="d-block font-weight-normal text-black">Monday-Friday</strong>
+              8AM - 10PM
+            </p>
+            <p>
+              <strong class="d-block font-weight-normal text-black">Closed on Tuesdays</strong>
             </p>
           </div>
+          <div>
+            <h3>Contact Info</h3>
+            <ul class="list-unstyled footer-link">
+              <li class="d-block">
+                <span class="d-block text-black">Address:</span>
+                <span>19A Sinari Daranijo Street, Victoria Island, Lagos</span>
+              </li>
+              <li class="d-block">
+                <span class="d-block text-black">Phone:</span><span> +234 808 912 8657</span>
+              </li>
+              <li class="d-block">
+                <span class="d-block text-black">Email:</span><span><a href="mailto:grublane@yahoo.com"
+                    class="__cf_email__"
+                    data-cfemail="7910171f163900160c0b1d1614181017571a1614">grublane@yahoo.com</a></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3 mb-5">
+          <h3>Quick Links</h3>
+          <ul class="list-unstyled footer-link">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="dine-in.html">Dine-In</a></li>
+            <li><a href="reservation.html">Reservations</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-md-center text-left">
+          <p>
+            Copyright &copy;
+            <script data-cfasync="false"
+              src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            All rights reserved
+            <i class="fa fa-heart-o" aria-hidden="true"></i>
+            <a href="#" target="_blank">Grublane</a>
+          </p>
         </div>
       </div>
-    </footer>
+    </div>
+  </footer>
 
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/magnific-popup-options.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/fetchdishes.js"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/magnific-popup-options.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/fetchdishes.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-      gtag("config", "UA-23581568-13");
-    </script>
+    gtag("config", "UA-23581568-13");
+  </script>
 
-    <script>
-      // Initialize cart, removing redundant declarations
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  <script>
+    // Initialize cart, removing redundant declarations
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-      function renderCart() {
-        const cartItemsContainer = document.getElementById("side-cart-items");
-        cartItemsContainer.innerHTML = "";
+    function renderCart() {
+      const cartItemsContainer = document.getElementById("side-cart-items");
+      cartItemsContainer.innerHTML = "";
 
-        let totalPrice = 0;
+      let totalPrice = 0;
 
-        cart.forEach((item, index) => {
-          const cartItemDiv = document.createElement("div");
-          cartItemDiv.classList.add("side-cart-item");
-          cartItemDiv.innerHTML = `
+      cart.forEach((item, index) => {
+        const cartItemDiv = document.createElement("div");
+        cartItemDiv.classList.add("side-cart-item");
+        cartItemDiv.innerHTML = `
           <h4>${item.name}</h4>
           <p>N${item.price} x ${item.quantity}</p>
           <span class="remove-btn" data-index="${index}">&times;</span>
       `;
-          cartItemsContainer.appendChild(cartItemDiv);
+        cartItemsContainer.appendChild(cartItemDiv);
 
-          totalPrice += item.price * item.quantity;
-        });
-
-        document.getElementById(
-          "total-price"
-        ).textContent = `Total: N${totalPrice}`;
-
-        // Enable or disable checkout button based on cart items
-        const checkoutButton = document.getElementById("checkout-button");
-        checkoutButton.disabled = cart.length === 0;
-
-        // Add event listeners for remove buttons
-        document.querySelectorAll(".remove-btn").forEach((button) => {
-          button.addEventListener("click", function () {
-            const itemIndex = this.getAttribute("data-index");
-            cart.splice(itemIndex, 1);
-            localStorage.setItem("cart", JSON.stringify(cart));
-            renderCart(); // Re-render cart after item is removed
-          });
-        });
-      }
-
-      // Initial render
-      renderCart();
-
-      // Handle click event for Add to Cart button
-      document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
-        button.addEventListener("click", function () {
-          // Get item name and price from data attributes
-          const itemName = this.getAttribute("data-item");
-          const itemPrice = parseInt(this.getAttribute("data-price"));
-
-          // Check if item is already in cart
-          const existingItemIndex = cart.findIndex(
-            (item) => item.name === itemName
-          );
-
-          if (existingItemIndex > -1) {
-            // Increment quantity if item already exists
-            cart[existingItemIndex].quantity += 1;
-          } else {
-            // Add new item to cart
-            cart.push({ name: itemName, price: itemPrice, quantity: 1 });
-          }
-
-          // Save cart to localStorage
-          localStorage.setItem("cart", JSON.stringify(cart));
-
-          // Render cart again to update the side cart
-          renderCart();
-
-          // Show the side cart
-          document.getElementById("side-cart").classList.add("active");
-          document.getElementById("overlay").classList.add("active");
-        });
+        totalPrice += item.price * item.quantity;
       });
 
-      // Toggle side cart visibility
-      document
-        .getElementById("cart-button")
-        .addEventListener("click", function () {
-          document.getElementById("side-cart").classList.toggle("active");
-          document.getElementById("overlay").classList.toggle("active");
-        });
+      document.getElementById(
+        "total-price"
+      ).textContent = `Total: N${totalPrice}`;
 
-      // Close side cart
-      document
-        .getElementById("side-cart-close")
-        .addEventListener("click", function () {
-          document.getElementById("side-cart").classList.remove("active");
-          document.getElementById("overlay").classList.remove("active");
-        });
+      // Enable or disable checkout button based on cart items
+      const checkoutButton = document.getElementById("checkout-button");
+      checkoutButton.disabled = cart.length === 0;
 
-      // Close side cart when clicking outside
-      document.getElementById("overlay").addEventListener("click", function () {
+      // Add event listeners for remove buttons
+      document.querySelectorAll(".remove-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+          const itemIndex = this.getAttribute("data-index");
+          cart.splice(itemIndex, 1);
+          localStorage.setItem("cart", JSON.stringify(cart));
+          renderCart(); // Re-render cart after item is removed
+        });
+      });
+    }
+
+    // Initial render
+    renderCart();
+
+    // Handle click event for Add to Cart button
+    document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        // Get item name and price from data attributes
+        const itemName = this.getAttribute("data-item");
+        const itemPrice = parseInt(this.getAttribute("data-price"));
+
+        // Check if item is already in cart
+        const existingItemIndex = cart.findIndex(
+          (item) => item.name === itemName
+        );
+
+        if (existingItemIndex > -1) {
+          // Increment quantity if item already exists
+          cart[existingItemIndex].quantity += 1;
+        } else {
+          // Add new item to cart
+          cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+        }
+
+        // Save cart to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Render cart again to update the side cart
+        renderCart();
+
+        // Show the side cart
+        document.getElementById("side-cart").classList.add("active");
+        document.getElementById("overlay").classList.add("active");
+      });
+    });
+
+    // Toggle side cart visibility
+    document
+      .getElementById("cart-button")
+      .addEventListener("click", function () {
+        document.getElementById("side-cart").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+      });
+
+    // Close side cart
+    document
+      .getElementById("side-cart-close")
+      .addEventListener("click", function () {
         document.getElementById("side-cart").classList.remove("active");
         document.getElementById("overlay").classList.remove("active");
       });
 
-      // Checkout with Paystack
-      document
-        .getElementById("checkout-button")
-        .addEventListener("click", function () {
-          if (cart.length === 0) {
-            alert("No items in cart. Please add items before checking out.");
-            return;
-          }
+    // Close side cart when clicking outside
+    document.getElementById("overlay").addEventListener("click", function () {
+      document.getElementById("side-cart").classList.remove("active");
+      document.getElementById("overlay").classList.remove("active");
+    });
 
-          // Calculate the total amount
-          let totalAmount = cart.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
+    // Checkout with Paystack
+    document
+      .getElementById("checkout-button")
+      .addEventListener("click", function () {
+        if (cart.length === 0) {
+          alert("No items in cart. Please add items before checking out.");
+          return;
+        }
 
-          // Get the user's email (replace this with actual user email retrieval)
-          let userEmail =
-            localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
+        // Calculate the total amount
+        let totalAmount = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
 
-          // Generate an order ID (this could also be generated on the server)
-          let orderId = "ORDER_" + new Date().getTime(); // Example order ID
+        // Get the user's email (replace this with actual user email retrieval)
+        let userEmail =
+          localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
 
-          // Call the Paystack payment function
-          payWithPaystack(totalAmount, userEmail, orderId);
-        });
+        // Generate an order ID (this could also be generated on the server)
+        let orderId = "ORDER_" + new Date().getTime(); // Example order ID
 
-      // Paystack payment integration
-      function payWithPaystack(amount, email, orderId) {
-        const handler = PaystackPop.setup({
-          key: "YOUR_PUBLIC_KEY", // Replace with your Paystack public key
-          email: email,
-          amount: amount * 100, // Convert to kobo
-          currency: "NGN",
-          ref: orderId, // Use generated order ID
-          callback: function (response) {
-            // Record payment details
-            createOrder(
-              userId,
-              amount,
-              orderId,
-              new Date().toISOString(),
-              response.reference,
-              JSON.stringify(cart)
-            )
-              .then(() => {
-                localStorage.removeItem("cart"); // Clear the cart after successful payment
-                window.location.href = `order-confirmation.html?orderId=${orderId}`;
-              })
-              .catch((error) => {
-                alert("Failed to create order. Please contact support.");
-                console.error("Error creating order:", error.message);
-              });
-          },
-          onClose: function () {
-            alert("Transaction was not completed, window closed.");
-          },
-        });
-        handler.openIframe();
-      }
-      // Record payment details
-      function recordPayment(reference, email, amount) {
-        const paymentDetails = {
-          order_id: reference,
-          amount: amount,
-          payment_date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
-          payment_method: "Paystack",
-          status: "Completed",
-          paystack_refnumber: reference,
-        };
+        // Call the Paystack payment function
+        payWithPaystack(totalAmount, userEmail, orderId);
+      });
 
-        // Send the payment details to your backend API
-        $.ajax({
-          url: "https://grublanerestaurant.com/api/payments/createPayments",
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify(paymentDetails),
-          success: function (response) {
-            alert("Payment recorded successfully!");
-            localStorage.removeItem("cart"); // Clear the cart after successful payment
-            window.location.href = "order-confirmation.html?orderId=${orderId}"; // Redirect to a thank-you page or order confirmation
-          },
-          error: function (xhr) {
-            alert("Failed to record payment. Please contact support.");
-          },
-        });
-      }
-    </script>
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-      integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-      data-cf-beacon='{"rayId":"8a3c1b55ef2e8926","version":"2024.6.1","serverTiming":{"name":{"cfL4":true}},"token":"cd0b4b3a733644fc843ef0b185f98241","b":1}'
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    // Paystack payment integration
+    function payWithPaystack(amount, email, orderId) {
+      const handler = PaystackPop.setup({
+        key: "YOUR_PUBLIC_KEY", // Replace with your Paystack public key
+        email: email,
+        amount: amount * 100, // Convert to kobo
+        currency: "NGN",
+        ref: orderId, // Use generated order ID
+        callback: function (response) {
+          // Record payment details
+          createOrder(
+            userId,
+            amount,
+            orderId,
+            new Date().toISOString(),
+            response.reference,
+            JSON.stringify(cart)
+          )
+            .then(() => {
+              localStorage.removeItem("cart"); // Clear the cart after successful payment
+              window.location.href = `order-confirmation.html?orderId=${orderId}`;
+            })
+            .catch((error) => {
+              alert("Failed to create order. Please contact support.");
+              console.error("Error creating order:", error.message);
+            });
+        },
+        onClose: function () {
+          alert("Transaction was not completed, window closed.");
+        },
+      });
+      handler.openIframe();
+    }
+    // Record payment details
+    function recordPayment(reference, email, amount) {
+      const paymentDetails = {
+        order_id: reference,
+        amount: amount,
+        payment_date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
+        payment_method: "Paystack",
+        status: "Completed",
+        paystack_refnumber: reference,
+      };
+
+      // Send the payment details to your backend API
+      $.ajax({
+        url: "https://grublanerestaurant.com/api/payments/createPayments",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(paymentDetails),
+        success: function (response) {
+          alert("Payment recorded successfully!");
+          localStorage.removeItem("cart"); // Clear the cart after successful payment
+          window.location.href = "order-confirmation.html?orderId=${orderId}"; // Redirect to a thank-you page or order confirmation
+        },
+        error: function (xhr) {
+          alert("Failed to record payment. Please contact support.");
+        },
+      });
+    }
+  </script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"rayId":"8a3c1b55ef2e8926","version":"2024.6.1","serverTiming":{"name":{"cfL4":true}},"token":"cd0b4b3a733644fc843ef0b185f98241","b":1}'
+    crossorigin="anonymous"></script>
+</body>
+
 </html>

@@ -1,7 +1,7 @@
-// Function to fetch and display menu data
+// Function to fetch and display menu data dynamically
 function fetchMenuData(menuType) {
-  // Determine whether it's takeout or dine-in
-  const takeOut = menuType === "dine_in" ? "false" : "true";
+  // Set takeOut flag based on menu type (dine_in or take_out)
+  const takeOut = menuType === "dine_in" ? "true" : "false";
   const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
 
   fetch(endpointUrl)
@@ -12,8 +12,6 @@ function fetchMenuData(menuType) {
       return response.json();
     })
     .then((data) => {
-      console.log("Fetched data:", data); // Log the fetched data for debugging
-
       const menuContainer = document.getElementById("menu-container");
       let menuHtml = "";
 
@@ -30,27 +28,42 @@ function fetchMenuData(menuType) {
           </div>
         `;
       } else {
-        // Process menu data
-        data.dishes.forEach((item) => {
-          menuHtml += `
-            <div class="col-md-4 mb-4">
-              <div class="menu-item">
-                ${
-                  menuType === "take_out"
-                    ? `<img src="${item.image_url}" alt="${item.name}" class="img-fluid" />`
-                    : ""
-                }
-                <h4>${item.name}</h4>
-                <p>N${item.price}</p>
-                <button class="add-to-cart-btn" data-item="${
-                  item.name
-                }" data-price="${item.price}">
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          `;
+        // Group dishes by subcategory (e.g., appetizers, main courses)
+        const groupedMenu = {};
+        data.dishes.forEach((dish) => {
+          const { subcategory } = dish;
+          if (!groupedMenu[subcategory]) {
+            groupedMenu[subcategory] = [];
+          }
+          groupedMenu[subcategory].push(dish);
         });
+
+        // Build the HTML for each subcategory
+        for (const subcategory in groupedMenu) {
+          menuHtml += `<h3 class="menu-category">${subcategory}</h3>`;
+          menuHtml += `<div class="row">`;
+
+          groupedMenu[subcategory].forEach((item) => {
+            menuHtml += `<div class="col-md-4 mb-4"><div class="menu-item">`;
+
+            // Only display images for the take-out menu
+            if (menuType === "take_out") {
+              menuHtml += `
+                <img src="${item.image_url}" alt="${item.name}" class="img-fluid" />
+              `;
+            }
+
+            menuHtml += `
+              <h5>${item.name}</h5>
+              <p>N${item.price}</p>
+              <button class="add-to-cart-btn" data-item="${item.name}" data-price="${item.price}">
+                Add to cart
+              </button>
+            </div></div>`;
+          });
+
+          menuHtml += `</div>`;
+        }
       }
 
       menuContainer.innerHTML = menuHtml;
@@ -77,26 +90,29 @@ function addCartFunctionality() {
       const itemName = this.getAttribute("data-item");
       const itemPrice = parseInt(this.getAttribute("data-price"));
 
-      // Find if the item is already in the cart
+      // Retrieve the cart from localStorage or create a new one if it doesn't exist
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Check if the item is already in the cart
       const existingItemIndex = cart.findIndex(
         (item) => item.name === itemName
       );
 
       if (existingItemIndex > -1) {
-        // Increase quantity if item is already in cart
+        // Increase the quantity if the item is already in the cart
         cart[existingItemIndex].quantity += 1;
       } else {
-        // Add new item to cart
+        // Add the new item to the cart
         cart.push({ name: itemName, price: itemPrice, quantity: 1 });
       }
 
-      // Save cart to localStorage
+      // Save the updated cart back to localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
 
-      // Render updated cart
+      // Re-render the cart
       renderCart();
 
-      // Show side cart and overlay
+      // Show the side cart and overlay
       document.getElementById("side-cart").classList.add("active");
       document.getElementById("overlay").classList.add("active");
     });
