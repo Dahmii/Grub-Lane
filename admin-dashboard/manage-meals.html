@@ -34,9 +34,9 @@
                     <a href="manage-takeout.html"><i class="fas fa-box"></i> <span>Take-Out Orders</span></a>
                 </li>
                 <li data-page="manage-payments">
-                    <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i><span> Payments</span></a>
+                    <a href="manage-payments.html"><i class="fas fa-money-check-alt"></i> <span>Payments</span></a>
                 </li>
-                <li data-page="manage-meals">
+                <li data-page="manage-meals" class="active">
                     <a href="manage-meals.html"><i class="fas fa-utensils"></i> <span>Manage Meals</span></a>
                 </li>
                 <li class="staff-role" data-page="create-admin">
@@ -64,14 +64,14 @@
                             </div>
                         </div>
                         <button id="logoutButton" class="btn btn-danger">
-                            <i class="fas fa-sign-out-alt"></i>Logout
+                            <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
                 </div>
             </nav>
 
             <div class="content-area">
-                <!-- Filter and Search Meals Section (Open by Default) -->
+                <!-- Filter and Search Meals Section -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="mb-0">Filter and Search Meals</h5>
@@ -95,10 +95,25 @@
                                             <label for="filterCategory">Subcategory</label>
                                             <select class="form-control" id="filterCategory">
                                                 <option value="">All</option>
-                                                <option value="appetizer">Appetizer</option>
-                                                <option value="main">Main Course</option>
-                                                <option value="dessert">Dessert</option>
-                                                <option value="beverage">Beverage</option>
+                                                <option value="Early Bird Grubs">Early bird Grubs</option>
+                                                <option value="Sandwiches, Toasties, and Wraps">Sandwiches, Toasties,
+                                                    and Wraps</option>
+                                                <option value="Tea and Coffee Accompaniments">Tea and Coffee
+                                                    Accompaniments</option>
+                                                <option value="Appetizers">Appetizers</option>
+                                                <option value="Soups">Soups</option>
+                                                <option value="Salads">Salads</option>
+                                                <option value="Mains">Mains</option>
+                                                <option value="The Young Grubber">the Young Grubber</option>
+                                                <option value="Burgers">Burgers</option>
+                                                <option value="The Fit Grubber">The Fit Grubber</option>
+                                                <option value="Pizza">Pizza</option>
+                                                <option value="Savoury Pastry">Savoury Pastry</option>
+                                                <option value="Dessert">Dessert</option>
+                                                <option value="Milkshakes">Milkshakes</option>
+                                                <option value="Non-alcoholic Beverages">Non-alcoholic Beverages</option>
+                                                <option value="Alcoholic Beverages">Alcoholic Beverages</option>
+                                                <option value="Wine">Wine</option>
                                             </select>
                                         </div>
                                     </div>
@@ -115,7 +130,7 @@
                     </div>
                 </div>
 
-                <!-- Manage Meals Section (Collapsible) -->
+                <!-- Manage Meals Section -->
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Manage Meals</h5>
@@ -140,18 +155,13 @@
                                     <!-- Meal rows will be dynamically added here -->
                                 </tbody>
                             </table>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-primary" id="prevPage" disabled>Previous</button>
-                                <button class="btn btn-primary" id="nextPage" disabled>Next</button>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Add New Meal Form (Collapsible, Collapsed by Default) -->
+                <!-- Add New Meal Form -->
                 <div class="card mb-4">
-                    <div class="card-header" data-toggle="collapse" data-target="#addMealFormCollapse"
-                        aria-expanded="false" aria-controls="addMealFormCollapse">
+                    <div class="card-header" data-toggle="collapse" data-target="#addMealFormCollapse">
                         <h5 class="mb-0">
                             <button class="btn btn-success" id="addMealButton">
                                 <i class="fas fa-plus"></i> Add New Meal
@@ -193,20 +203,25 @@
                                 <div class="form-group">
                                     <label for="mealCategory">Subcategory</label>
                                     <select class="form-control" id="mealCategory" required>
-                                        <option value="">Select a subcategory</option>
-                                        <option value="appetizer">Appetizer</option>
-                                        <option value="main">Main Course</option>
-                                        <option value="dessert">Dessert</option>
-                                        <option value="beverage">Beverage</option>
-                                    </select>
-                                </div>
-
-                                <!-- Menu ID (can be hidden or a dropdown) -->
-                                <div class="form-group">
-                                    <label for="mealMenuId">Menu</label>
-                                    <select class="form-control" id="mealMenuId" required>
-                                        <option value="1">Menu 1</option> <!-- Example options -->
-                                        <option value="2">Menu 2</option>
+                                        <option value="Early Bird Grubs">Early bird Grubs</option>
+                                        <option value="Sandwiches, Toasties, and Wraps">Sandwiches, Toasties,
+                                            and Wraps</option>
+                                        <option value="Tea and Coffee Accompaniments">Tea and Coffee
+                                            Accompaniments</option>
+                                        <option value="Appetizers">Appetizers</option>
+                                        <option value="Soups">Soups</option>
+                                        <option value="Salads">Salads</option>
+                                        <option value="Mains">Mains</option>
+                                        <option value="The Young Grubber">The Young Grubber</option>
+                                        <option value="Burgers">Burgers</option>
+                                        <option value="The Fit Grubber">The Fit Grubber</option>
+                                        <option value="Pizza">Pizza</option>
+                                        <option value="Savoury Pastry">Savoury Pastry</option>
+                                        <option value="Dessert">Dessert</option>
+                                        <option value="Milkshakes">Milkshakes</option>
+                                        <option value="Non-alcoholic Beverages">Non-alcoholic Beverages</option>
+                                        <option value="Alcoholic Beverages">Alcoholic Beverages</option>
+                                        <option value="Wine">Wine</option>
                                     </select>
                                 </div>
 
@@ -232,45 +247,8 @@
     <script src="js/admin.js"></script>
     <script src="js/admin-logout.js"></script>
     <script src="js/manage-meals.js"></script>
+    <script src="js/uploadMenuData.js"></script>
 
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const username = localStorage.getItem("username");
-
-            if (username) {
-                document.getElementById("adminUsername").textContent = username;
-                document.getElementById("profileUsername").textContent = username;
-            }
-
-            updateDashboardCounts();
-            setInterval(updateDashboardCounts, 10000);
-            checkViewedStatus();
-        });
-
-        function setActiveMenuItem() {
-            const currentPage = window.location.pathname.split("/").pop().replace(".html", "");
-            const menuItems = document.querySelectorAll("#sidebar ul.components li");
-
-            menuItems.forEach(item => {
-                item.classList.remove("active");
-                if (item.dataset.page === currentPage) {
-                    item.classList.add("active");
-                }
-            });
-
-            // Special case for the home page
-            if (currentPage === "" || currentPage === "index") {
-                document.querySelector('li[data-page="home"]').classList.add("active");
-            }
-        }
-
-        // Call the function when the DOM is loaded
-        document.addEventListener("DOMContentLoaded", function () {
-            setActiveMenuItem();
-            // ... (other existing DOMContentLoaded event listeners) ...
-        });
-    </script>
 </body>
 
 </html>

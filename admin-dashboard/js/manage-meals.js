@@ -2,32 +2,74 @@ const API_FETCH_URL = "https://grublanerestaurant.com/api/dish/getDishes";
 const API_CREATE_URL = "https://grublanerestaurant.com/api/dish/createDish";
 const API_UPDATE_URL = "https://grublanerestaurant.com/api/dish/updateDish";
 const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish";
+const API_MENU_URL = "https://grublanerestaurant.com/api/menu/getMenus"; // For fetching menu IDs
 
 let meals = [];
+let menuId = null; // Will be dynamically fetched from the backend
 
+// Function to fetch menu ID from the backend
+async function fetchMenuId() {
+  try {
+    const response = await fetch(API_MENU_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Ensure the response is OK and parse JSON
+    if (!response.ok) {
+      throw new Error(`Failed to fetch menu ID: ${response.status}`);
+    }
+
+    const menus = await response.json();
+
+    // Check if valid menus are received
+    if (menus && menus.length > 0) {
+      menuId = menus[0].id; // Use the first menu ID or adjust as needed
+    } else {
+      throw new Error("No menus found.");
+    }
+  } catch (error) {
+    console.error("Error fetching menu ID:", error);
+  }
+}
+
+// Function to fetch meals from the API and display them
 async function fetchMeals() {
   try {
-    const response = await fetch(API_FETCH_URL);
+    const response = await fetch(API_FETCH_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
     const data = await response.json();
+
     if (data.dishes && Array.isArray(data.dishes)) {
       meals = data.dishes;
     } else {
       throw new Error("Invalid data format: Expected an array of meals");
     }
+
     displayMeals();
   } catch (error) {
     document.getElementById("mealsTableBody").innerHTML = `
-        <tr>
-          <td colspan="6" class="text-center text-danger">
-            Failed to load meals. Please try again later.
-          </td>
-        </tr>`;
+      <tr>
+        <td colspan="6" class="text-center text-danger">
+          Failed to load meals. Please try again later.
+        </td>
+      </tr>`;
+    console.error("Error fetching meals:", error);
   }
 }
 
+// Function to display meals in the table
 function displayMeals(filteredMeals = meals) {
   const tableBody = document.getElementById("mealsTableBody");
   tableBody.innerHTML = "";
@@ -50,6 +92,7 @@ function displayMeals(filteredMeals = meals) {
   });
 }
 
+// Function to add a new meal
 async function addMeal(event) {
   event.preventDefault();
 
@@ -96,6 +139,7 @@ function editMeal(id) {
   }
 }
 
+// Function to save changes to a meal after editing
 async function saveMealEdit() {
   const id = parseInt(document.getElementById("editMealId").value);
   const updatedMeal = {
@@ -103,7 +147,7 @@ async function saveMealEdit() {
     name: document.getElementById("editMealName").value,
     description: document.getElementById("editMealDescription").value,
     price: parseFloat(document.getElementById("editMealPrice").value),
-    serviceType: document.getElementById("editMealServiceType").value,
+    servicetype: document.getElementById("editMealServiceType").value,
     subcategory: document.getElementById("editMealCategory").value,
   };
 
@@ -112,6 +156,7 @@ async function saveMealEdit() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(updatedMeal),
     });
@@ -123,25 +168,33 @@ async function saveMealEdit() {
         displayMeals();
         $("#editMealModal").modal("hide");
       }
+    } else {
+      console.error("Error updating meal:", await response.json());
     }
   } catch (error) {
-    // Handle error
+    console.error("Error updating meal:", error);
   }
 }
 
+// Function to delete a meal
 async function deleteMeal(id) {
   if (confirm("Are you sure you want to delete this meal?")) {
     try {
       const response = await fetch(`${API_DELETE_URL}/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (response.ok) {
         meals = meals.filter((meal) => meal.id !== id);
         displayMeals();
+      } else {
+        console.error("Error deleting meal:", await response.json());
       }
     } catch (error) {
-      // Handle error
+      console.error("Error deleting meal:", error);
     }
   }
 }

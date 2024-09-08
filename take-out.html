@@ -161,6 +161,40 @@
         margin-left: auto;
       }
     }
+
+    /* Styles for increase and decrease buttons */
+    .side-cart-item button {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      margin: 0 5px;
+    }
+
+    .side-cart-item button:hover {
+      background: #ddd;
+    }
+
+    .side-cart-item .decrease-quantity {
+      background: #ff6666;
+      color: white;
+    }
+
+    .side-cart-item .increase-quantity {
+      background: #4caf50;
+      color: white;
+    }
+
+    .side-cart-item .decrease-quantity:hover {
+      background: #cc0000;
+    }
+
+    .side-cart-item .increase-quantity:hover {
+      background: #45a049;
+    }
   </style>
 </head>
 
@@ -175,7 +209,6 @@
             aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
         </div>
         <div class="collapse navbar-collapse" id="navbarsExample05">
           <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
@@ -199,13 +232,14 @@
             </li>
           </ul>
         </div>
+        <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
       </div>
     </nav>
   </header>
 
   <!-- HERO SECTION -->
   <div class="slider-wrap">
-    <div class="slider-item" style="background-image: url('img/restuarant-home.jpg')">
+    <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg')">
       <div class="container">
         <div class="row slider-text align-items-center justify-content-center">
           <div class="col-md-8 text-center col-sm-12">
@@ -260,8 +294,11 @@
           <div class="mb-5">
             <h3>Opening Hours</h3>
             <p>
-              <strong class="d-block font-weight-normal text-black">Monday-Friday</strong>
-              9AM - 4PM
+              <strong class="d-block font-weight-normal text-black">Everyday of the week <br>Sunday-Saturday</strong>
+              8AM - 10PM
+            </p>
+            <p>
+              <strong class="d-block font-weight-normal text-black">Closed on Tuesdays</strong>
             </p>
           </div>
           <div>
@@ -285,9 +322,10 @@
         <div class="col-md-3 mb-5">
           <h3>Quick Links</h3>
           <ul class="list-unstyled footer-link">
+            <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="dine-in.html">Dine-In</a></li>
-            <li><a href="take-out.html">Take-Out</a></li>
+            <li><a href="reservation.html">Reservations</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
@@ -358,7 +396,9 @@
         totalPrice += item.price * item.quantity;
       });
 
-      document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
+      document.getElementById(
+        "total-price"
+      ).textContent = `Total: N${totalPrice}`;
 
       // Enable or disable checkout button based on cart items
       const checkoutButton = document.getElementById("checkout-button");
@@ -386,7 +426,9 @@
         const itemPrice = parseInt(this.getAttribute("data-price"));
 
         // Check if item is already in cart
-        const existingItemIndex = cart.findIndex((item) => item.name === itemName);
+        const existingItemIndex = cart.findIndex(
+          (item) => item.name === itemName
+        );
 
         if (existingItemIndex > -1) {
           // Increment quantity if item already exists
@@ -409,16 +451,20 @@
     });
 
     // Toggle side cart visibility
-    document.getElementById("cart-button").addEventListener("click", function () {
-      document.getElementById("side-cart").classList.toggle("active");
-      document.getElementById("overlay").classList.toggle("active");
-    });
+    document
+      .getElementById("cart-button")
+      .addEventListener("click", function () {
+        document.getElementById("side-cart").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+      });
 
     // Close side cart
-    document.getElementById("side-cart-close").addEventListener("click", function () {
-      document.getElementById("side-cart").classList.remove("active");
-      document.getElementById("overlay").classList.remove("active");
-    });
+    document
+      .getElementById("side-cart-close")
+      .addEventListener("click", function () {
+        document.getElementById("side-cart").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+      });
 
     // Close side cart when clicking outside
     document.getElementById("overlay").addEventListener("click", function () {
@@ -427,27 +473,30 @@
     });
 
     // Checkout with Paystack
-    document.getElementById("checkout-button").addEventListener("click", function () {
-      if (cart.length === 0) {
-        alert("No items in cart. Please add items before checking out.");
-        return;
-      }
+    document
+      .getElementById("checkout-button")
+      .addEventListener("click", function () {
+        if (cart.length === 0) {
+          alert("No items in cart. Please add items before checking out.");
+          return;
+        }
 
-      // Calculate the total amount
-      let totalAmount = cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
+        // Calculate the total amount
+        let totalAmount = cart.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
 
-      // Get the user's email (replace this with actual user email retrieval)
-      let userEmail = localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
+        // Get the user's email (replace this with actual user email retrieval)
+        let userEmail =
+          localStorage.getItem("userEmail") || "user@example.com"; // Replace with actual user email
 
-      // Generate an order ID (this could also be generated on the server)
-      let orderId = "ORDER_" + new Date().getTime(); // Example order ID
+        // Generate an order ID (this could also be generated on the server)
+        let orderId = "ORDER_" + new Date().getTime(); // Example order ID
 
-      // Call the Paystack payment function
-      payWithPaystack(totalAmount, userEmail, orderId);
-    });
+        // Call the Paystack payment function
+        payWithPaystack(totalAmount, userEmail, orderId);
+      });
 
     // Paystack payment integration
     function payWithPaystack(amount, email, orderId) {
@@ -459,12 +508,19 @@
         ref: orderId, // Use generated order ID
         callback: function (response) {
           // Record payment details
-          createOrder(userId, amount, orderId, new Date().toISOString(), response.reference, JSON.stringify(cart))
+          createOrder(
+            userId,
+            amount,
+            orderId,
+            new Date().toISOString(),
+            response.reference,
+            JSON.stringify(cart)
+          )
             .then(() => {
               localStorage.removeItem("cart"); // Clear the cart after successful payment
               window.location.href = `order-confirmation.html?orderId=${orderId}`;
             })
-            .catch(error => {
+            .catch((error) => {
               alert("Failed to create order. Please contact support.");
               console.error("Error creating order:", error.message);
             });
