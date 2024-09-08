@@ -15,7 +15,8 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   },
-});
+})
+
 /**
  * @swagger
  * /api/dish/getDishes:
@@ -89,6 +90,7 @@ const storage = multer.diskStorage({
  *                   type: string
  *                   description: Error message
  */
+
 router.get("/getDishes", (req, res) => {
   const take_out = req.query.take_out;
   const page = parseInt(req.query.page) || 1;
@@ -140,7 +142,7 @@ router.get("/getDishes", (req, res) => {
         price: row.price,
         servicetype: row.serviceType,
         subcategory: row.subcategory,
-        image_link: `${protocol}://${host}/images/${path.basename(row.image_link)}`
+        image_link: row.image_link ? `${protocol}://${host}/images/${path.basename(row.image_link)}` : null
       }));
 
       const nextPage = page < totalPages ? `${req.baseUrl}${req.path}?page=${page + 1}&limit=${limit}` : null;
@@ -155,8 +157,6 @@ router.get("/getDishes", (req, res) => {
     });
   });
 });
-
-
 
 
 const upload = multer({

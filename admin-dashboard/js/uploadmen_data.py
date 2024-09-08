@@ -195,10 +195,10 @@ def upload_menu_to_endpoint(menu):
                 "subcategory": item["subcategory"],
 
             }
-            response=requests.post(URL_ENDPOINT,payload
+            response=requests.post(URL_ENDPOINT,json=payload
 
             )
-            if response.status_code ==200:
+            if response.status_code ==201:
                 print(f"{item["name"]} has been uploaded")
             print(f"{item["name"]}failed")
             print(response.json())

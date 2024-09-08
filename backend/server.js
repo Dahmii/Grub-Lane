@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Load SSL certificate and key
 const sslOptions = {
   key: fs.readFileSync("/etc/ssl/private/private.key"),
   cert: fs.readFileSync("/etc/ssl/certs/certificate.crt"),
