@@ -35,10 +35,16 @@ function fetchMenuData(menuType) {
           menuHtml += `
             <div class="col-md-4 mb-4">
               <div class="menu-item">
-                <img src="${item.image_url}" alt="${item.name}" class="img-fluid" />
+                ${
+                  menuType === "take_out"
+                    ? `<img src="${item.image_url}" alt="${item.name}" class="img-fluid" />`
+                    : ""
+                }
                 <h4>${item.name}</h4>
                 <p>N${item.price}</p>
-                <button class="add-to-cart-btn" data-item="${item.name}" data-price="${item.price}">
+                <button class="add-to-cart-btn" data-item="${
+                  item.name
+                }" data-price="${item.price}">
                   Add to cart
                 </button>
               </div>
