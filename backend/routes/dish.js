@@ -209,8 +209,8 @@ const upload = multer({
  *       - in: formData
  *         name: image
  *         type: file
- *         required: true
- *         description: Image of the dish
+ *         required: false
+ *         description: Image of the dish (required if menu_id = 1)
  *     responses:
  *       201:
  *         description: Dish created successfully
@@ -262,22 +262,30 @@ const upload = multer({
 router.post("/createDish", upload.single("image"), (req, res) => {
   const { name, price, menu_id, subcategory } = req.body;
 
-  if (!name || !price || !menu_id || !req.file) {
+  if (!name || !price || !menu_id) {
     return res.status(400).json({
-      error: "All fields (name, price, menu_id, image) are required.",
+      error: "Fields (name, price, menu_id) are required.",
     });
   }
+
   if (isNaN(price) || isNaN(menu_id)) {
     return res
       .status(400)
       .json({ error: "Price and menu_id must be valid numbers." });
   }
 
-  const image_filename = req.file.filename;
-  const image_link = `/app/database/images/${image_filename}`;
+  if (parseInt(menu_id) === 1 && !req.file) {
+    return res.status(400).json({
+      error: "Image is required when menu_id is 1.",
+    });
+  }
+
+  const image_filename = req.file ? req.file.filename : null;
+  
+  const image_link = image_filename ? `/app/database/images/${image_filename}` : null;
   const host = 'grublanerestaurant.com';
   const protocol = req.protocol;
-  const image_url = `${protocol}://${host}/images/${image_filename}`;
+  const image_url = image_filename ? `${protocol}://${host}/images/${image_filename}` : null;
 
   const query = `
         INSERT INTO Dish (name, price, menu_id, subcategory, image_link)
