@@ -145,8 +145,8 @@ router.get("/getDishes", (req, res) => {
         image_link: row.image_link ? `${protocol}://${host}/images/${path.basename(row.image_link)}` : null
       }));
 
-      const nextPage = page < totalPages ? `${req.baseUrl}${req.path}?page=${page + 1}&limit=${limit}` : null;
-      const prevPage = page > 1 ? `${req.baseUrl}${req.path}?page=${page - 1}&limit=${limit}` : null;
+      const nextPage = page < totalPages ? `${protocol}://${host}/api/${req.path}?page=${page + 1}&limit=${limit}` : null;
+      const prevPage = page > 1 ? `${protocol}://${host}/api/{req.path}?page=${page - 1}&limit=${limit}` : null;
 
       res.json({
         next: nextPage,
