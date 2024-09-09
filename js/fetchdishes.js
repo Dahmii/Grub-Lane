@@ -120,7 +120,7 @@ function addRatingFunctionality() {
       const dishId = this.parentElement.getAttribute("data-dish-id");
       const rating = parseInt(this.getAttribute("data-rating"));
 
-      fetch(`https://grublanerestaurant.com/api/dish/rateDish/${dishId}`, {
+      fetch(`https://grublanerestaurant.com/api/dish/createDish/${dishId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   },
-})
+});
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.get("/getDishes", (req, res) => {
         FROM Dish
         INNER JOIN Menu ON Dish.menu_id = Menu.id
     `;
-  
+
   let countQuery = `
         SELECT COUNT(*) AS total 
         FROM Dish
@@ -122,46 +122,60 @@ router.get("/getDishes", (req, res) => {
   baseQuery += ` LIMIT ? OFFSET ?`;
   queryParams.push(limit, offset);
 
-  db.get(countQuery, queryParams.slice(0, queryParams.length - 2), (err, countResult) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-
-    const totalItems = countResult.total;
-    const totalPages = Math.ceil(totalItems / limit);
-    
-    db.all(baseQuery, queryParams, (err, rows) => {
+  db.get(
+    countQuery,
+    queryParams.slice(0, queryParams.length - 2),
+    (err, countResult) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
 
-      const protocol = req.protocol;
-      const host = 'grublanerestaurant.com';
+      const totalItems = countResult.total;
+      const totalPages = Math.ceil(totalItems / limit);
 
-      const dishes = rows.map(row => ({
-        id: row.id,
-        name: row.name,
-        price: row.price,
-        servicetype: row.serviceType,
-        subcategory: row.subcategory,
-        image_link: row.image_link ? `${protocol}://${host}/images/${path.basename(row.image_link)}` : null,
-        average_rating: row.average_rating
-      }));
+      db.all(baseQuery, queryParams, (err, rows) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
 
-      const nextPage = page < totalPages ? `${protocol}://${host}/api/dish${req.path}?page=${page + 1}&limit=${limit}` : null;
-      const prevPage = page > 1 ? `${protocol}://${host}/api/dish${req.path}?page=${page - 1}&limit=${limit}` : null;
+        const protocol = req.protocol;
+        const host = "grublanerestaurant.com";
 
-      res.json({
-        next: nextPage,
-        previous: prevPage,
-        count: totalItems,
-        dishes
+        const dishes = rows.map((row) => ({
+          id: row.id,
+          name: row.name,
+          price: row.price,
+          servicetype: row.serviceType,
+          subcategory: row.subcategory,
+          image_link: row.image_link
+            ? `${protocol}://${host}/images/${path.basename(row.image_link)}`
+            : null,
+          average_rating: row.average_rating,
+        }));
+
+        const nextPage =
+          page < totalPages
+            ? `${protocol}://${host}/api/dish${req.path}?page=${
+                page + 1
+              }&limit=${limit}`
+            : null;
+        const prevPage =
+          page > 1
+            ? `${protocol}://${host}/api/dish${req.path}?page=${
+                page - 1
+              }&limit=${limit}`
+            : null;
+
+        res.json({
+          next: nextPage,
+          previous: prevPage,
+          count: totalItems,
+          dishes,
+        });
       });
-    });
-  });
+    }
+  );
 });
-
-
 
 const upload = multer({
   storage: storage,
@@ -285,38 +299,44 @@ router.post("/createDish", upload.single("image"), (req, res) => {
   }
 
   const image_filename = req.file ? req.file.filename : null;
-  
-  const image_link = image_filename ? `/app/database/images/${image_filename}` : null;
-  const host = 'grublanerestaurant.com';
+
+  const image_link = image_filename
+    ? `/app/database/images/${image_filename}`
+    : null;
+  const host = "grublanerestaurant.com";
   const protocol = req.protocol;
-  const image_url = image_filename ? `${protocol}://${host}/images/${image_filename}` : null;
+  const image_url = image_filename
+    ? `${protocol}://${host}/images/${image_filename}`
+    : null;
 
   const query = `
         INSERT INTO Dish (name, price, menu_id, subcategory, image_link)
         VALUES (?, ?, ?, ?, ?)
     `;
 
-  db.run(query, [name, price, menu_id, subcategory || null, image_link], function (err) {
-    if (err) {
-      if (err.message.includes("FOREIGN KEY")) {
-        return res
-          .status(400)
-          .json({ error: "Invalid menu_id. Please provide a valid menu_id." });
+  db.run(
+    query,
+    [name, price, menu_id, subcategory || null, image_link],
+    function (err) {
+      if (err) {
+        if (err.message.includes("FOREIGN KEY")) {
+          return res.status(400).json({
+            error: "Invalid menu_id. Please provide a valid menu_id.",
+          });
+        }
+        return res.status(500).json({ error: err.message });
       }
-      return res.status(500).json({ error: err.message });
+      res.status(201).json({
+        id: this.lastID,
+        name,
+        price,
+        menu_id,
+        subcategory,
+        image_url,
+      });
     }
-    res.status(201).json({
-      id: this.lastID,
-      name,
-      price,
-      menu_id,
-      subcategory,
-      image_url,
-    });
-  });
+  );
 });
-
-
 
 /**
  * @swagger
@@ -443,14 +463,16 @@ router.put("/updateDish/:id", upload.single("image"), (req, res) => {
     queryParams.push(image_link);
   }
 
-  query = query.slice(0, -2); 
+  query = query.slice(0, -2);
   query += ` WHERE id = ?`;
   queryParams.push(id);
 
   db.run(query, queryParams, function (err) {
     if (err) {
       if (err.message.includes("FOREIGN KEY")) {
-        return res.status(400).json({ error: "Invalid menu_id. Please provide a valid menu_id." });
+        return res
+          .status(400)
+          .json({ error: "Invalid menu_id. Please provide a valid menu_id." });
       }
       return res.status(500).json({ error: err.message });
     }
@@ -495,7 +517,9 @@ router.post("/rateDish/:id", (req, res) => {
   const { rating } = req.body;
 
   if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
-    return res.status(400).json({ error: "Rating must be an integer between 1 and 5." });
+    return res
+      .status(400)
+      .json({ error: "Rating must be an integer between 1 and 5." });
   }
 
   const insertQuery = `INSERT INTO Ratings (dish_id, rating) VALUES (?, ?)`;
@@ -518,10 +542,11 @@ router.post("/rateDish/:id", (req, res) => {
         return res.status(500).json({ error: err.message });
       }
 
-      res.status(201).json({ message: "Rating added and average updated successfully." });
+      res
+        .status(201)
+        .json({ message: "Rating added and average updated successfully." });
     });
   });
 });
-
 
 module.exports = router;

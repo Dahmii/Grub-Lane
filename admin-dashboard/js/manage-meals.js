@@ -78,13 +78,17 @@ function displayMeals(filteredMeals = meals) {
     const row = `
             <tr>
                 <td>${meal.name}</td>
-                <td>${meal.description || ''}</td>
+                <td>${meal.description || ""}</td>
                 <td>₦${meal.price.toFixed(2)}</td>
                 <td>${meal.servicetype}</td>
-                <td>${meal.subcategory || ''}</td>
+                <td>${meal.subcategory || ""}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary" onclick="editMeal(${meal.id})">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${meal.id})">Delete</button>
+                    <button class="btn btn-sm btn-primary" onclick="editMeal(${
+                      meal.id
+                    })">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
+                      meal.id
+                    })">Delete</button>
                 </td>
             </tr>
         `;
@@ -118,8 +122,8 @@ async function addMeal(event) {
       meals.push(createdMeal);
       displayMeals();
       document.getElementById("addMealForm").reset();
-      $('#addMealFormCollapse').collapse('hide');
-      $('#manageMealsCollapse').collapse('show'); // Reopen the Manage Meals section after adding a meal
+      $("#addMealFormCollapse").collapse("hide");
+      $("#manageMealsCollapse").collapse("show"); // Reopen the Manage Meals section after adding a meal
     }
   } catch (error) {
     // Handle error
@@ -127,14 +131,16 @@ async function addMeal(event) {
 }
 
 function editMeal(id) {
+  console.log("Edit button clicked for meal ID:", id);
   const meal = meals.find((m) => m.id === id);
   if (meal) {
     document.getElementById("editMealId").value = meal.id;
     document.getElementById("editMealName").value = meal.name;
-    document.getElementById("editMealDescription").value = meal.description || '';
+    document.getElementById("editMealDescription").value =
+      meal.description || "";
     document.getElementById("editMealPrice").value = meal.price;
     document.getElementById("editMealServiceType").value = meal.servicetype;
-    document.getElementById("editMealCategory").value = meal.subcategory || '';
+    document.getElementById("editMealCategory").value = meal.subcategory || "";
     $("#editMealModal").modal("show");
   }
 }
@@ -200,14 +206,25 @@ async function deleteMeal(id) {
 }
 
 function filterAndSearchMeals() {
-  const servicetype = document.getElementById("filterServiceType").value.toLowerCase();
-  const subcategory = document.getElementById("filterCategory").value.toLowerCase();
+  const servicetype = document
+    .getElementById("filterServiceType")
+    .value.toLowerCase();
+  const subcategory = document
+    .getElementById("filterCategory")
+    .value.toLowerCase();
   const searchQuery = document.getElementById("searchMeal").value.toLowerCase();
 
-  const filteredMeals = meals.filter(meal => {
-    const matchesServiceType = !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
-    const matchesSubcategory = !subcategory || (meal.subcategory && meal.subcategory.toLowerCase().includes(subcategory));
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery) || (meal.description && meal.description.toLowerCase().includes(searchQuery));
+  const filteredMeals = meals.filter((meal) => {
+    const matchesServiceType =
+      !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
+    const matchesSubcategory =
+      !subcategory ||
+      (meal.subcategory &&
+        meal.subcategory.toLowerCase().includes(subcategory));
+    const matchesSearch =
+      meal.name.toLowerCase().includes(searchQuery) ||
+      (meal.description &&
+        meal.description.toLowerCase().includes(searchQuery));
 
     return matchesServiceType && matchesSubcategory && matchesSearch;
   });
@@ -218,12 +235,20 @@ function filterAndSearchMeals() {
 document.addEventListener("DOMContentLoaded", () => {
   fetchMeals();
   document.getElementById("addMealForm").addEventListener("submit", addMeal);
-  document.getElementById("saveEditMeal").addEventListener("click", saveMealEdit);
-  document.getElementById("filterServiceType").addEventListener("input", filterAndSearchMeals);
-  document.getElementById("filterCategory").addEventListener("input", filterAndSearchMeals);
-  document.getElementById("searchMeal").addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("saveEditMeal")
+    .addEventListener("click", saveMealEdit);
+  document
+    .getElementById("filterServiceType")
+    .addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("filterCategory")
+    .addEventListener("input", filterAndSearchMeals);
+  document
+    .getElementById("searchMeal")
+    .addEventListener("input", filterAndSearchMeals);
 
   document.getElementById("addMealButton").addEventListener("click", () => {
-    $('#manageMealsCollapse').collapse('hide');
+    $("#manageMealsCollapse").collapse("hide");
   });
 });

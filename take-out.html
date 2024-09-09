@@ -545,6 +545,13 @@
     integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
     data-cf-beacon='{"rayId":"8a3c1b55ef2e8926","version":"2024.6.1","serverTiming":{"name":{"cfL4":true}},"token":"cd0b4b3a733644fc843ef0b185f98241","b":1}'
     crossorigin="anonymous"></script>
+
+  <script>
+    window.onload = function () {
+      const pageType = document.body.dataset.pageType;
+      fetchMenuData(pageType);
+    };
+  </script>
 </body>
 
 </html>
