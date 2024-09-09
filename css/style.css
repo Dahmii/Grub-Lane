@@ -1297,60 +1297,67 @@ header .navbar .dropdown-menu a {
 }
 
 /* Menu section styling */
+/* General styles for menu container */
+#menu-container {
+  padding: 20px;
+}
+
 .menu-section {
-  margin-bottom: 30px; /* Space between sections */
+  margin-bottom: 40px;
 }
 
 .menu-category {
+  font-size: 1.5em;
   margin-bottom: 20px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
 }
 
 .menu-items {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.menu-item-card {
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  justify-content: space-between; /* Ensures even spacing */
 }
 
 .menu-item {
-  text-align: center;
+  flex: 1 1 30%; /* Adjust width as needed */
+  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee; /* Subtle division without full card style */
 }
 
-.menu-item img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 10px;
+.menu-item h5 {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.menu-item p {
+  font-size: 1em;
 }
 
 .add-to-cart-btn {
-  background-color: #4caf50;
-  color: white;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #ff7404;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
   cursor: pointer;
+  text-align: center;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-  .menu-items {
-    display: block;
-  }
-  .menu-item-card {
-    width: 100%;
-  }
+.add-to-cart-btn:hover {
+  background-color: #ff7404;
+}
+
+/* Specific to take-out menu */
+.take-out .menu-item img {
+  width: 100%;
+  max-height: 200px;
+  display: block;
+}
+
+/* Specific to dine-in menu */
+.dine-in .menu-item {
+  border-bottom: 2px dotted #ccc;
 }
 
 /*# sourceMappingURL=style.css.map */
