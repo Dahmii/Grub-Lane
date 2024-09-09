@@ -20,11 +20,11 @@ function fetchMenuData(menuType) {
       } else {
         const groupedMenu = {};
         data.dishes.forEach((dish) => {
-          const { subcategory } = dish;
+          const { subcategory, average_rating, id } = dish;
           if (!groupedMenu[subcategory]) {
             groupedMenu[subcategory] = [];
           }
-          groupedMenu[subcategory].push(dish);
+          groupedMenu[subcategory].push({ ...dish, average_rating });
         });
 
         for (const subcategory in groupedMenu) {
@@ -43,8 +43,8 @@ function fetchMenuData(menuType) {
                 <h5 class="menu-item-name">${item.name}</h5>
                 <p class="price"><strong>N${item.price}</strong></p>
                 <p class="description">${item.description || 'A delicious dish from our menu.'}</p>
-                <div class="rating">
-                  ${generateStarRating(4)} <!-- Assuming 4-star rating, you can change this dynamically -->
+                <div class="rating" data-dish-id="${item.id}" data-average-rating="${item.average_rating || 0}">
+                  ${generateStarRating(item.average_rating || 0)}
                 </div>
               </div>
             </div>`;
@@ -55,6 +55,7 @@ function fetchMenuData(menuType) {
       }
 
       menuContainer.innerHTML = menuHtml;
+      addRatingFunctionality(); // Add functionality to handle rating clicks
     })
     .catch((error) => {
       const menuContainer = document.getElementById("menu-container");
@@ -65,38 +66,65 @@ function fetchMenuData(menuType) {
 
 function generateStarRating(rating) {
   let starHtml = '';
-  for (let i = 0; i < 5; i++) {
-    if (i < rating) {
-      starHtml += `<i class="fa fa-star" aria-hidden="true"></i>`;
-    } else {
-      starHtml += `<i class="fa fa-star-o" aria-hidden="true"></i>`;
-    }
+  for (let i = 1; i <= 5; i++) {
+    const starClass = i <= rating ? 'fa fa-star' : 'fa fa-star-o';
+    starHtml += `<i class="${starClass}" aria-hidden="true" data-rating="${i}"></i>`;
   }
   return starHtml;
 }
 
 function toggleMenu(subcategoryId) {
   const element = document.getElementById(subcategoryId);
-  if (element.style.display === "none") {
-    element.style.display = "grid"; // Show items in grid view
-  } else {
-    element.style.display = "none"; // Hide items
-  }
+  element.style.display = element.style.display === "none" || element.style.display === "" ? "grid" : "none";
 }
 
-function toggleMenu(subcategoryId) {
-  const element = document.getElementById(subcategoryId);
-  if (element.style.display === "none" || element.style.display === "") {
-    element.style.display = "grid";
-  } else {
-    element.style.display = "none";
-  }
+function addRatingFunctionality() {
+  document.querySelectorAll(".rating i").forEach((star) => {
+    star.addEventListener("mouseover", function () {
+      const rating = parseInt(this.getAttribute("data-rating"));
+      updateStars(rating, this.parentElement);
+    });
+
+    star.addEventListener("mouseout", function () {
+      const rating = parseInt(this.parentElement.getAttribute("data-average-rating"));
+      updateStars(rating, this.parentElement);
+    });
+
+    star.addEventListener("click", function () {
+      const dishId = this.parentElement.getAttribute("data-dish-id");
+      const rating = parseInt(this.getAttribute("data-rating"));
+      
+      fetch(`https://grublanerestaurant.com/api/dish/rateDish/${dishId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rating }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to submit rating');
+          }
+          return response.json();
+        })
+        .then(() => {
+          alert('Your feedback has been submitted.');
+          fetchMenuData(document.body.dataset.pageType); // Refresh the menu data
+        })
+        .catch(error => {
+          alert('Failed to submit rating. Please try again later.');
+          console.error('Error submitting rating:', error);
+        });
+    });
+  });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const pageType = document.body.dataset.pageType;
-  fetchMenuData(pageType);
-});
+function updateStars(rating, ratingElement) {
+  ratingElement.querySelectorAll("i").forEach((star) => {
+    const starRating = parseInt(star.getAttribute("data-rating"));
+    star.className = starRating <= rating ? 'fa fa-star' : 'fa fa-star-o';
+  });
+}
 
 function addCartFunctionality() {
   document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
