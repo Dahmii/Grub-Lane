@@ -58,6 +58,9 @@ function fetchMenuData(menuType) {
                 <p class="description">${
                   item.description || "A delicious dish from our menu."
                 }</p>
+                <button class="add-to-cart-btn" data-item="${
+                  item.name
+                }" data-price="${item.price}">Add to Cart</button>
                 <div class="rating" data-dish-id="${
                   item.id
                 }" data-average-rating="${item.average_rating || 0}">
@@ -179,7 +182,7 @@ function renderCart() {
   cartItemsContainer.innerHTML = "";
 
   let totalPrice = 0;
-  cart.forEach((item) => {
+  cart.forEach((item, index) => {
     const cartItemDiv = document.createElement("div");
     cartItemDiv.classList.add("side-cart-item");
     cartItemDiv.innerHTML = `

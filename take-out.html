@@ -9,7 +9,6 @@
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&amp;display=swap"
     rel="stylesheet" />
   <link rel="shortcut icon" href="ftco-32x32.html" />
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800" rel="stylesheet" />
   <link rel="stylesheet" href="css/bootstrap.css" />
   <link rel="stylesheet" href="css/animate.css" />
   <link rel="stylesheet" href="css/owl.carousel.min.css" />
@@ -23,7 +22,6 @@
   <link rel="icon" href="img/favicon.png" type="image/png" />
   <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
   <style>
-    /* General body styling */
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
@@ -31,40 +29,35 @@
       padding: 20px;
     }
 
-    /* Container for subcategories and menu items */
     .menu-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      /* Grid layout for subcategories */
       gap: 20px;
       margin-bottom: 40px;
     }
 
-    /* Subcategory button */
     .menu-category {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
       text-align: center;
-      padding: 10px;
+      padding: 15px;
       color: #333;
       background-color: #f0f0f0;
       cursor: pointer;
       border-radius: 5px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 10px;
     }
 
     .menu-category:hover {
       background-color: #e2e6ea;
+      transform: translateY(-3px);
     }
 
-    /* Container for the menu items with CSS Grid */
     .menu-items {
       display: none;
-      /* Initially hidden */
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      /* Flexibility for smaller screens */
       gap: 20px;
       margin-top: 15px;
       margin-bottom: 30px;
@@ -75,64 +68,133 @@
       box-sizing: border-box;
     }
 
-    /* Fancy card design */
     .fancy-card {
       background-color: #fff;
       border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
+      overflow: hidden;
+      position: relative;
     }
 
     .fancy-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-item-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 2px solid #f8f9fa;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .menu-item-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 15px;
     }
 
     .price {
-      font-size: 18px;
-      color: #333;
+      font-size: 20px;
+      color: #1a1a1a;
       margin-top: 10px;
+      font-weight: bold;
     }
 
     .description {
       font-size: 14px;
       color: #777;
       font-style: italic;
+      margin: 10px 0;
+    }
+
+    .rating i {
+      color: #ffcc00;
+      margin-right: 3px;
     }
 
     .add-to-cart-btn {
+      background-color: #ff6347;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: #e65347;
+    }
+
+    #side-cart {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 999;
+    }
+
+    #side-cart.active {
+      transform: translateX(0);
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+    }
+
+    #overlay.active {
       display: block;
     }
 
-    .side-cart-item button {
-      background: #ff7404;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 0 5px;
-    }
-
-    .side-cart-item button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-
-    /* Media query for smaller screens */
     @media (max-width: 768px) {
       .menu-container {
         grid-template-columns: 1fr;
-        /* One column on small screens */
+      }
+
+      .menu-category {
+        font-size: 18px;
+        padding: 10px;
+      }
+
+      .fancy-card {
+        padding: 15px;
+      }
+
+      .price {
+        font-size: 16px;
+      }
+
+      .description {
+        font-size: 12px;
+      }
+
+      #side-cart {
+        width: 80%;
       }
     }
   </style>
 </head>
 
-<body  data-page-type="take_out">
+<body data-page-type="take_out">
   <header role="banner">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
@@ -171,7 +233,6 @@
     </nav>
   </header>
 
-  <!-- HERO SECTION -->
   <div class="slider-wrap">
     <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg')">
       <div class="container">
@@ -184,44 +245,33 @@
     </div>
   </div>
 
-  <!-- MENU SECTION -->
   <section class="section bg-light pt-5 bottom-slant-gray">
     <div class="container">
       <div class="row">
         <div class="col-md-12 mb-5">
           <h2 class="text-center">Take-Out Menu</h2>
         </div>
-        <!-- Menu Categories -->
         <div class="col-md-12">
-          <div class="menu-container" id="menu-container">
-            <!-- Menu items will be inserted here by JavaScript -->
-          </div>
+          <div class="menu-container" id="menu-container"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MENU END -->
-
-  <!-- SIDE CART -->
   <div id="side-cart" class="side-cart">
     <div class="side-cart-header">
       Your Cart
       <span id="side-cart-close" class="side-cart-close">&times;</span>
     </div>
-    <div id="side-cart-items" class="side-cart-items">
-      <!-- Cart items will be inserted here by JavaScript -->
-    </div>
+    <div id="side-cart-items" class="side-cart-items"></div>
     <div class="side-cart-footer">
       <h3 id="total-price">Total: N0</h3>
       <button id="checkout-button">Checkout with Paystack</button>
     </div>
   </div>
 
-  <!-- OVERLAY -->
   <div id="overlay" class="overlay"></div>
 
-  <!-- FOOTER -->
   <footer class="site-footer" role="contentinfo">
     <div class="container">
       <div class="row mb-5">
@@ -254,12 +304,10 @@
                 <span>19A Sinari Daranijo Street, Victoria Island, Lagos</span>
               </li>
               <li class="d-block">
-                <span class="d-block text-black">Phone:</span>
-                <span>+234 810 667 8736</span>
+                <span class="d-block text-black">Phone:</span><span> +234 810 667 8736</span>
               </li>
               <li class="d-block">
-                <span class="d-block text-black">Email:</span>
-                <span>hello@grublane.com</span>
+                <span class="d-block text-black">Email:</span><span>hello@grublane.com</span>
               </li>
             </ul>
           </div>
@@ -268,7 +316,6 @@
     </div>
   </footer>
 
-  <!-- SCRIPT -->
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/jquery.easing.1.3.js"></script>
@@ -280,7 +327,6 @@
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/fetchdishes.js"></script>
-  <!-- <script src="js/paystack-int.js"></script> -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
