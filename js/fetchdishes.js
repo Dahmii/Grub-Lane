@@ -31,14 +31,21 @@ function fetchMenuData(menuType) {
           const subcategoryId = subcategory.replace(/\s+/g, '-').toLowerCase();
           menuHtml += `<div class="menu-section">
             <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
-            <div class="menu-items" id="${subcategoryId}">`;
+            <div class="menu-items" id="${subcategoryId}" style="display: none;">`;
 
           groupedMenu[subcategory].forEach((item) => {
             menuHtml += `<div class="menu-item-card">
               <div class="menu-item fancy-card">
-                <h5>${item.name}</h5>
+                ${takeOut ? `
+                <div class="menu-item-image">
+                  <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}" class="menu-image" />
+                </div>` : ''}
+                <h5 class="menu-item-name">${item.name}</h5>
                 <p class="price"><strong>N${item.price}</strong></p>
-                <p class="description">A delicious ${item.subcategory} offering.</p>
+                <p class="description">${item.description || 'A delicious dish from our menu.'}</p>
+                <div class="rating">
+                  ${generateStarRating(4)} <!-- Assuming 4-star rating, you can change this dynamically -->
+                </div>
               </div>
             </div>`;
           });
@@ -54,6 +61,27 @@ function fetchMenuData(menuType) {
       menuContainer.innerHTML = `<div class="text-center"><h2>Error Fetching Data</h2><p>We couldn't fetch the menu data. Please try again later.</p></div>`;
       console.error("Error fetching menu data:", error);
     });
+}
+
+function generateStarRating(rating) {
+  let starHtml = '';
+  for (let i = 0; i < 5; i++) {
+    if (i < rating) {
+      starHtml += `<i class="fa fa-star" aria-hidden="true"></i>`;
+    } else {
+      starHtml += `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+    }
+  }
+  return starHtml;
+}
+
+function toggleMenu(subcategoryId) {
+  const element = document.getElementById(subcategoryId);
+  if (element.style.display === "none") {
+    element.style.display = "grid"; // Show items in grid view
+  } else {
+    element.style.display = "none"; // Hide items
+  }
 }
 
 function toggleMenu(subcategoryId) {
