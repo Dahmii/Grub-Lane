@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
  * /api/dish/getDishes:
  *   get:
  *     tags: [Dishes]
- *     summary: Get dishes based on the take_out flag of the menu with pagination. If the take_out flag is not provided, return all dishes.
+ *     summary: Get dishes with their average ratings based on the take_out flag of the menu with pagination
  *     parameters:
  *       - in: query
  *         name: take_out
@@ -44,7 +44,7 @@ const storage = multer.diskStorage({
  *         description: The number of dishes to return per page (default is 20)
  *     responses:
  *       200:
- *         description: List of dishes with pagination
+ *         description: List of dishes with average ratings and pagination
  *         content:
  *           application/json:
  *             schema:
@@ -79,6 +79,9 @@ const storage = multer.diskStorage({
  *                       image_link:
  *                         type: string
  *                         description: The relative path to the dish's image
+ *                       average_rating:
+ *                         type: number
+ *                         description: The average rating of the dish
  *       500:
  *         description: Server error
  *         content:
@@ -90,7 +93,6 @@ const storage = multer.diskStorage({
  *                   type: string
  *                   description: Error message
  */
-
 router.get("/getDishes", (req, res) => {
   const take_out = req.query.take_out;
   const page = parseInt(req.query.page) || 1;
@@ -98,7 +100,7 @@ router.get("/getDishes", (req, res) => {
   const offset = (page - 1) * limit;
 
   let baseQuery = `
-        SELECT Dish.id, Dish.name, Dish.price, Menu.name AS serviceType, Dish.subcategory, Dish.image_link 
+        SELECT Dish.id, Dish.name, Dish.price, Menu.name AS serviceType, Dish.subcategory, Dish.image_link, IFNULL(Dish.average_rating, 0) AS average_rating
         FROM Dish
         INNER JOIN Menu ON Dish.menu_id = Menu.id
     `;
@@ -142,7 +144,8 @@ router.get("/getDishes", (req, res) => {
         price: row.price,
         servicetype: row.serviceType,
         subcategory: row.subcategory,
-        image_link: row.image_link ? `${protocol}://${host}/images/${path.basename(row.image_link)}` : null
+        image_link: row.image_link ? `${protocol}://${host}/images/${path.basename(row.image_link)}` : null,
+        average_rating: row.average_rating
       }));
 
       const nextPage = page < totalPages ? `${protocol}://${host}/api/dish${req.path}?page=${page + 1}&limit=${limit}` : null;
@@ -157,6 +160,7 @@ router.get("/getDishes", (req, res) => {
     });
   });
 });
+
 
 
 const upload = multer({
@@ -456,6 +460,66 @@ router.put("/updateDish/:id", upload.single("image"), (req, res) => {
     }
 
     res.status(200).json({ message: "Dish updated successfully." });
+  });
+});
+
+/**
+ * @swagger
+ * /api/dish/rateDish/{id}:
+ *   post:
+ *     summary: Rate a dish by ID
+ *     tags: [Dishes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: integer
+ *         required: true
+ *         description: ID of the dish to rate
+ *       - in: formData
+ *         name: rating
+ *         type: integer
+ *         required: true
+ *         description: Rating for the dish (1-5)
+ *     responses:
+ *       201:
+ *         description: Rating added successfully
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Dish not found
+ *       500:
+ *         description: Server error
+ */
+router.post("/rateDish/:id", (req, res) => {
+  const { id } = req.params;
+  const { rating } = req.body;
+
+  if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: "Rating must be an integer between 1 and 5." });
+  }
+
+  const insertQuery = `INSERT INTO Ratings (dish_id, rating) VALUES (?, ?)`;
+  db.run(insertQuery, [id, rating], function (err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    const updateQuery = `
+      UPDATE Dish
+      SET average_rating = (
+        SELECT AVG(rating)
+        FROM Ratings
+        WHERE dish_id = ?
+      )
+      WHERE id = ?
+    `;
+    db.run(updateQuery, [id, id], function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.status(201).json({ message: "Rating added and average updated successfully." });
+    });
   });
 });
 

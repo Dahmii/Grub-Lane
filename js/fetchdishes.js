@@ -1,5 +1,5 @@
 function fetchMenuData(menuType) {
-  console.log("Menu type: ", menuType);
+  console.log(menuType);
   const takeOut = menuType === "take_out" ? true : false;
 
   const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
@@ -27,26 +27,42 @@ function fetchMenuData(menuType) {
       } else {
         const groupedMenu = {};
         data.dishes.forEach((dish) => {
-          const { subcategory } = dish;
+          const { subcategory, average_rating, id } = dish;
           if (!groupedMenu[subcategory]) {
             groupedMenu[subcategory] = [];
           }
-          groupedMenu[subcategory].push(dish);
+          groupedMenu[subcategory].push({ ...dish, average_rating });
         });
 
         for (const subcategory in groupedMenu) {
           const subcategoryId = subcategory.replace(/\s+/g, "-").toLowerCase();
           menuHtml += `<div class="menu-section">
             <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
-            <div class="menu-items" id="${subcategoryId}">`;
+            <div class="menu-items" id="${subcategoryId}" style="display: none;">`;
 
           groupedMenu[subcategory].forEach((item) => {
             menuHtml += `<div class="menu-item-card">
               <div class="menu-item fancy-card">
-                <h5>${item.name}</h5>
+                ${
+                  takeOut
+                    ? `
+                <div class="menu-item-image">
+                  <img src="${item.image_url || "default-image.jpg"}" alt="${
+                        item.name
+                      }" class="menu-image" />
+                </div>`
+                    : ""
+                }
+                <h5 class="menu-item-name">${item.name}</h5>
                 <p class="price"><strong>N${item.price}</strong></p>
-                <p class="description">A delicious ${item.subcategory} offering.</p>
-                <button class="add-to-cart-btn" data-item="${item.name}" data-price="${item.price}">Add to Cart</button>
+                <p class="description">${
+                  item.description || "A delicious dish from our menu."
+                }</p>
+                <div class="rating" data-dish-id="${
+                  item.id
+                }" data-average-rating="${item.average_rating || 0}">
+                  ${generateStarRating(item.average_rating || 0)}
+                </div>
               </div>
             </div>`;
           });
@@ -57,6 +73,7 @@ function fetchMenuData(menuType) {
 
       menuContainer.innerHTML = menuHtml;
       addCartFunctionality();
+      addRatingFunctionality(); // Add functionality to handle rating clicks
     })
     .catch((error) => {
       const menuContainer = document.getElementById("menu-container");
@@ -65,17 +82,74 @@ function fetchMenuData(menuType) {
     });
 }
 
+function generateStarRating(rating) {
+  let starHtml = "";
+  for (let i = 1; i <= 5; i++) {
+    const starClass = i <= rating ? "fa fa-star" : "fa fa-star-o";
+    starHtml += `<i class="${starClass}" aria-hidden="true" data-rating="${i}"></i>`;
+  }
+  return starHtml;
+}
+
 function toggleMenu(subcategoryId) {
   const element = document.getElementById(subcategoryId);
-  if (element.style.display === "none" || element.style.display === "") {
-    element.style.display = "grid";
-  } else {
-    element.style.display = "none";
-  }
+  element.style.display =
+    element.style.display === "none" || element.style.display === ""
+      ? "grid"
+      : "none";
+}
+
+function addRatingFunctionality() {
+  document.querySelectorAll(".rating i").forEach((star) => {
+    star.addEventListener("mouseover", function () {
+      const rating = parseInt(this.getAttribute("data-rating"));
+      updateStars(rating, this.parentElement);
+    });
+
+    star.addEventListener("mouseout", function () {
+      const rating = parseInt(
+        this.parentElement.getAttribute("data-average-rating")
+      );
+      updateStars(rating, this.parentElement);
+    });
+
+    star.addEventListener("click", function () {
+      const dishId = this.parentElement.getAttribute("data-dish-id");
+      const rating = parseInt(this.getAttribute("data-rating"));
+
+      fetch(`https://grublanerestaurant.com/api/dish/rateDish/${dishId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rating }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to submit rating");
+          }
+          return response.json();
+        })
+        .then(() => {
+          alert("Your feedback has been submitted.");
+          fetchMenuData(document.body.dataset.pageType); // Refresh the menu data
+        })
+        .catch((error) => {
+          alert("Failed to submit rating. Please try again later.");
+          console.error("Error submitting rating:", error);
+        });
+    });
+  });
+}
+
+function updateStars(rating, ratingElement) {
+  ratingElement.querySelectorAll("i").forEach((star) => {
+    const starRating = parseInt(star.getAttribute("data-rating"));
+    star.className = starRating <= rating ? "fa fa-star" : "fa fa-star-o";
+  });
 }
 
 function addCartFunctionality() {
-  console.log("Adding cart functionality");
   document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
     button.addEventListener("click", function () {
       const itemName = this.getAttribute("data-item");
@@ -100,21 +174,12 @@ function addCartFunctionality() {
 }
 
 function renderCart() {
-  console.log("Rendering cart");
   const cartItemsContainer = document.getElementById("side-cart-items");
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cartItemsContainer.innerHTML = "";
 
   let totalPrice = 0;
-
-  if (cart.length === 0) {
-    cartItemsContainer.innerHTML = "<p>No items in cart</p>";
-    document.getElementById("total-price").textContent = "Total: N0";
-    document.getElementById("checkout-button").disabled = true;
-    return; // Exit the function if the cart is empty
-  }
-
-  cart.forEach((item, index) => {
+  cart.forEach((item) => {
     const cartItemDiv = document.createElement("div");
     cartItemDiv.classList.add("side-cart-item");
     cartItemDiv.innerHTML = `
@@ -132,41 +197,17 @@ function renderCart() {
   document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
   document.getElementById("checkout-button").disabled = cart.length === 0;
 
-  // Add event listeners for remove buttons
   document.querySelectorAll(".remove-btn").forEach((button) => {
     button.addEventListener("click", function () {
-      const itemIndex = this.getAttribute("data-index");
-      cart.splice(itemIndex, 1);
+      const itemName = this.getAttribute("data-item");
+      cart = cart.filter((item) => item.name !== itemName);
       localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart(); // Re-render cart after item is removed
-    });
-  });
-
-  // Add event listeners for increase and decrease buttons
-  document.querySelectorAll(".increase-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      const itemIndex = this.getAttribute("data-index");
-      cart[itemIndex].quantity += 1;
-      localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart(); // Re-render cart after quantity is increased
-    });
-  });
-
-  document.querySelectorAll(".decrease-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      const itemIndex = this.getAttribute("data-index");
-      if (cart[itemIndex].quantity > 1) {
-        cart[itemIndex].quantity -= 1;
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart(); // Re-render cart after quantity is decreased
-      }
+      renderCart();
     });
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const pageType = document.body.dataset.pageType;
-  console.log("Page type: ", pageType);
   fetchMenuData(pageType);
-  renderCart(); // Ensure cart is rendered after DOM loads
 });
