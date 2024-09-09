@@ -23,6 +23,63 @@
   <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
 
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .menu-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      margin: auto;
+      max-width: 1200px;
+      /* Limits the width for larger screens */
+    }
+
+    .menu-category {
+      grid-column: 1 / -1;
+      /* Spans full width of the grid */
+      text-align: center;
+      margin: 40px 0;
+      font-size: 24px;
+      color: #333;
+      /* Dark grey for better readability */
+    }
+
+    .menu-item {
+      background: #f9f9f9;
+      border: 1px solid #e1e1e1;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      /* Smooth transition for hover effects */
+    }
+
+    .menu-item:hover {
+      transform: translateY(-5px);
+      /* Slight raise effect on hover */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-item h5 {
+      margin-top: 0;
+      color: #000;
+      font-size: 20px;
+      /* Slightly larger for better visibility */
+    }
+
+    .menu-item p {
+      font-size: 16px;
+      color: #666;
+      /* Lighter grey for descriptions */
+    }
+
+    @media (max-width: 768px) {
+      .menu-container {
+        grid-template-columns: 1fr;
+        /* Single column on small screens */
+      }
+    }
+  </style>
 </head>
 
 <body data-page-type="dine_in">
