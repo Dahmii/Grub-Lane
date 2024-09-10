@@ -199,6 +199,35 @@ header .navbar .dropdown-menu a {
   padding-bottom: 7px;
 }
 
+@media (max-width: 767px) {
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+  }
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #343a40;
+    padding: 1rem;
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .navbar-nav {
+    flex-direction: column;
+  }
+  .navbar-nav .nav-item {
+    margin-bottom: 0.5rem;
+  }
+  body {
+    padding-top: 56px;
+  }
+}
+
 .blog .media h3 {
   font-size: 20px;
   margin-bottom: 10px;
@@ -1211,6 +1240,20 @@ header .navbar .dropdown-menu a {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;
+}
+.side-cart-item button {
+  background: #ff7404;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.side-cart-item button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .add-to-cart-btn {

@@ -2,7 +2,7 @@ function fetchMenuData(menuType) {
   console.log(menuType);
   const takeOut = menuType === "take_out" ? true : false;
 
-  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
+  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${menuType}`;
   console.log("Fetching menu from: ", endpointUrl);
 
   fetch(endpointUrl)

@@ -175,11 +175,28 @@
 
     #overlay.active {
       display: block;
+      z-index: 998;
     }
 
     .add-to-cart-btn {
       display: none;
     }
+
+    .side-cart-item button {
+      background: #ff7404;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 0 5px;
+    }
+
+    .side-cart-item button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
 
     /* Responsive adjustments */
     @media (max-width: 768px) {

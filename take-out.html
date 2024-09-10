@@ -163,6 +163,7 @@
 
     #overlay.active {
       display: block;
+      z-index: 998;
     }
 
     @media (max-width: 768px) {
@@ -198,16 +199,17 @@
   <header role="banner">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="index.html"><img src="img/GrublaneBC-03.png" alt="grublane logo"
-            style="width: 200px" /></a>
-        <div class="d-flex">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
-            aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
+        <a class="navbar-brand" href="index.html">
+          <img src="img/GrublaneBC-03.png" alt="grublane logo" style="width: 200px" />
+        </a>
+        <!-- Hamburger Menu Button for Mobile -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
+          aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarsExample05">
-          <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+          <ul class="navbar-nav ml-auto">
             <li class="nav-item">
               <a class="nav-link" href="index.html">Home</a>
             </li>
@@ -228,10 +230,14 @@
             </li>
           </ul>
         </div>
-        <a class="nav-link" href="#" id="cart-button"><i class="fa fa-shopping-cart"></i></a>
+        <!-- Cart Button -->
+        <a class="nav-link" href="#" id="cart-button">
+          <i class="fa fa-shopping-cart"></i>
+        </a>
       </div>
     </nav>
   </header>
+
 
   <div class="slider-wrap">
     <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg')">
@@ -348,12 +354,12 @@
 
     // Function to update cart in localStorage and render cart
     function updateCartAndRender() {
+      // Save the updated cart to localStorage
       localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Render the updated cart
       renderCart();
     }
-
-    // Initialize cart from localStorage
-    let cart = getCart();
 
     function renderCart() {
       const cartItemsContainer = document.getElementById("side-cart-items");
@@ -372,12 +378,12 @@
         const cartItemDiv = document.createElement("div");
         cartItemDiv.classList.add("side-cart-item");
         cartItemDiv.innerHTML = `
-        <h4>${item.name}</h4>
-        <p>N${item.price} x ${item.quantity}</p>
-        <button class="decrease-btn" data-index="${index}">-</button>
-        <button class="increase-btn" data-index="${index}">+</button>
-        <span class="remove-btn" data-index="${index}">&times;</span>
-      `;
+      <h4>${item.name}</h4>
+      <p>N${item.price} x ${item.quantity}</p>
+      <button class="decrease-btn" data-index="${index}">-</button>
+      <button class="increase-btn" data-index="${index}">+</button>
+      <span class="remove-btn" data-index="${index}">&times;</span>
+    `;
         cartItemsContainer.appendChild(cartItemDiv);
 
         totalPrice += item.price * item.quantity;
@@ -386,7 +392,7 @@
       document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
       document.getElementById("checkout-button").disabled = false;
 
-      // Add event listeners for remove, increase, and decrease buttons
+      // Re-attach the event listeners for remove, increase, and decrease buttons
       addCartButtonListeners();
     }
 
@@ -394,7 +400,11 @@
       document.querySelectorAll(".remove-btn").forEach((button) => {
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
+
+          // Update the cart array by removing the item at the specified index
           cart.splice(itemIndex, 1);
+
+          // Update the cart in localStorage
           updateCartAndRender();
         });
       });
@@ -402,7 +412,11 @@
       document.querySelectorAll(".increase-btn").forEach((button) => {
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
+
+          // Increase the quantity of the item at the specified index
           cart[itemIndex].quantity += 1;
+
+          // Update the cart in localStorage
           updateCartAndRender();
         });
       });
@@ -410,15 +424,21 @@
       document.querySelectorAll(".decrease-btn").forEach((button) => {
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
+
+          // Decrease the quantity of the item at the specified index
           if (cart[itemIndex].quantity > 1) {
             cart[itemIndex].quantity -= 1;
           } else {
+            // If the quantity is 1 and the decrease button is clicked, remove the item
             cart.splice(itemIndex, 1);
           }
+
+          // Update the cart in localStorage
           updateCartAndRender();
         });
       });
     }
+
 
     // Handle click event for Add to Cart button using delegated event handling
     function attachAddToCartListeners() {
@@ -443,10 +463,23 @@
     }
 
     // Toggle side cart visibility
-    document.getElementById("cart-button").addEventListener("click", function () {
-      document.getElementById("side-cart").classList.toggle("active");
-      document.getElementById("overlay").classList.toggle("active");
-    });
+    // document.getElementById("cart-button").addEventListener("click", function () {
+    //   const sideCart = document.getElementById("side-cart");
+    //   const overlay = document.getElementById("overlay");
+
+    // Manually toggle classes if they're not applying correctly
+    // if (sideCart.classList.contains("active")) {
+    //   sideCart.classList.remove("active");
+    //   overlay.classList.remove("active");
+    // } else {
+    //   sideCart.classList.add("active");
+    //   overlay.classList.add("active");
+    // }
+
+    // console.log("Side cart active state: ", sideCart.classList.contains("active"));
+    // console.log("Overlay active state: ", overlay.classList.contains("active"));
+    //});
+
 
     // Close side cart
     document.getElementById("side-cart-close").addEventListener("click", function () {
@@ -462,8 +495,8 @@
 
     // Checkout with Paystack
     document.getElementById("checkout-button").addEventListener("click", function () {
-      cart = getCart();  // Ensure cart is up-to-date from localStorage
-      console.log("Cart during checkout: ", cart);  // Check the cart contents
+      cart = getCart();
+      console.log("Cart during checkout: ", cart);
 
       if (cart.length === 0) {
         alert("No items in cart. Please add items before checking out.");
@@ -471,75 +504,82 @@
       }
 
       let totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      let userEmail = localStorage.getItem("userEmail") || "user@example.com";  // Replace with actual user email
-      let orderId = "ORDER_" + new Date().getTime();  // Example order ID
+      let userEmail = localStorage.getItem("userEmail") || "user@example.com";
+      let orderId = "ORDER_" + new Date().getTime();
 
-      payWithPaystack(totalAmount, userEmail, orderId);  // Proceed with Paystack checkout
+      payWithPaystack(totalAmount, userEmail, orderId);
     });
 
-    function payWithPaystack(amount, email, orderId) {
-      const handler = PaystackPop.setup({
-        key: PAYSTACK_PUBLIC_KEY,
-        email: email,
-        amount: amount * 100,
-        currency: "NGN",
-        ref: orderId,
-        callback: function (response) {
-          recordPayment(response.reference, email, amount)
-            .then(() => {
-              localStorage.removeItem("cart");
-              window.location.href = `order-confirmation.html?orderId=${orderId}`;
-            })
-            .catch((error) => {
-              alert("Failed to record payment. Please contact support.");
-              console.error("Error recording payment:", error.message);
-            });
-        },
-        onClose: function () {
-          alert("Transaction was not completed, window closed.");
-        },
-      });
-      handler.openIframe();
-    }
+    //const PAYSTACK_KEY = PAYSTACK_PUBLIC_KEY;
 
-    function recordPayment(reference, email, amount) {
-      const paymentDetails = {
-        order_id: reference,
-        amount: amount,
-        payment_date: new Date().toISOString().slice(0, 10),
-        payment_method: "Paystack",
-        status: "Completed",
-        paystack_refnumber: reference,
-      };
+    // function payWithPaystack(amount, email, orderId) {
+    //   const handler = PaystackPop.setup({
+    //     key: PAYSTACK_KEY,
+    //     email: email,
+    //     amount: amount * 100, 
+    //     currency: "NGN",
+    //     ref: orderId,
+    //     callback: function (response) {
+    //       recordPayment(response.reference, email, amount)
+    //         .then(() => {
+    //           localStorage.removeItem("cart");
+    //           window.location.href = `order-confirmation.html?orderId=${orderId}`;
+    //         })
+    //         .catch((error) => {
+    //           alert("Failed to record payment. Please contact support.");
+    //           console.error("Error recording payment:", error.message);
+    //         });
+    //     },
+    //     onClose: function () {
+    //       alert("Transaction was not completed, window closed.");
+    //     },
+    //   });
+    //   handler.openIframe();
+    // }
 
-      // Send the payment details to your backend API
-      return $.ajax({
-        url: "https://grublanerestaurant.com/api/payments/createPayments",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(paymentDetails),
-        success: function () {
-          return Promise.resolve();
-        },
-        error: function (xhr) {
-          return Promise.reject(new Error("Failed to record payment. Please contact support."));
-        },
-      });
-    }
+    // function recordPayment(reference, email, amount) {
+    //   const paymentDetails = {
+    //     order_id: reference,
+    //     amount: amount,
+    //     payment_date: new Date().toISOString().slice(0, 10),
+    //     payment_method: "Paystack",
+    //     status: "Completed",
+    //     paystack_refnumber: reference,
+    //   };
+
+    // Send the payment details to your backend API
+    // return $.ajax({
+    //   url: "https://grublanerestaurant.com/api/payments/createPayments",  
+    //   type: "POST",
+    //   contentType: "application/json",
+    //   data: JSON.stringify(paymentDetails),
+    //   success: function () {
+    //     return Promise.resolve();
+    //   },
+    //   error: function (xhr) {
+    //     return Promise.reject(new Error("Failed to record payment. Please contact support."));
+    //   },
+    // });
+
+
+    // Example usage
+    // document.getElementById('checkout-button').addEventListener('click', function () {
+    //   const amount = 10000;  
+    //   const email = 'customer@example.com';  
+    //   const orderId = 'ORDER_' + new Date().getTime();  
+
+    //   payWithPaystack(amount, email, orderId);  
 
     // Initial setup
     function init() {
       renderCart();
-      attachAddToCartListeners();  // Attach the Add to Cart listeners once
+      attachAddToCartListeners();
     }
 
     // Initialize the cart and event listeners when the page loads
     document.addEventListener("DOMContentLoaded", init);
+
   </script>
-
-
-
-
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
     integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
@@ -551,6 +591,27 @@
       const pageType = document.body.dataset.pageType;
       fetchMenuData(pageType);
     };
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var navbarToggler = document.querySelector('.navbar-toggler');
+      var navbarCollapse = document.querySelector('.navbar-collapse');
+
+      navbarToggler.addEventListener('click', function () {
+        navbarCollapse.classList.toggle('show');
+      });
+
+      // Close menu when a nav item is clicked
+      var navItems = document.querySelectorAll('.navbar-nav .nav-item');
+      navItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          if (window.innerWidth < 768) {
+            navbarCollapse.classList.remove('show');
+          }
+        });
+      });
+    });
   </script>
 </body>
 
