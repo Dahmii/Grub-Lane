@@ -310,13 +310,41 @@
                 <span>19A Sinari Daranijo Street, Victoria Island, Lagos</span>
               </li>
               <li class="d-block">
-                <span class="d-block text-black">Phone:</span><span> +234 810 667 8736</span>
+                <span class="d-block text-black">Phone:</span><span> +234 808 912 8657</span>
               </li>
               <li class="d-block">
-                <span class="d-block text-black">Email:</span><span>hello@grublane.com</span>
+                <span class="d-block text-black">Email:</span><span><a href="mailto:grublane@yahoo.com"
+                    class="__cf_email__"
+                    data-cfemail="7910171f163900160c0b1d1614181017571a1614">grublane@yahoo.com</a></span>
               </li>
             </ul>
           </div>
+        </div>
+        <div class="col-md-3 mb-5">
+          <h3>Quick Links</h3>
+          <ul class="list-unstyled footer-link">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="dine-in.html">Dine-In</a></li>
+            <li><a href="reservation.html">Reservations</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-md-center text-left">
+          <p>
+            Copyright &copy;
+            <script data-cfasync="false"
+              src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            All rights reserved
+            <i class="fa fa-heart-o" aria-hidden="true"></i>
+            <a href="#" target="_blank">Grublane</a>
+          </p>
         </div>
       </div>
     </div>
@@ -347,17 +375,17 @@
   </script>
 
   <script>
-    // Function to retrieve the cart from localStorage consistently
+
     function getCart() {
       return JSON.parse(localStorage.getItem("cart")) || [];
     }
 
-    // Function to update cart in localStorage and render cart
+
     function updateCartAndRender() {
-      // Save the updated cart to localStorage
+
       localStorage.setItem("cart", JSON.stringify(cart));
 
-      // Render the updated cart
+
       renderCart();
     }
 
@@ -392,7 +420,7 @@
       document.getElementById("total-price").textContent = `Total: N${totalPrice}`;
       document.getElementById("checkout-button").disabled = false;
 
-      // Re-attach the event listeners for remove, increase, and decrease buttons
+
       addCartButtonListeners();
     }
 
@@ -401,10 +429,10 @@
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
 
-          // Update the cart array by removing the item at the specified index
+
           cart.splice(itemIndex, 1);
 
-          // Update the cart in localStorage
+
           updateCartAndRender();
         });
       });
@@ -413,10 +441,10 @@
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
 
-          // Increase the quantity of the item at the specified index
+
           cart[itemIndex].quantity += 1;
 
-          // Update the cart in localStorage
+
           updateCartAndRender();
         });
       });
@@ -425,22 +453,22 @@
         button.addEventListener("click", function () {
           const itemIndex = this.getAttribute("data-index");
 
-          // Decrease the quantity of the item at the specified index
+
           if (cart[itemIndex].quantity > 1) {
             cart[itemIndex].quantity -= 1;
           } else {
-            // If the quantity is 1 and the decrease button is clicked, remove the item
+
             cart.splice(itemIndex, 1);
           }
 
-          // Update the cart in localStorage
+
           updateCartAndRender();
         });
       });
     }
 
 
-    // Handle click event for Add to Cart button using delegated event handling
+
     function attachAddToCartListeners() {
       document.body.addEventListener("click", function (event) {
         if (event.target.classList.contains("add-to-cart-btn")) {
@@ -462,23 +490,6 @@
       });
     }
 
-    // Toggle side cart visibility
-    // document.getElementById("cart-button").addEventListener("click", function () {
-    //   const sideCart = document.getElementById("side-cart");
-    //   const overlay = document.getElementById("overlay");
-
-    // Manually toggle classes if they're not applying correctly
-    // if (sideCart.classList.contains("active")) {
-    //   sideCart.classList.remove("active");
-    //   overlay.classList.remove("active");
-    // } else {
-    //   sideCart.classList.add("active");
-    //   overlay.classList.add("active");
-    // }
-
-    // console.log("Side cart active state: ", sideCart.classList.contains("active"));
-    // console.log("Overlay active state: ", overlay.classList.contains("active"));
-    //});
 
 
     // Close side cart
@@ -510,65 +521,7 @@
       payWithPaystack(totalAmount, userEmail, orderId);
     });
 
-    //const PAYSTACK_KEY = PAYSTACK_PUBLIC_KEY;
 
-    // function payWithPaystack(amount, email, orderId) {
-    //   const handler = PaystackPop.setup({
-    //     key: PAYSTACK_KEY,
-    //     email: email,
-    //     amount: amount * 100, 
-    //     currency: "NGN",
-    //     ref: orderId,
-    //     callback: function (response) {
-    //       recordPayment(response.reference, email, amount)
-    //         .then(() => {
-    //           localStorage.removeItem("cart");
-    //           window.location.href = `order-confirmation.html?orderId=${orderId}`;
-    //         })
-    //         .catch((error) => {
-    //           alert("Failed to record payment. Please contact support.");
-    //           console.error("Error recording payment:", error.message);
-    //         });
-    //     },
-    //     onClose: function () {
-    //       alert("Transaction was not completed, window closed.");
-    //     },
-    //   });
-    //   handler.openIframe();
-    // }
-
-    // function recordPayment(reference, email, amount) {
-    //   const paymentDetails = {
-    //     order_id: reference,
-    //     amount: amount,
-    //     payment_date: new Date().toISOString().slice(0, 10),
-    //     payment_method: "Paystack",
-    //     status: "Completed",
-    //     paystack_refnumber: reference,
-    //   };
-
-    // Send the payment details to your backend API
-    // return $.ajax({
-    //   url: "https://grublanerestaurant.com/api/payments/createPayments",  
-    //   type: "POST",
-    //   contentType: "application/json",
-    //   data: JSON.stringify(paymentDetails),
-    //   success: function () {
-    //     return Promise.resolve();
-    //   },
-    //   error: function (xhr) {
-    //     return Promise.reject(new Error("Failed to record payment. Please contact support."));
-    //   },
-    // });
-
-
-    // Example usage
-    // document.getElementById('checkout-button').addEventListener('click', function () {
-    //   const amount = 10000;  
-    //   const email = 'customer@example.com';  
-    //   const orderId = 'ORDER_' + new Date().getTime();  
-
-    //   payWithPaystack(amount, email, orderId);  
 
     // Initial setup
     function init() {
