@@ -1,86 +1,94 @@
-function fetchMenuData(menuType) {
+async function fetchMenuData(menuType) {
   console.log(menuType);
-  
   const takeOut = menuType === "take_out" ? true : false;
 
-  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
-  console.log("Fetching menu from: ", endpointUrl);
+  let endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}&limit=20`;
+  let allDishes = [];
+  let menuContainer = document.getElementById("menu-container");
 
-  fetch(endpointUrl)
-    .then((response) => {
-      console.log("Fetch response: ", response);
+  try {
+    while (endpointUrl) {
+      console.log("Fetching menu from: ", endpointUrl);
+      const response = await fetch(endpointUrl);
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return response.json();
-    })
-    .then((data) => {
+
+      const data = await response.json();
       console.log("Menu data: ", data);
-      const menuContainer = document.getElementById("menu-container");
-      let menuHtml = "";
 
-      if (
-        !data.dishes ||
-        !Array.isArray(data.dishes) ||
-        data.dishes.length === 0
-      ) {
-        menuHtml = `<div class="text-center"><h2>No menu items available</h2><p>We couldn't find any menu items at the moment for this type. Please try again later.</p></div>`;
-      } else {
-        const groupedMenu = {};
-        data.dishes.forEach((dish) => {
-          const { subcategory, average_rating, id } = dish;
-          if (!groupedMenu[subcategory]) {
-            groupedMenu[subcategory] = [];
-          }
-          groupedMenu[subcategory].push({ ...dish, average_rating });
-        });
+      allDishes = allDishes.concat(data.dishes);
 
-        for (const subcategory in groupedMenu) {
-          const subcategoryId = subcategory.replace(/\s+/g, "-").toLowerCase();
-          menuHtml += `<div class="menu-section">
-            <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
-            <div class="menu-items" id="${subcategoryId}" style="display: none;">`;
+      // If there's a next page, update endpointUrl; otherwise, stop.
+      endpointUrl = data.next;
+    }
 
-          groupedMenu[subcategory].forEach((item) => {
-            menuHtml += `<div class="menu-item-card">
-              <div class="menu-item fancy-card">
-                ${
-                  takeOut
-                    ? `<div class="menu-item-image">
-                  <img src="${item.image_url || "default-image.jpg"}" alt="${item.name}" class="menu-image" />
-                </div>`
-                    : ""
-                }
-                <h5 class="menu-item-name">${item.name}</h5>
-                <p class="price"><strong>N${item.price}</strong></p>
-                <p class="description">${
-                  item.description || "A delicious dish from our menu."
-                }</p>
-                <button class="add-to-cart-btn" data-item="${
-                  item.name
-                }" data-price="${item.price}">Add to Cart</button>
-                <div class="rating" data-dish-id="${
-                  item.id
-                }" data-average-rating="${item.average_rating || 0}">
-                  ${generateStarRating(item.average_rating || 0)}
-                </div>
-              </div>
-            </div>`;
-          });
+    // Once all pages are fetched, render the menu.
+    renderMenu(allDishes, takeOut, menuContainer);
+  } catch (error) {
+    console.error("Error fetching menu data:", error);
+    menuContainer.innerHTML = `<div class="text-center"><h2>Error Fetching Data</h2><p>We couldn't fetch the menu data. Please try again later.</p></div>`;
+  }
+}
 
-          menuHtml += `</div></div>`;
-        }
+function renderMenu(dishes, takeOut, menuContainer) {
+  let menuHtml = "";
+
+  if (!dishes || dishes.length === 0) {
+    menuHtml = `<div class="text-center"><h2>No menu items available</h2><p>We couldn't find any menu items at the moment for this type. Please try again later.</p></div>`;
+  } else {
+    const groupedMenu = {};
+    dishes.forEach((dish) => {
+      const { subcategory, average_rating, id } = dish;
+      if (!groupedMenu[subcategory]) {
+        groupedMenu[subcategory] = [];
       }
-
-      menuContainer.innerHTML = menuHtml;
-      addCartFunctionality();
-      addRatingFunctionality(); 
-    })
-    .catch((error) => {
-      const menuContainer = document.getElementById("menu-container");
-      menuContainer.innerHTML = `<div class="text-center"><h2>Error Fetching Data</h2><p>We couldn't fetch the menu data. Please try again later.</p></div>`;
-      console.error("Error fetching menu data:", error);
+      groupedMenu[subcategory].push({ ...dish, average_rating });
     });
+
+    for (const subcategory in groupedMenu) {
+      const subcategoryId = subcategory.replace(/\s+/g, "-").toLowerCase();
+      menuHtml += `<div class="menu-section">
+        <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
+        <div class="menu-items" id="${subcategoryId}" style="display: none;">`;
+
+      groupedMenu[subcategory].forEach((item) => {
+        menuHtml += `<div class="menu-item-card">
+          <div class="menu-item fancy-card">
+            ${
+              takeOut
+                ? `<div class="menu-item-image">
+              <img src="${item.image_url || "default-image.jpg"}" alt="${
+                    item.name
+                  }" class="menu-image" />
+            </div>`
+                : ""
+            }
+            <h5 class="menu-item-name">${item.name}</h5>
+            <p class="price"><strong>N${item.price}</strong></p>
+            <p class="description">${
+              item.description || "A delicious dish from our menu."
+            }</p>
+            <button class="add-to-cart-btn" data-item="${
+              item.name
+            }" data-price="${item.price}">Add to Cart</button>
+            <div class="rating" data-dish-id="${
+              item.id
+            }" data-average-rating="${item.average_rating || 0}">
+              ${generateStarRating(item.average_rating || 0)}
+            </div>
+          </div>
+        </div>`;
+      });
+
+      menuHtml += `</div></div>`;
+    }
+  }
+
+  menuContainer.innerHTML = menuHtml;
+  addCartFunctionality();
+  addRatingFunctionality();
 }
 
 function generateStarRating(rating) {
