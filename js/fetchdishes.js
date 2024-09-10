@@ -1,8 +1,9 @@
 function fetchMenuData(menuType) {
   console.log(menuType);
+  
   const takeOut = menuType === "take_out" ? true : false;
 
-  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${menuType}`;
+  const endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
   console.log("Fetching menu from: ", endpointUrl);
 
   fetch(endpointUrl)
@@ -45,11 +46,8 @@ function fetchMenuData(menuType) {
               <div class="menu-item fancy-card">
                 ${
                   takeOut
-                    ? `
-                <div class="menu-item-image">
-                  <img src="${item.image_url || "default-image.jpg"}" alt="${
-                        item.name
-                      }" class="menu-image" />
+                    ? `<div class="menu-item-image">
+                  <img src="${item.image_url || "default-image.jpg"}" alt="${item.name}" class="menu-image" />
                 </div>`
                     : ""
                 }
@@ -76,7 +74,7 @@ function fetchMenuData(menuType) {
 
       menuContainer.innerHTML = menuHtml;
       addCartFunctionality();
-      addRatingFunctionality(); // Add functionality to handle rating clicks
+      addRatingFunctionality(); 
     })
     .catch((error) => {
       const menuContainer = document.getElementById("menu-container");
@@ -135,7 +133,7 @@ function addRatingFunctionality() {
         })
         .then(() => {
           alert("Your feedback has been submitted.");
-          fetchMenuData(document.body.dataset.pageType); // Refresh the menu data
+          fetchMenuData(document.body.dataset.pageType);
         })
         .catch((error) => {
           alert("Failed to submit rating. Please try again later.");
