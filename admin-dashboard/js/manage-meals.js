@@ -5,7 +5,9 @@ const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish";
 const API_MENU_URL = "https://grublanerestaurant.com/api/menu/getMenus"; // For fetching menu IDs
 
 let meals = [];
-let menuId = null; // Will be dynamically fetched from the backend
+let menuId = null;
+let currentPage = 1;
+const mealsPerPage = 10; // Number of meals to show per page
 
 // Function to fetch menu ID from the backend
 async function fetchMenuId() {
@@ -74,26 +76,77 @@ function displayMeals(filteredMeals = meals) {
   const tableBody = document.getElementById("mealsTableBody");
   tableBody.innerHTML = "";
 
-  filteredMeals.forEach((meal) => {
+  // Calculate pagination limits
+  const startIndex = (currentPage - 1) * mealsPerPage;
+  const endIndex = startIndex + mealsPerPage;
+  const paginatedMeals = filteredMeals.slice(startIndex, endIndex);
+
+  // Display meals for the current page
+  paginatedMeals.forEach((meal) => {
     const row = `
-            <tr>
-                <td>${meal.name}</td>
-                <td>${meal.description || ""}</td>
-                <td>₦${meal.price.toFixed(2)}</td>
-                <td>${meal.servicetype}</td>
-                <td>${meal.subcategory || ""}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editMeal(${
-                      meal.id
-                    })">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
-                      meal.id
-                    })">Delete</button>
-                </td>
-            </tr>
-        `;
+      <tr>
+          <td>${meal.name}</td>
+          <td>${meal.description || ""}</td>
+          <td>₦${meal.price.toFixed(2)}</td>
+          <td>${meal.servicetype}</td>
+          <td>${meal.subcategory || ""}</td>
+          <td>
+              <button class="btn btn-sm btn-primary" onclick="editMeal(${
+                meal.id
+              })">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMeal(${
+                meal.id
+              })">Delete</button>
+          </td>
+      </tr>
+    `;
     tableBody.innerHTML += row;
   });
+
+  // Update pagination controls based on filtered data
+  displayPagination(filteredMeals.length);
+}
+
+function displayPagination(totalMeals) {
+  const paginationControls = document.getElementById("paginationControls");
+  paginationControls.innerHTML = "";
+
+  const totalPages = Math.ceil(totalMeals / mealsPerPage);
+
+  // Create Previous button
+  const prevButton = document.createElement("button");
+  prevButton.classList.add("btn", "btn-secondary");
+  prevButton.innerText = "Previous";
+  prevButton.disabled = currentPage === 1;
+  prevButton.onclick = () => {
+    currentPage--;
+    displayMeals();
+  };
+  paginationControls.appendChild(prevButton);
+
+  // Create page number buttons
+  for (let i = 1; i <= totalPages; i++) {
+    const pageButton = document.createElement("button");
+    pageButton.classList.add("btn", "btn-secondary");
+    pageButton.innerText = i;
+    pageButton.disabled = i === currentPage;
+    pageButton.onclick = () => {
+      currentPage = i;
+      displayMeals();
+    };
+    paginationControls.appendChild(pageButton);
+  }
+
+  // Create Next button
+  const nextButton = document.createElement("button");
+  nextButton.classList.add("btn", "btn-secondary");
+  nextButton.innerText = "Next";
+  nextButton.disabled = currentPage === totalPages;
+  nextButton.onclick = () => {
+    currentPage++;
+    displayMeals();
+  };
+  paginationControls.appendChild(nextButton);
 }
 
 // Function to add a new meal
@@ -206,7 +259,7 @@ async function deleteMeal(id) {
 }
 
 function filterAndSearchMeals() {
-  const servicetype = document
+  const serviceType = document
     .getElementById("filterServiceType")
     .value.toLowerCase();
   const subcategory = document
@@ -216,7 +269,7 @@ function filterAndSearchMeals() {
 
   const filteredMeals = meals.filter((meal) => {
     const matchesServiceType =
-      !servicetype || meal.servicetype.toLowerCase().includes(servicetype);
+      !serviceType || meal.servicetype.toLowerCase().includes(serviceType);
     const matchesSubcategory =
       !subcategory ||
       (meal.subcategory &&
@@ -229,21 +282,27 @@ function filterAndSearchMeals() {
     return matchesServiceType && matchesSubcategory && matchesSearch;
   });
 
+  // Reset current page to 1 when applying new filters
+  currentPage = 1;
+
+  // Display the filtered meals
   displayMeals(filteredMeals);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetchMeals();
+  fetchMenuId().then(() => {
+    fetchMeals();
+  });
   document.getElementById("addMealForm").addEventListener("submit", addMeal);
   document
     .getElementById("saveEditMeal")
     .addEventListener("click", saveMealEdit);
   document
     .getElementById("filterServiceType")
-    .addEventListener("input", filterAndSearchMeals);
+    .addEventListener("change", filterAndSearchMeals);
   document
     .getElementById("filterCategory")
-    .addEventListener("input", filterAndSearchMeals);
+    .addEventListener("change", filterAndSearchMeals);
   document
     .getElementById("searchMeal")
     .addEventListener("input", filterAndSearchMeals);
