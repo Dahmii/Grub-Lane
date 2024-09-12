@@ -4,8 +4,8 @@ const API_UPDATE_URL = "https://grublanerestaurant.com/api/dish/updateDish";
 const API_DELETE_URL = "https://grublanerestaurant.com/api/dish/deleteDish";
 const API_MENU_URL = "https://grublanerestaurant.com/api/menu/getMenus"; // For fetching menu IDs
 
-let meals = [];
-let menuId = null;
+let meals = []; // Original meals fetched from API
+let filteredMeals = []; // Meals after applying search and filters
 let currentPage = 1;
 const mealsPerPage = 10; // Number of meals to show per page
 
@@ -19,16 +19,14 @@ async function fetchMenuId() {
       },
     });
 
-    // Ensure the response is OK and parse JSON
     if (!response.ok) {
       throw new Error(`Failed to fetch menu ID: ${response.status}`);
     }
 
     const menus = await response.json();
 
-    // Check if valid menus are received
     if (menus && menus.length > 0) {
-      menuId = menus[0].id; // Use the first menu ID or adjust as needed
+      menuId = menus[0].id;
     } else {
       throw new Error("No menus found.");
     }
@@ -55,11 +53,11 @@ async function fetchMeals() {
 
     if (data.dishes && Array.isArray(data.dishes)) {
       meals = data.dishes;
+      filteredMeals = [...meals]; // Set filteredMeals to all meals initially
+      displayMeals(); // Display meals after fetching
     } else {
       throw new Error("Invalid data format: Expected an array of meals");
     }
-
-    displayMeals();
   } catch (error) {
     document.getElementById("mealsTableBody").innerHTML = `
       <tr>
@@ -72,16 +70,15 @@ async function fetchMeals() {
 }
 
 // Function to display meals in the table
-function displayMeals(filteredMeals = meals) {
+function displayMeals() {
   const tableBody = document.getElementById("mealsTableBody");
   tableBody.innerHTML = "";
 
-  // Calculate pagination limits
+  // Calculate start and end indexes based on current page and mealsPerPage
   const startIndex = (currentPage - 1) * mealsPerPage;
   const endIndex = startIndex + mealsPerPage;
   const paginatedMeals = filteredMeals.slice(startIndex, endIndex);
 
-  // Display meals for the current page
   paginatedMeals.forEach((meal) => {
     const row = `
       <tr>
@@ -103,10 +100,10 @@ function displayMeals(filteredMeals = meals) {
     tableBody.innerHTML += row;
   });
 
-  // Update pagination controls based on filtered data
-  displayPagination(filteredMeals.length);
+  displayPagination(filteredMeals.length); // Call pagination function based on filtered meals
 }
 
+// Function to display pagination controls
 function displayPagination(totalMeals) {
   const paginationControls = document.getElementById("paginationControls");
   paginationControls.innerHTML = "";
@@ -119,8 +116,10 @@ function displayPagination(totalMeals) {
   prevButton.innerText = "Previous";
   prevButton.disabled = currentPage === 1;
   prevButton.onclick = () => {
-    currentPage--;
-    displayMeals();
+    if (currentPage > 1) {
+      currentPage--;
+      displayMeals();
+    }
   };
   paginationControls.appendChild(prevButton);
 
@@ -143,11 +142,69 @@ function displayPagination(totalMeals) {
   nextButton.innerText = "Next";
   nextButton.disabled = currentPage === totalPages;
   nextButton.onclick = () => {
-    currentPage++;
-    displayMeals();
+    if (currentPage < totalPages) {
+      currentPage++;
+      displayMeals();
+    }
   };
   paginationControls.appendChild(nextButton);
 }
+
+// Function to filter and search meals
+function filterAndSearchMeals() {
+  const serviceType = document
+    .getElementById("filterServiceType")
+    .value.toLowerCase()
+    .trim();
+  const subcategory = document
+    .getElementById("filterCategory")
+    .value.toLowerCase()
+    .trim();
+  const searchQuery = document
+    .getElementById("searchMeal")
+    .value.toLowerCase()
+    .trim();
+
+  // Filter meals based on serviceType, subcategory, and searchQuery
+  filteredMeals = meals.filter((meal) => {
+    const matchesServiceType =
+      !serviceType || meal.servicetype.toLowerCase().includes(serviceType);
+    const matchesSubcategory =
+      !subcategory ||
+      (meal.subcategory &&
+        meal.subcategory.toLowerCase().includes(subcategory));
+    const matchesSearch =
+      !searchQuery ||
+      meal.name.toLowerCase().includes(searchQuery) ||
+      (meal.description &&
+        meal.description.toLowerCase().includes(searchQuery));
+
+    return matchesServiceType && matchesSubcategory && matchesSearch;
+  });
+
+  currentPage = 1; // Reset page to 1 after filtering or searching
+  displayMeals(); // Display filtered meals
+}
+
+// Event listeners for filter and search
+document.addEventListener("DOMContentLoaded", () => {
+  fetchMenuId().then(() => {
+    fetchMeals();
+  });
+  document.getElementById("addMealForm").addEventListener("submit", addMeal);
+  document
+    .getElementById("saveEditMeal")
+    .addEventListener("click", saveMealEdit);
+  document
+    .getElementById("filterServiceType")
+    .addEventListener("change", filterAndSearchMeals);
+  document
+    .getElementById("filterCategory")
+    .addEventListener("change", filterAndSearchMeals);
+  document
+    .getElementById("searchMeal")
+    .addEventListener("input", filterAndSearchMeals);
+});
 
 // Function to add a new meal
 async function addMeal(event) {
@@ -173,18 +230,19 @@ async function addMeal(event) {
     if (response.ok) {
       const createdMeal = await response.json();
       meals.push(createdMeal);
-      displayMeals();
+      filteredMeals.push(createdMeal); // Add to filteredMeals as well
+      displayMeals(); // Re-display meals after adding a new one
       document.getElementById("addMealForm").reset();
       $("#addMealFormCollapse").collapse("hide");
-      $("#manageMealsCollapse").collapse("show"); // Reopen the Manage Meals section after adding a meal
+      $("#manageMealsCollapse").collapse("show");
     }
   } catch (error) {
-    // Handle error
+    console.error("Error adding meal:", error);
   }
 }
 
+// Function to edit a meal
 function editMeal(id) {
-  console.log("Edit button clicked for meal ID:", id);
   const meal = meals.find((m) => m.id === id);
   if (meal) {
     document.getElementById("editMealId").value = meal.id;
@@ -224,6 +282,7 @@ async function saveMealEdit() {
       const mealIndex = meals.findIndex((m) => m.id === id);
       if (mealIndex !== -1) {
         meals[mealIndex] = updatedMeal;
+        filteredMeals[mealIndex] = updatedMeal; // Update filteredMeals
         displayMeals();
         $("#editMealModal").modal("hide");
       }
@@ -248,6 +307,7 @@ async function deleteMeal(id) {
 
       if (response.ok) {
         meals = meals.filter((meal) => meal.id !== id);
+        filteredMeals = filteredMeals.filter((meal) => meal.id !== id); // Remove from filteredMeals
         displayMeals();
       } else {
         console.error("Error deleting meal:", await response.json());
@@ -257,57 +317,3 @@ async function deleteMeal(id) {
     }
   }
 }
-
-function filterAndSearchMeals() {
-  const serviceType = document
-    .getElementById("filterServiceType")
-    .value.toLowerCase();
-  const subcategory = document
-    .getElementById("filterCategory")
-    .value.toLowerCase();
-  const searchQuery = document.getElementById("searchMeal").value.toLowerCase();
-
-  const filteredMeals = meals.filter((meal) => {
-    const matchesServiceType =
-      !serviceType || meal.servicetype.toLowerCase().includes(serviceType);
-    const matchesSubcategory =
-      !subcategory ||
-      (meal.subcategory &&
-        meal.subcategory.toLowerCase().includes(subcategory));
-    const matchesSearch =
-      meal.name.toLowerCase().includes(searchQuery) ||
-      (meal.description &&
-        meal.description.toLowerCase().includes(searchQuery));
-
-    return matchesServiceType && matchesSubcategory && matchesSearch;
-  });
-
-  // Reset current page to 1 when applying new filters
-  currentPage = 1;
-
-  // Display the filtered meals
-  displayMeals(filteredMeals);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  fetchMenuId().then(() => {
-    fetchMeals();
-  });
-  document.getElementById("addMealForm").addEventListener("submit", addMeal);
-  document
-    .getElementById("saveEditMeal")
-    .addEventListener("click", saveMealEdit);
-  document
-    .getElementById("filterServiceType")
-    .addEventListener("change", filterAndSearchMeals);
-  document
-    .getElementById("filterCategory")
-    .addEventListener("change", filterAndSearchMeals);
-  document
-    .getElementById("searchMeal")
-    .addEventListener("input", filterAndSearchMeals);
-
-  document.getElementById("addMealButton").addEventListener("click", () => {
-    $("#manageMealsCollapse").collapse("hide");
-  });
-});
