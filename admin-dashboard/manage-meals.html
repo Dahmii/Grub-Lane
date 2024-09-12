@@ -12,6 +12,51 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="icon" href="../img/favicon.png" type="image/png" />
     <link rel="shortcut icon" href="../img/favicon-icon" type="image/png" />
+
+    <style>
+        /* Table should scroll horizontally on smaller screens */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Pagination should be simple: next and previous buttons */
+        .pagination-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-controls button {
+            min-width: 100px;
+        }
+
+        /* Make table rows more compact and handle action buttons for smaller screens */
+        @media (max-width: 768px) {
+
+            .table td,
+            .table th {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .btn {
+                margin-bottom: 5px;
+                display: block;
+                width: 100%;
+            }
+
+            /* Handle filter and search form for mobile */
+            .filter-form-row {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .filter-form-row .form-group {
+                flex: 1 1 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -155,7 +200,11 @@
                                     <!-- Meal rows will be dynamically added here -->
                                 </tbody>
                             </table>
-                            <div id="paginationControls" class="d-flex justify-content-center my-3"></div>
+                            <div id="paginationControls" class="pagination-controls my-3">
+                                <button id="previousPage" class="btn btn-outline-primary" disabled>Prev</button>
+                                <span id="paginationInfo"></span>
+                                <button id="nextPage" class="btn btn-outline-primary">Next</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -322,34 +371,33 @@
     <script>
         // Global variables
         let allMeals = [];
-        const itemsPerPage = 10;
+        const itemsPerPage = 10; // Number of meals per page
         let currentPage = 1;
-        let totalCount = 0;
-        let nextPage = null;
+        let totalPages = 1;
+        let nextPage = 'https://grublanerestaurant.com/api/dish/getDishes'; // Initial URL for API
 
-        // Function to fetch meals from the server
-        async function fetchMeals(url = 'https://grublanerestaurant.com/api/dish/getDishes') {
+        // Function to fetch all meals from the server in batches
+        async function fetchAllMeals() {
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch meals');
-                }
-                const data = await response.json();
+                while (nextPage) {
+                    const response = await fetch(nextPage);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch meals');
+                    }
+                    const data = await response.json();
 
-                if (data && Array.isArray(data.dishes)) {
-                    allMeals = [...allMeals, ...data.dishes];
-                    totalCount = data.count;
-                    nextPage = data.next;
-                } else {
-                    throw new Error('Unexpected data format');
+                    if (data && Array.isArray(data.dishes)) {
+                        allMeals = [...allMeals, ...data.dishes]; // Append new meals to the array
+                        nextPage = data.next; // Update nextPage to the next batch URL
+                    } else {
+                        throw new Error('Unexpected data format');
+                    }
                 }
 
+                // Once all meals are fetched, calculate total pages and update UI
+                totalPages = Math.ceil(allMeals.length / itemsPerPage);
+                updatePagination();
                 filterAndDisplayMeals();
-
-                // If there's a next page and we haven't loaded all meals, load more
-                if (nextPage && allMeals.length < totalCount) {
-                    await fetchMeals(nextPage);
-                }
             } catch (error) {
                 console.error('Error fetching meals:', error);
                 displayError('Failed to load meals. Please try again later.');
@@ -362,12 +410,13 @@
             tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">${message}</td></tr>`;
         }
 
-        // Function to filter and display meals
+        // Function to filter and display meals based on pagination
         function filterAndDisplayMeals() {
             const serviceType = document.getElementById('filterServiceType').value;
             const category = document.getElementById('filterCategory').value;
             const searchTerm = document.getElementById('searchMeal').value.toLowerCase();
 
+            // Filter meals based on the search and filters
             const filteredMeals = allMeals.filter(meal => {
                 const matchesServiceType = !serviceType || meal.servicetype === serviceType;
                 const matchesCategory = !category || meal.subcategory === category;
@@ -375,11 +424,10 @@
                 return matchesServiceType && matchesCategory && matchesSearch;
             });
 
-            displayMeals(filteredMeals);
-            updatePagination(filteredMeals.length);
+            displayMeals(filteredMeals); // Display meals based on the filtered results
         }
 
-        // Function to display meals
+        // Function to display meals per page
         function displayMeals(meals) {
             const tableBody = document.getElementById('mealsTableBody');
             tableBody.innerHTML = '';
@@ -389,10 +437,12 @@
                 return;
             }
 
+            // Slice the meals array to display meals for the current page
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const paginatedMeals = meals.slice(start, end);
+            const paginatedMeals = meals.slice(start, end); // Get meals for the current page
 
+            // Loop through the meals and add them to the table
             paginatedMeals.forEach(meal => {
                 const row = `
                     <tr>
@@ -409,7 +459,7 @@
                 `;
                 tableBody.innerHTML += row;
             });
-            attachEventListeners();
+            attachEventListeners(); // Attach event listeners to edit and delete buttons
         }
 
         // Function to attach event listeners to edit and delete buttons
@@ -468,7 +518,7 @@
             }).then(data => {
                 console.log('Success:', data);
                 $('#editMealModal').modal('hide'); // Hide modal after update
-                fetchMeals(); // Refresh the list to show the updated details
+                fetchAllMeals(); // Refresh the list to show the updated details
             }).catch((error) => {
                 console.error('Error:', error);
             });
@@ -493,7 +543,7 @@
                     })
                     .then(data => {
                         console.log('Delete successful', data);
-                        fetchMeals(); // Refresh the list after deletion
+                        fetchAllMeals(); // Refresh the list after deletion
                     })
                     .catch(error => {
                         console.error('Error deleting meal:', error);
@@ -534,7 +584,7 @@
                 .then(data => {
                     console.log('Meal created successfully:', data);
                     document.getElementById('addMealForm').reset(); // Clear the form
-                    fetchMeals(); // Refresh the list to show the new meal
+                    fetchAllMeals(); // Refresh the list to show the new meal
                 })
                 .catch(error => {
                     console.error('Error creating meal:', error);
@@ -543,24 +593,31 @@
         }
 
         // Function to update pagination controls
-        function updatePagination(totalItems) {
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            const paginationControls = document.getElementById('paginationControls');
-            paginationControls.innerHTML = '';
+        function updatePagination() {
+            const paginationInfo = document.getElementById('paginationInfo');
+            const previousButton = document.getElementById('previousPage');
+            const nextButton = document.getElementById('nextPage');
 
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.innerText = i;
-                button.classList.add('btn', 'btn-sm', 'btn-outline-primary', 'mx-1');
-                if (i === currentPage) {
-                    button.classList.add('active');
-                }
-                button.addEventListener('click', () => {
-                    currentPage = i;
+            paginationInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            previousButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
+
+            // Ensure buttons work as expected
+            previousButton.onclick = function () {
+                if (currentPage > 1) {
+                    currentPage--;
                     filterAndDisplayMeals();
-                });
-                paginationControls.appendChild(button);
-            }
+                    updatePagination();
+                }
+            };
+
+            nextButton.onclick = function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    filterAndDisplayMeals();
+                    updatePagination();
+                }
+            };
         }
 
         // Event listeners
@@ -570,8 +627,11 @@
         document.getElementById('addMealForm').addEventListener('submit', createMeal);
 
         // Initial fetch and display
-        fetchMeals();
+        fetchAllMeals(); // Fetch all meals in batches
     </script>
+
+
+
 
 
 
