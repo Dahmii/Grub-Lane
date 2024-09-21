@@ -31,22 +31,63 @@
   <!-- Enhanced Styles -->
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Open Sans', Arial, sans-serif;
       background-color: #f8f9fa;
       margin: 0;
       padding: 0; /* Remove default padding */
     }
 
+    /* Loader Styling */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #loader svg {
+      width: 80px;
+      height: 80px;
+      animation: rotate 1.5s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     /* PDF Container Styling */
     .pdf-container {
       position: relative;
-      width: 100%;
+      width: 90%;
       max-width: 1200px; /* Adjust as needed */
-      margin: 0 auto 40px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      background-color: #ffffff; /* Match with website's background */
+      margin: 40px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #ffffff, #f0f0f0);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pdf-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
     .pdf-container iframe {
@@ -54,7 +95,7 @@
       height: 80vh; /* Occupies 80% of viewport height */
       border: none;
       border-radius: 10px;
-      /* Optional: Add smooth transition for responsiveness */
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
       transition: height 0.3s ease;
     }
 
@@ -72,13 +113,25 @@
       border-radius: 30px;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s ease, opacity 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .download-button a:hover {
       background-color: #e65347;
+      transform: translateY(-2px);
+    }
+
+    .download-button a i {
+      margin-right: 8px;
+      transition: margin-right 0.3s ease;
+    }
+
+    .download-button a:hover i {
+      margin-right: 12px;
     }
 
     /* Responsive adjustments */
@@ -106,31 +159,69 @@
       }
     }
 
-    /* Loader Styling */
-    #loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.8);
-      z-index: 9999;
+    /* Footer Styling */
+    .site-footer {
+      background-color: #343a40;
+      color: #ffffff;
+      padding: 40px 0;
+    }
+
+    .site-footer a {
+      color: #ff6347;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .site-footer a:hover {
+      color: #e65347;
+    }
+
+    .footer-social a {
+      font-size: 24px;
+      margin-right: 15px;
+      color: #ffffff;
+      transition: color 0.3s ease;
+    }
+
+    .footer-social a:hover {
+      color: #ff6347;
+    }
+
+    /* Hero Section Enhancements */
+    .slider-item {
+      height: 60vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
-    #loader svg {
-      animation: rotate 2s linear infinite;
+    .slider-text h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
-    @keyframes rotate {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+    .slider-text p {
+      font-size: 18px;
+      color: #ffffff;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-outline-white {
+      border-color: #ffffff;
+      color: #ffffff;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-white:hover {
+      background-color: #ffffff;
+      color: #ff6347;
     }
   </style>
 </head>
@@ -139,8 +230,8 @@
   <!-- Loader -->
   <div id="loader">
     <svg class="circular" width="48px" height="48px">
-      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#cf1d16" />
+      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#ffffff" />
+      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#ff6347" />
     </svg>
   </div>
 
@@ -183,7 +274,7 @@
 
   <!-- Hero Section -->
   <div class="slider-wrap">
-    <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg'); background-size: cover; background-position: center;">
+    <div class="slider-item" style="background-image: url('img/grublane-interior4.jpg');">
       <div class="container">
         <div class="row slider-text align-items-center justify-content-center">
           <div class="col-md-8 text-center col-sm-12">
@@ -210,7 +301,7 @@
         <div class="col-md-12">
           <!-- Embedded PDF without Toolbar -->
           <div class="pdf-container">
-            <iframe src="assets/pdf/dine-in-menu.pdf#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="800px" title="Grub Lane Dine-In Menu">
+            <iframe src="assets/pdf/dine-in-menu.pdf#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="80vh" title="Grub Lane Dine-In Menu">
               This browser does not support PDFs. Please download the PDF to view it:
               <a href="assets/pdf/dine-in-menu.pdf">Download PDF</a>.
             </iframe>
@@ -218,7 +309,7 @@
           <!-- Download Button -->
           <div class="download-button">
             <a href="assets/pdf/dine-in-menu.pdf" target="_blank" download>
-              Download Our Menu (PDF)
+              <i class="fa fa-download"></i> Download Our Menu (PDF)
             </a>
           </div>
         </div>
@@ -313,9 +404,7 @@
     $(document).ready(function () {
       // Hide the loader once the page has fully loaded
       $(window).on('load', function() {
-        $('#loader').fadeOut('slow', function() {
-          $(this).remove();
-        });
+        $('#loader').addClass('hidden');
       });
 
       // Cart Sidebar Functionality (If Cart is still needed)
