@@ -8,15 +8,16 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&display=swap" rel="stylesheet" />
-  
+
   <!-- Favicon -->
   <link rel="icon" href="img/favicon.png" type="image/png" />
-  <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
+  <link rel="shortcut icon" href="img/favicon-icon.png" type="image/png" />
 
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="css/bootstrap.css" />
   <link rel="stylesheet" href="css/animate.css" />
   <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/owl.theme.default.min.css" />
   <link rel="stylesheet" href="css/aos.css" />
   <link rel="stylesheet" href="css/magnific-popup.css" />
 
@@ -67,42 +68,16 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
     }
 
-    /* PDF Container Styling */
-    .pdf-container {
-      position: relative;
-      width: 90%;
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 10px;
-      background: linear-gradient(135deg, #ffffff, #f0f0f0);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .pdf-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .pdf-container canvas {
-      width: 100% !important;
-      height: auto !important;
-      border: none;
-      border-radius: 10px;
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
     /* Download Button Styling */
     .download-button {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     .download-button a {
@@ -134,29 +109,28 @@
       margin-right: 12px;
     }
 
-    /* Responsive Adjustments */
-    @media (max-width: 1200px) {
-      .pdf-container {
-        width: 95%;
-      }
+    /* Image Preview Styling */
+    .menu-preview {
+      display: block;
+      margin: 30px auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    @media (max-width: 992px) {
-      .pdf-container {
-        width: 100%;
-        margin: 20px auto;
-      }
+    .menu-preview:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
-    @media (max-width: 400px) {
-      .download-button a {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
-
-      .download-button a i {
-        margin-right: 6px;
-      }
+    /* Owl Carousel Customization */
+    .owl-carousel .item img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
     }
 
     /* Footer Styling */
@@ -224,32 +198,20 @@
       color: #ff6347;
     }
 
-    /* PDF Controls Styling */
-    .pdf-controls {
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+      .download-button a {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
 
-    .pdf-controls button {
-      padding: 8px 16px;
-      border: none;
-      background-color: #007bff;
-      color: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+      .download-button a i {
+        margin-right: 6px;
+      }
 
-    .pdf-controls button:hover {
-      background-color: #0056b3;
-    }
-
-    .pdf-controls span {
-      font-size: 16px;
-      color: #333;
+      .menu-preview {
+        margin: 20px auto;
+      }
     }
 
     /* Error Message Styling */
@@ -262,6 +224,7 @@
 </head>
 
 <body data-page-type="dine_in">
+  <!-- Loader -->
   <div id="loader">
     <svg class="circular" width="48px" height="48px">
       <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#ffffff" />
@@ -269,6 +232,7 @@
     </svg>
   </div>
 
+  <!-- Header -->
   <header role="banner">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
       <div class="container">
@@ -332,18 +296,67 @@
           <h2 class="text-center">Dine-In Menu</h2>
         </div>
         <div class="col-md-12">
-          <div class="pdf-container">
-            <canvas id="pdf-render"></canvas>
-            <div class="pdf-controls">
-              <button id="prev-page" class="btn btn-primary">Previous</button>
-              <span>Page: <span id="page-num"></span> / <span id="page-count"></span></span>
-              <button id="next-page" class="btn btn-primary">Next</button>
-            </div>
-          </div>
+          <!-- Download Button -->
           <div class="download-button">
-            <a href="https://www.grublanerestaurant.com/images/dine-in-menu.pdf" target="_blank" download>
+            <a href="https://www.grublanerestaurant.com/images/dinein/dine-in-menu.pdf" target="_blank" download>
               <i class="fa fa-download"></i> Download Our Menu (PDF)
             </a>
+          </div>
+
+          <!-- Image Gallery Carousel -->
+          <div class="owl-carousel owl-theme mt-4">
+            <!-- Repeat this block for each image (1.jpg to 10.jpg) -->
+            <!-- Example for 1.jpg to 10.jpg -->
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/1.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/1.jpg" alt="Grub Lane Dine-In Menu Page 1" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/2.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/2.jpg" alt="Grub Lane Dine-In Menu Page 2" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/3.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/3.jpg" alt="Grub Lane Dine-In Menu Page 3" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/4.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/4.jpg" alt="Grub Lane Dine-In Menu Page 4" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/5.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/5.jpg" alt="Grub Lane Dine-In Menu Page 5" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/6.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/6.jpg" alt="Grub Lane Dine-In Menu Page 6" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/7.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/7.jpg" alt="Grub Lane Dine-In Menu Page 7" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/8.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/8.jpg" alt="Grub Lane Dine-In Menu Page 8" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/9.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/9.jpg" alt="Grub Lane Dine-In Menu Page 9" />
+              </a>
+            </div>
+            <div class="item">
+              <a href="https://www.grublanerestaurant.com/images/dinein/10.jpg" class="image-popup">
+                <img src="https://www.grublanerestaurant.com/images/dinein/10.jpg" alt="Grub Lane Dine-In Menu Page 10" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -418,8 +431,9 @@
   </footer>
 
   <!-- JavaScript Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
-  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/owl.carousel.min.js"></script>
@@ -427,14 +441,26 @@
   <script src="js/aos.js"></script>
   <script src="js/jquery.magnific-popup.min.js"></script>
   <script src="js/magnific-popup-options.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-NiZqfo75OymmN0PbzIpD4xwjq1UijUNV2D7rV3YxXzKt5ZP91EXiG+LlZsU4osjL" crossorigin="anonymous"></script>
+  <!-- Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu48OVpZwEVGRmR73fLmbhj4HgkONw9enOZ2q5hpLxKK3lgkD" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-XE7zlKAb1HluVH6SRH3iI2gR8Gix+zjvKR/qQEDvx+fjf7HSE6lj9W9ljvWZadK" crossorigin="anonymous"></script>
+  <!-- Owl Carousel JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-OvRqTty1hNnhFsf1k0jEmR7VzhUMO3qdC16e4do34bll98WVDFxHjIoUMl3yc49uEVQqGAD7hQwP7DqXrq9Zpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Magnific Popup JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js" integrity="sha512-IsI3mOdC47MtFOk6eKrnwFSyE8B8FKsV0wyuzHKjaNHOrVjTqIdzDfmIhFU/TLMG0zK5gHNVhFhVnbjUuw+r3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
   <!-- Custom Scripts -->
   <script>
     $(document).ready(function () {
+      // Hide Loader on Page Load
       $(window).on('load', function () {
         $('#loader').addClass('hidden');
       });
 
+      // Cart Button Functionality (Assuming you have side-cart and overlay)
       $('#cart-button').on('click', function () {
         $('#side-cart').addClass('active');
         $('#overlay').addClass('active');
@@ -444,92 +470,36 @@
         $('#side-cart').removeClass('active');
         $('#overlay').removeClass('active');
       });
-    });
 
-    // PDF.js Configuration
-    const url = 'https://www.grublanerestaurant.com/images/dine-in-menu.pdf';
-    let pdfDoc = null,
-      pageNum = 1,
-      pageIsRendering = false,
-      pageNumIsPending = null;
-
-    const scale = 1.0,
-      canvas = document.getElementById('pdf-render'),
-      ctx = canvas.getContext('2d');
-
-    // Render the page
-    const renderPage = num => {
-      pageIsRendering = true;
-
-      // Get page
-      pdfDoc.getPage(num).then(page => {
-        const viewport = page.getViewport({ scale });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderCtx = {
-          canvasContext: ctx,
-          viewport
-        };
-
-        page.render(renderCtx).promise.then(() => {
-          pageIsRendering = false;
-
-          if (pageNumIsPending !== null) {
-            renderPage(pageNumIsPending);
-            pageNumIsPending = null;
+      // Initialize Owl Carousel for Menu Images
+      $('.owl-carousel').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        dots: true,
+        responsive: {
+          0: {
+            items: 1
+          },
+          600: {
+            items: 2
+          },
+          1000: {
+            items: 3
           }
-        });
-
-        // Output current page
-        document.getElementById('page-num').textContent = num;
+        }
       });
-    };
 
-    // Check for pages rendering
-    const queueRenderPage = num => {
-      if (pageIsRendering) {
-        pageNumIsPending = num;
-      } else {
-        renderPage(num);
-      }
-    };
-
-    // Show Previous Page
-    const showPrevPage = () => {
-      if (pageNum <= 1) {
-        return;
-      }
-      pageNum--;
-      queueRenderPage(pageNum);
-    };
-
-    // Show Next Page
-    const showNextPage = () => {
-      if (pageNum >= pdfDoc.numPages) {
-        return;
-      }
-      pageNum++;
-      queueRenderPage(pageNum);
-    };
-
-    // Get Document
-    pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-      pdfDoc = pdfDoc_;
-      document.getElementById('page-count').textContent = pdfDoc.numPages;
-
-      renderPage(pageNum);
-    }).catch(err => {
-      const div = document.createElement('div');
-      div.className = 'error';
-      div.appendChild(document.createTextNode(err.message));
-      document.querySelector('.pdf-container').insertBefore(div, canvas);
-      document.querySelector('.pdf-controls').style.display = 'none';
+      $('.image-popup').magnificPopup({
+        type: 'image',
+        gallery: {
+          enabled: true
+        },
+        image: {
+          titleSrc: 'alt'
+        }
+      });
     });
-
-    // Button Events
-    document.getElementById('prev-page').addEventListener('click', showPrevPage);
-    document.getElementById('next-page').addEventListener('click', showNextPage);
   </script>
 </body>
 
