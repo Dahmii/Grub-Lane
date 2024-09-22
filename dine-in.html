@@ -5,36 +5,36 @@
   <title>Grub Lane - Dine-In Menu</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|DM+Serif+Display:400,400i&display=swap" rel="stylesheet" />
   
   <!-- Favicon -->
   <link rel="icon" href="img/favicon.png" type="image/png" />
   <link rel="shortcut icon" href="img/favicon-icon" type="image/png" />
-  
+
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="css/bootstrap.css" />
   <link rel="stylesheet" href="css/animate.css" />
   <link rel="stylesheet" href="css/owl.carousel.min.css" />
   <link rel="stylesheet" href="css/aos.css" />
   <link rel="stylesheet" href="css/magnific-popup.css" />
-  
+
   <!-- Icon Fonts -->
   <link rel="stylesheet" href="fonts/ionicons/css/ionicons.min.css" />
   <link rel="stylesheet" href="fonts/fontawesome/css/font-awesome.min.css" />
   <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
-  
+
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
-  
+
   <!-- Enhanced Styles -->
   <style>
     body {
       font-family: 'Open Sans', Arial, sans-serif;
       background-color: #f8f9fa;
       margin: 0;
-      padding: 0; /* Remove default padding */
+      padding: 0;
     }
 
     /* Loader Styling */
@@ -44,7 +44,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+      background: rgba(0, 0, 0, 0.6);
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -76,12 +76,13 @@
     .pdf-container {
       position: relative;
       width: 90%;
-      max-width: 1200px; /* Adjust as needed */
+      max-width: 1200px;
       margin: 40px auto;
-      padding: 20px;
+      padding: 10px;
       background: linear-gradient(135deg, #ffffff, #f0f0f0);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       border-radius: 15px;
+      overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -90,13 +91,12 @@
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
-    .pdf-container iframe {
-      width: 100%;
-      height: 80vh; /* Occupies 80% of viewport height */
+    .pdf-container canvas {
+      width: 100% !important;
+      height: auto !important;
       border: none;
       border-radius: 10px;
       box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-      transition: height 0.3s ease;
     }
 
     /* Download Button Styling */
@@ -134,28 +134,28 @@
       margin-right: 12px;
     }
 
-    /* Responsive adjustments */
+    /* Responsive Adjustments */
     @media (max-width: 1200px) {
-      .pdf-container iframe {
-        height: 75vh;
+      .pdf-container {
+        width: 95%;
       }
     }
 
     @media (max-width: 992px) {
-      .pdf-container iframe {
-        height: 70vh;
+      .pdf-container {
+        width: 100%;
+        margin: 20px auto;
       }
     }
 
-    @media (max-width: 768px) {
-      .pdf-container iframe {
-        height: 65vh;
+    @media (max-width: 400px) {
+      .download-button a {
+        padding: 10px 20px;
+        font-size: 14px;
       }
-    }
 
-    @media (max-width: 576px) {
-      .pdf-container iframe {
-        height: 60vh;
+      .download-button a i {
+        margin-right: 6px;
       }
     }
 
@@ -223,11 +223,45 @@
       background-color: #ffffff;
       color: #ff6347;
     }
+
+    /* PDF Controls Styling */
+    .pdf-controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .pdf-controls button {
+      padding: 8px 16px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .pdf-controls button:hover {
+      background-color: #0056b3;
+    }
+
+    .pdf-controls span {
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Error Message Styling */
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 
 <body data-page-type="dine_in">
-  <!-- Loader -->
   <div id="loader">
     <svg class="circular" width="48px" height="48px">
       <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#ffffff" />
@@ -240,8 +274,7 @@
       <div class="container">
         <a class="navbar-brand" href="index.html"><img src="img/GrublaneBC-03.png" alt="Grub Lane Logo" style="width: 200px" /></a>
         <div class="d-flex">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05"
-            aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
@@ -299,16 +332,16 @@
           <h2 class="text-center">Dine-In Menu</h2>
         </div>
         <div class="col-md-12">
-          <!-- Embedded PDF without Toolbar -->
           <div class="pdf-container">
-            <iframe src="assets/pdf/dine-in-menu.pdf#toolbar=0&navpanes=0&scrollbar=0" width="100%" height="80vh" title="Grub Lane Dine-In Menu">
-              This browser does not support PDFs. Please download the PDF to view it:
-              <a href="assets/pdf/dine-in-menu.pdf">Download PDF</a>.
-            </iframe>
+            <canvas id="pdf-render"></canvas>
+            <div class="pdf-controls">
+              <button id="prev-page" class="btn btn-primary">Previous</button>
+              <span>Page: <span id="page-num"></span> / <span id="page-count"></span></span>
+              <button id="next-page" class="btn btn-primary">Next</button>
+            </div>
           </div>
-          <!-- Download Button -->
           <div class="download-button">
-            <a href="assets/pdf/dine-in-menu.pdf" target="_blank" download>
+            <a href="https://www.grublanerestaurant.com/images/dine-in-menu.pdf" target="_blank" download>
               <i class="fa fa-download"></i> Download Our Menu (PDF)
             </a>
           </div>
@@ -325,10 +358,8 @@
           <ul class="list-unstyled footer-link d-flex footer-social">
             <li>
               <a href="https://www.instagram.com/grub_lane_lagos?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="p-2"><span class="fa fa-instagram"></span></a>
-              <br />
               <p>Instagram</p>
             </li>
-            <!-- Add more social links if needed -->
           </ul>
         </div>
         <div class="col-md-5 mb-5">
@@ -387,6 +418,7 @@
   </footer>
 
   <!-- JavaScript Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
@@ -395,19 +427,14 @@
   <script src="js/aos.js"></script>
   <script src="js/jquery.magnific-popup.min.js"></script>
   <script src="js/magnific-popup-options.js"></script>
-  
+
   <!-- Custom Scripts -->
-  <!-- Removed main.js, cart.js, fetchdishes.js as they were related to the interactive menu -->
-  
-  <!-- Enhanced JavaScript for Loader and Other Functionalities -->
   <script>
     $(document).ready(function () {
-      // Hide the loader once the page has fully loaded
-      $(window).on('load', function() {
+      $(window).on('load', function () {
         $('#loader').addClass('hidden');
       });
 
-      // Cart Sidebar Functionality (If Cart is still needed)
       $('#cart-button').on('click', function () {
         $('#side-cart').addClass('active');
         $('#overlay').addClass('active');
@@ -418,6 +445,91 @@
         $('#overlay').removeClass('active');
       });
     });
+
+    // PDF.js Configuration
+    const url = 'https://www.grublanerestaurant.com/images/dine-in-menu.pdf';
+    let pdfDoc = null,
+      pageNum = 1,
+      pageIsRendering = false,
+      pageNumIsPending = null;
+
+    const scale = 1.0,
+      canvas = document.getElementById('pdf-render'),
+      ctx = canvas.getContext('2d');
+
+    // Render the page
+    const renderPage = num => {
+      pageIsRendering = true;
+
+      // Get page
+      pdfDoc.getPage(num).then(page => {
+        const viewport = page.getViewport({ scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderCtx = {
+          canvasContext: ctx,
+          viewport
+        };
+
+        page.render(renderCtx).promise.then(() => {
+          pageIsRendering = false;
+
+          if (pageNumIsPending !== null) {
+            renderPage(pageNumIsPending);
+            pageNumIsPending = null;
+          }
+        });
+
+        // Output current page
+        document.getElementById('page-num').textContent = num;
+      });
+    };
+
+    // Check for pages rendering
+    const queueRenderPage = num => {
+      if (pageIsRendering) {
+        pageNumIsPending = num;
+      } else {
+        renderPage(num);
+      }
+    };
+
+    // Show Previous Page
+    const showPrevPage = () => {
+      if (pageNum <= 1) {
+        return;
+      }
+      pageNum--;
+      queueRenderPage(pageNum);
+    };
+
+    // Show Next Page
+    const showNextPage = () => {
+      if (pageNum >= pdfDoc.numPages) {
+        return;
+      }
+      pageNum++;
+      queueRenderPage(pageNum);
+    };
+
+    // Get Document
+    pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+      pdfDoc = pdfDoc_;
+      document.getElementById('page-count').textContent = pdfDoc.numPages;
+
+      renderPage(pageNum);
+    }).catch(err => {
+      const div = document.createElement('div');
+      div.className = 'error';
+      div.appendChild(document.createTextNode(err.message));
+      document.querySelector('.pdf-container').insertBefore(div, canvas);
+      document.querySelector('.pdf-controls').style.display = 'none';
+    });
+
+    // Button Events
+    document.getElementById('prev-page').addEventListener('click', showPrevPage);
+    document.getElementById('next-page').addEventListener('click', showNextPage);
   </script>
 </body>
 
