@@ -7,7 +7,12 @@ const databasePath = process.env.DATABASE_PATH;
 const SECRET_KEY = process.env.JWT_SECRET || "";
 const RESERVATION_QUEUE = process.env.RESERVATION_QUEUE;
 
-const redisClient = redis.createClient();
+// Create Redis client
+const redisClient = redis.createClient({
+  url: 'redis://localhost:6379' // Adjust if necessary
+});
+
+redisClient.connect().catch(console.error);
 
 function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
@@ -74,7 +79,7 @@ router.post("/", (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
 
-  let checkSql = `SELECT id, email FROM User WHERE id = ?`;
+  let checkSql = `SELECT id, email FROM Users WHERE id = ?`;
   db.get(checkSql, [user_id], (err, userRow) => {
     if (err) {
       console.error("Database error:", err.message);
@@ -115,13 +120,13 @@ router.post("/", (req, res) => {
             email
           };
 
-          redisClient.rpush(RESERVATION_QUEUE, JSON.stringify(reservationDetails), (err) => {
-            if (err) {
-              console.error("Failed to add reservation to queue:", err);
-            } else {
+          redisClient.rpush(RESERVATION_QUEUE, JSON.stringify(reservationDetails))
+            .then(() => {
               console.log("Reservation details sent to queue:", reservationDetails);
-            }
-          });
+            })
+            .catch(err => {
+              console.error("Failed to add reservation to queue:", err);
+            });
 
           res.status(201).json({ id: this.lastID });
         }
