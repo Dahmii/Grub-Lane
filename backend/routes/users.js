@@ -47,9 +47,7 @@ router.post("/", (req, res) => {
       return res.status(400).json({ error: err.message });
     }
     if (row) {
-      return res
-        .status(409)
-        .json({ error: "User with this email already exists." });
+      return res.status(200).json({ id: row.id }); // Return existing user ID
     }
 
     let insertSql = `INSERT INTO User (email, address, phone_number, name) VALUES (?, ?, ?, ?)`;
@@ -59,6 +57,7 @@ router.post("/", (req, res) => {
       }
       res.status(201).json({ id: this.lastID });
     });
+
     db.close((err) => {
       if (err) {
         console.error("Error closing database connection:", err.message);

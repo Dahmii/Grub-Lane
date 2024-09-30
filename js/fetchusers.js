@@ -18,7 +18,9 @@ function createUser(email, name, address = "", phoneNumber = "") {
       if (response.status === 201) {
         return response.json();
       } else if (response.status === 409) {
-        throw new Error("User already exists.");
+        return response.json().then((data) => {
+          return { userId: data.id }; 
+        });
       } else {
         throw new Error("Failed to create user.");
       }
@@ -28,6 +30,7 @@ function createUser(email, name, address = "", phoneNumber = "") {
       throw error;
     });
 }
+
 
 
 function fetchAllUsers() {
