@@ -7,12 +7,12 @@ const databasePath = process.env.DATABASE_PATH;
 const SECRET_KEY = process.env.JWT_SECRET || "";
 const RESERVATION_QUEUE = process.env.RESERVATION_QUEUE;
 
-// Create Redis client
+// Create Redis client and connect
 const redisClient = redis.createClient({
-  url: 'redis://localhost:6379' // Adjust if necessary
+  url: 'redis://localhost:6379' // Adjust as necessary for your setup
 });
 
-redisClient.connect().catch(console.error);
+redisClient.connect().catch(err => console.error('Redis Client Error', err));
 
 function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
@@ -120,6 +120,7 @@ router.post("/", (req, res) => {
             email
           };
 
+          // Using Promises with Redis client
           redisClient.rpush(RESERVATION_QUEUE, JSON.stringify(reservationDetails))
             .then(() => {
               console.log("Reservation details sent to queue:", reservationDetails);
