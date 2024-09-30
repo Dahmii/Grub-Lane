@@ -81,12 +81,11 @@ def email_worker(queue_name):
             recipient_email = task_data['email']
             context = {
                 'recipient_name': task_data['name'],
-                'reservation_date': task_data['date'],
-                'reservation_time': task_data['time'],
+                'reservation_date': task_data['date_time'].split()[0],  # Extract date part
+                'reservation_time': task_data['date_time'].split()[1],  # Extract time part
                 'guest_count': task_data['number_of_guests']
             }
 
-            # Set the subject based on the queue name
             subject = f"{queue_name.capitalize()} Confirmation"
 
             body = render_template(template, context)
@@ -97,8 +96,7 @@ def add_email_to_redis_queue(queue_name, recipient_email, name, date, time, numb
     task_data = {
         'email': recipient_email,
         'name': name,
-        'date': date,
-        'time': time,
+        'date_time': f"{date} {time}:00",  # Combine date and time
         'number_of_guests': number_of_guests
     }
     redis_client.rpush(queue_name, json.dumps(task_data))
