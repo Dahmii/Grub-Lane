@@ -2,8 +2,12 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const redis = require("redis");
 const databasePath = process.env.DATABASE_PATH;
 const SECRET_KEY = process.env.JWT_SECRET || "";
+const RESERVATION_QUEUE = process.env.RESERVATION_QUEUE;
+
+const redisClient = redis.createClient();
 
 function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
@@ -70,38 +74,64 @@ router.post("/", (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
 
-  let checkSql = `SELECT id FROM Reservations WHERE user_id = ? AND date_time = ?`;
-  db.get(checkSql, [user_id, date_time], (err, row) => {
+  let checkSql = `SELECT id, email FROM Users WHERE id = ?`;
+  db.get(checkSql, [user_id], (err, userRow) => {
     if (err) {
       console.error("Database error:", err.message);
       return res.status(500).json({ error: "Internal server error." });
     }
-    if (row) {
-      return res.status(409).json({
-        error:
-          "Reservation for this user at this date and time already exists.",
-      });
+    if (!userRow) {
+      return res.status(404).json({ error: "User not found." });
     }
 
-    let insertSql = `INSERT INTO Reservations (user_id, table_number, number_of_guests, date_time) VALUES (?, ?, ?, ?)`;
-    db.run(
-      insertSql,
-      [user_id, table_number, number_of_guests, date_time],
-      function (err) {
-        if (err) {
-          console.error("Error inserting reservation:", err.message);
-          return res
-            .status(500)
-            .json({ error: "Failed to create reservation." });
-        }
-        res.status(201).json({ id: this.lastID });
-      }
-    );
+    let email = userRow.email;
 
-    db.close((err) => {
+    let checkReservationSql = `SELECT id FROM Reservations WHERE user_id = ? AND date_time = ?`;
+    db.get(checkReservationSql, [user_id, date_time], (err, row) => {
       if (err) {
-        console.error("Error closing database connection:", err.message);
+        console.error("Database error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
       }
+      if (row) {
+        return res.status(409).json({
+          error: "Reservation for this user at this date and time already exists.",
+        });
+      }
+
+      let insertSql = `INSERT INTO Reservations (user_id, table_number, number_of_guests, date_time) VALUES (?, ?, ?, ?)`;
+      db.run(
+        insertSql,
+        [user_id, table_number, number_of_guests, date_time],
+        function (err) {
+          if (err) {
+            console.error("Error inserting reservation:", err.message);
+            return res.status(500).json({ error: "Failed to create reservation." });
+          }
+
+          const reservationDetails = {
+            user_id,
+            number_of_guests,
+            date_time,
+            email
+          };
+
+          redisClient.rpush(RESERVATION_QUEUE, JSON.stringify(reservationDetails), (err) => {
+            if (err) {
+              console.error("Failed to add reservation to queue:", err);
+            } else {
+              console.log("Reservation details sent to queue:", reservationDetails);
+            }
+          });
+
+          res.status(201).json({ id: this.lastID });
+        }
+      );
+
+      db.close((err) => {
+        if (err) {
+          console.error("Error closing database connection:", err.message);
+        }
+      });
     });
   });
 });
@@ -201,14 +231,7 @@ router.get("/", authenticateToken, (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
   
-  let countSql = `
-    SELECT 
-      COUNT(*) AS total 
-    FROM 
-      Reservations 
-    WHERE 
-      1=1
-  `;
+  let countSql = `SELECT COUNT(*) AS total FROM Reservations WHERE 1=1`;
   let params = [];
 
   if (user_id) {
