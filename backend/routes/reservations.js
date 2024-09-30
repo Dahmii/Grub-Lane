@@ -99,7 +99,7 @@ router.post("/", (req, res) => {
         return res.status(500).json({ error: "Internal server error." });
       }
       if (row) {
-        return res.status(409).json({
+        return res.status(201).json({
           error: "Reservation for this user at this date and time already exists.",
         });
       }

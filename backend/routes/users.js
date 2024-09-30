@@ -47,7 +47,7 @@ router.post("/", (req, res) => {
       return res.status(400).json({ error: err.message });
     }
     if (row) {
-      return res.status(200).json({ id: row.id }); // Return existing user ID
+      return res.status(200).json({ id: row.id });
     }
 
     let insertSql = `INSERT INTO User (email, address, phone_number, name) VALUES (?, ?, ?, ?)`;
