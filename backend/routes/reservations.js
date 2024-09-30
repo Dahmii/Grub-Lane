@@ -12,6 +12,7 @@ const redisClient = redis.createClient({
   url: 'redis://localhost:6379' // Adjust as necessary for your setup
 });
 
+
 redisClient.connect().catch(err => console.error('Redis Client Error', err));
 
 function authenticateToken(req, res, next) {
@@ -121,7 +122,8 @@ router.post("/", (req, res) => {
           };
 
           // Using Promises with Redis client
-          redisClient.rpush(RESERVATION_QUEUE, JSON.stringify(reservationDetails))
+          
+          redisClient.rPush(RESERVATION_QUEUE, JSON.stringify(reservationDetails))
             .then(() => {
               console.log("Reservation details sent to queue:", reservationDetails);
             })
