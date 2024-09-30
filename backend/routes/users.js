@@ -2,34 +2,30 @@ const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const router = express.Router();
 const databasePath = process.env.DATABASE_PATH;
+const redis = require("redis");
+const redisClient = redis.createClient();
 
 /**
  * @swagger
  * /api/users:
  *   post:
  *     description: Create a new user
-*      tags: [Customers]
- *     parameters:
- *       - name: email
- *         in: body
- *         required: true
- *         schema:
- *           type: string
- *       - name: name
- *         in: body
- *         required: true
- *         schema:
- *           type: string
- *       - name: address
- *         in: body
- *         required: false
- *         schema:
- *           type: string
- *       - name: phone_number
- *         in: body
- *         required: false
- *         schema:
- *           type: string
+ *     tags: [Customers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               phone_number:
+ *                 type: string
  *     responses:
  *       201:
  *         description: User created successfully
@@ -175,7 +171,5 @@ router.get("/", (req, res) => {
     }
   });
 });
-
-
 
 module.exports = router;
