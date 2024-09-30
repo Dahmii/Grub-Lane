@@ -20,6 +20,7 @@ SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 RESERVATION_QUEUE = os.getenv('RESERVATION_QUEUE')
 PAYMENT_QUEUE = os.getenv('PAYMENT_QUEUE')
 
+ADMIN_EMAIL = "grublane@yahoo.com"  # Admin email address for notifications
 TEMPLATE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
 
 QUEUE_TEMPLATE_MAP = {
@@ -61,6 +62,11 @@ def send_email(recipient_email, subject, body):
     except Exception as e:
         logging.error(f"Failed to send email to {recipient_email}: {e}")
 
+def notify_admin(action_type, context):
+    subject = f"New {action_type} Notification"
+    body = render_template(load_template('admin_notification_template.html'), context)
+    send_email(ADMIN_EMAIL, subject, body)
+
 def email_worker(queue_name):
     logging.info(f"Listening for messages on {queue_name}...")
     template_name = QUEUE_TEMPLATE_MAP.get(queue_name)
@@ -87,10 +93,12 @@ def email_worker(queue_name):
             }
 
             subject = f"{queue_name.capitalize()} Confirmation"
-
             body = render_template(template, context)
 
             send_email(recipient_email, subject, body)
+
+            # Notify admin after sending the email
+            notify_admin(queue_name.capitalize(), context)
 
 def add_email_to_redis_queue(queue_name, recipient_email, name, date, time, number_of_guests):
     task_data = {
