@@ -74,7 +74,7 @@ router.post("/", (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
 
-  let checkSql = `SELECT id, email FROM Users WHERE id = ?`;
+  let checkSql = `SELECT id, email FROM User WHERE id = ?`;
   db.get(checkSql, [user_id], (err, userRow) => {
     if (err) {
       console.error("Database error:", err.message);

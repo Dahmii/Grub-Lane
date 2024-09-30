@@ -15,7 +15,8 @@ function createUser(email, name, address = "", phoneNumber = "") {
     body: JSON.stringify(userData),
   })
     .then((response) => {
-      if (response.status === 201) {
+      console.error(response.status);
+      if (response.status === 200) {
         return response.json();
       } else if (response.status === 409) {
         return response.json().then((data) => {
