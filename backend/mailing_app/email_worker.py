@@ -78,8 +78,8 @@ def email_worker(queue_name):
             _, task_data = task
             task_data = json.loads(task_data)
 
-            recipient_email = task_data['recipient_email']
-            subject = task_data['subject']
+            recipient_email = task_data['email']
+            subject =queue_name
             body = render_template(template, task_data)
 
             send_email(recipient_email, subject, body)
