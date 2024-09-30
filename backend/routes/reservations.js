@@ -80,7 +80,7 @@ router.post("/", (req, res) => {
 
   let db = new sqlite3.Database(databasePath);
 
-  let checkSql = `SELECT id, email FROM User WHERE id = ?`;
+  let checkSql = `SELECT id, email,name FROM User WHERE id = ?`;
   db.get(checkSql, [user_id], (err, userRow) => {
     if (err) {
       console.error("Database error:", err.message);
@@ -91,6 +91,7 @@ router.post("/", (req, res) => {
     }
 
     let email = userRow.email;
+    let name= userRow.name;
 
     let checkReservationSql = `SELECT id FROM Reservations WHERE user_id = ? AND date_time = ?`;
     db.get(checkReservationSql, [user_id, date_time], (err, row) => {
@@ -118,7 +119,9 @@ router.post("/", (req, res) => {
             user_id,
             number_of_guests,
             date_time,
-            email
+            email,
+            name
+            
           };
 
           // Using Promises with Redis client
