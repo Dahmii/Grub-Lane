@@ -225,8 +225,7 @@
             const tableNumber = 1;
             const date = document.getElementById("date").value;
             const time = document.getElementById("time").value;
-            const numberOfGuests =
-              document.getElementById("number_of_guests").value;
+            const numberOfGuests = document.getElementById("number_of_guests").value;
             const dateTime = `${date} ${time}:00`;
     
             createUser(email, name, "", phoneNumber)
@@ -235,28 +234,29 @@
                 document.getElementById("date_time").value = dateTime;
                 document.getElementById("user_id").value = userId;
     
-                return createReservation(
-                  userId,
-                  numberOfGuests,
-                  dateTime,
-                  tableNumber
-                );
+                return createReservation(userId, numberOfGuests, dateTime, tableNumber);
               })
               .then((data) => {
                 hideOverlay();
                 if (data) {
                   showNotification("Reservation created successfully!");
                 }
+                
               })
               .catch((error) => {
                 hideOverlay();
-                console.error(error);
-                console.error("Error:", error.message);
-                showNotification("Failed to create reservation. Please try again.");
+                if (error.response && error.response.status === 409) {
+                  showNotification("Reservation already exists with these details for this time.");
+                } else {
+                  const errorMessage = error.message || "Failed to create reservation. Please try again.";
+                  console.error("Error:", errorMessage);
+                  showNotification(errorMessage);
+                }
               });
           });
       });
     </script>
+    
     
   </body>
 </html>

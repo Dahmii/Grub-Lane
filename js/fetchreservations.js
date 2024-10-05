@@ -1,3 +1,5 @@
+const { error } = require("console");
+
 function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
   const endpointUrl = `https://grublanerestaurant.com/api/reservations`;
   const reservationData = {
@@ -6,7 +8,7 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
     date_time: dateTime,
     table_number: tableNumber,
   };
-
+  
   return fetch(endpointUrl, {
     method: "POST",
     headers: {
@@ -18,14 +20,16 @@ function createReservation(userId, numberOfGuests, dateTime, tableNumber) {
       if (response.status === 201) {
         return response.json();
       } else if (response.status === 409) {
-        throw new Error("Reservation already exists.");
+        return response.json().then((data) => {
+          throw new Error(`Reservation conflict: ${data.error || 'Reservation already exists.'}`);
+        });
       } else {
         throw new Error("Failed to create reservation.");
       }
     })
     .catch((error) => {
       console.error("Error creating reservation:", error.message);
-      return null;
+      return { error: error.message }; 
     });
 }
 

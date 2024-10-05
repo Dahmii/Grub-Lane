@@ -228,7 +228,7 @@ const upload = multer({
  *         name: image
  *         type: file
  *         required: false
- *         description: Image of the dish (required if menu_id = 1)
+ *         description: Image of the dish (optional)
  *     responses:
  *       201:
  *         description: Dish created successfully
@@ -276,7 +276,6 @@ const upload = multer({
  *                   type: string
  *                   description: Error message
  */
-
 router.post("/createDish", upload.single("image"), (req, res) => {
   const { name, price, menu_id, subcategory } = req.body;
 
@@ -290,12 +289,6 @@ router.post("/createDish", upload.single("image"), (req, res) => {
     return res
       .status(400)
       .json({ error: "Price and menu_id must be valid numbers." });
-  }
-
-  if (parseInt(menu_id) === 1 && !req.file) {
-    return res.status(400).json({
-      error: "Image is required when menu_id is 1.",
-    });
   }
 
   const image_filename = req.file ? req.file.filename : null;
@@ -337,6 +330,7 @@ router.post("/createDish", upload.single("image"), (req, res) => {
     }
   );
 });
+
 
 /**
  * @swagger
