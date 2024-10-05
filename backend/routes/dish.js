@@ -119,7 +119,7 @@ router.get("/getDishes", (req, res) => {
     queryParams.push(take_out === "true");
   }
 
-  baseQuery += ` LIMIT ? OFFSET ?`;
+  baseQuery += ` ORDER BY Dish.name ASC LIMIT ? OFFSET ?`; // Added ORDER BY clause to sort by name alphabetically
   queryParams.push(limit, offset);
 
   db.get(
@@ -176,6 +176,7 @@ router.get("/getDishes", (req, res) => {
     }
   );
 });
+
 
 const upload = multer({
   storage: storage,
