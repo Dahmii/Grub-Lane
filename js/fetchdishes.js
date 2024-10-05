@@ -2,7 +2,7 @@ async function fetchMenuData(menuType) {
   console.log(menuType);
   const takeOut = menuType === "take_out" ? true : false;
 
-  let endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}&limit=20`;
+  let endpointUrl = `https://grublanerestaurant.com/api/dish/getDishes?take_out=${takeOut}`;
   let allDishes = [];
   let menuContainer = document.getElementById("menu-container");
 
@@ -31,12 +31,15 @@ async function fetchMenuData(menuType) {
     menuContainer.innerHTML = `<div class="text-center"><h2>Error Fetching Data</h2><p>We couldn't fetch the menu data. Please try again later.</p></div>`;
   }
 }
-
 function renderMenu(dishes, takeOut, menuContainer) {
   let menuHtml = "";
 
   if (!dishes || dishes.length === 0) {
-    menuHtml = `<div class="text-center"><h2>No menu items available</h2><p>We couldn't find any menu items at the moment for this type. Please try again later.</p></div>`;
+    menuHtml = `
+      <div class="text-center">
+        <h2>No menu items available</h2>
+        <p>We couldn't find any menu items at the moment for this type. Please try again later.</p>
+      </div>`;
   } else {
     const groupedMenu = {};
     dishes.forEach((dish) => {
@@ -49,40 +52,30 @@ function renderMenu(dishes, takeOut, menuContainer) {
 
     for (const subcategory in groupedMenu) {
       const subcategoryId = subcategory.replace(/\s+/g, "-").toLowerCase();
-      menuHtml += `<div class="menu-section">
-        <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
-        <div class="menu-items" id="${subcategoryId}" style="display: none;">`;
+      menuHtml += `
+        <section class="menu-section">
+          <h3 class="menu-category" onclick="toggleMenu('${subcategoryId}')">${subcategory}</h3>
+          <div class="menu-items" id="${subcategoryId}" style="display: none;">`;  // Hide menu items initially
 
       groupedMenu[subcategory].forEach((item) => {
-        menuHtml += `<div class="menu-item-card">
-          <div class="menu-item fancy-card">
-            ${
-              takeOut
-                ? `<div class="menu-item-image">
-              <img src="${item.image_url || "default-image.jpg"}" alt="${
-                    item.name
-                  }" class="menu-image" />
-            </div>`
-                : ""
-            }
-            <h5 class="menu-item-name">${item.name}</h5>
-            <p class="price"><strong>N${item.price}</strong></p>
-            <p class="description">${
-              item.description || "A delicious dish from our menu."
-            }</p>
-            <button class="add-to-cart-btn" data-item="${
-              item.name
-            }" data-price="${item.price}">Add to Cart</button>
-            <div class="rating" data-dish-id="${
-              item.id
-            }" data-average-rating="${item.average_rating || 0}">
-              ${generateStarRating(item.average_rating || 0)}
+        menuHtml += `
+          <article class="menu-item-card">
+            <div class="menu-item fancy-card">
+              ${takeOut ? `
+                <div class="menu-item-image">
+                  <img src="${item.image_url || 'default-image.jpg'}" alt="${item.name}" class="menu-image" />
+                </div>` : ""}
+              <h5 class="menu-item-name">${item.name}</h5>
+              <p class="price"><strong>N${item.price}</strong></p>
+              <button class="add-to-cart-btn" data-item="${item.name}" data-price="${item.price}">Add to Cart</button>
+              <div class="rating" data-dish-id="${item.id}" data-average-rating="${item.average_rating || 0}">
+                ${generateStarRating(item.average_rating || 0)}
+              </div>
             </div>
-          </div>
-        </div>`;
+          </article>`;
       });
 
-      menuHtml += `</div></div>`;
+      menuHtml += `</div></section>`;
     }
   }
 
@@ -90,6 +83,8 @@ function renderMenu(dishes, takeOut, menuContainer) {
   addCartFunctionality();
   addRatingFunctionality();
 }
+
+
 
 function generateStarRating(rating) {
   let starHtml = "";
@@ -101,12 +96,14 @@ function generateStarRating(rating) {
 }
 
 function toggleMenu(subcategoryId) {
-  const element = document.getElementById(subcategoryId);
-  element.style.display =
-    element.style.display === "none" || element.style.display === ""
-      ? "grid"
-      : "none";
+  const menuItems = document.getElementById(subcategoryId);
+  if (menuItems.style.display === "none" || menuItems.style.display === "") {
+    menuItems.style.display = "grid";  // Show menu items as grid
+  } else {
+    menuItems.style.display = "none";  // Hide menu items
+  }
 }
+
 
 function addRatingFunctionality() {
   document.querySelectorAll(".rating i").forEach((star) => {
